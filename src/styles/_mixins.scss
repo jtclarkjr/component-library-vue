@@ -1,0 +1,33 @@
+@mixin focus-ring {
+  outline: 3px solid var(--clv-color-focus);
+  outline-offset: 2px;
+}
+
+@mixin disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@mixin field {
+  min-height: 2.65rem;
+  border: 1px solid var(--clv-color-border);
+  border-radius: var(--clv-radius-sm);
+  background: var(--clv-color-bg);
+  color: var(--clv-color-text);
+  font: inherit;
+}
+
+@mixin floating-surface {
+  border: 1px solid var(--clv-color-border);
+  border-radius: var(--clv-radius-md);
+  background: var(--clv-color-surface-raised);
+  box-shadow: var(--clv-shadow-md);
+  color: var(--clv-color-text);
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}

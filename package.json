@@ -1,6 +1,6 @@
 {
   "name": "component-library-vue",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Accessible Vue 3 components built with Reka UI, SCSS design tokens, and Vite+.",
   "license": "MIT",
   "files": [

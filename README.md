@@ -34,9 +34,38 @@ vp run pack:local        # build .local-pack/component-library-vue.tgz
 Install or link the package, then import its components and stylesheet:
 
 ```ts
-import { Button, Card, Dialog, Input, Spinner } from 'component-library-vue'
+import {
+  Accordion,
+  AlertDialog,
+  Avatar,
+  Button,
+  Card,
+  Checkbox,
+  Collapsible,
+  Combobox,
+  Dialog,
+  DropdownMenu,
+  Input,
+  Pagination,
+  Popover,
+  Progress,
+  RadioGroup,
+  ScrollArea,
+  Select,
+  Separator,
+  Slider,
+  Spinner,
+  Switch,
+  Tabs,
+  Toast,
+  Toggle,
+  Tooltip,
+} from 'component-library-vue'
 import 'component-library-vue/style.css'
 ```
+
+Data-driven collection components also export their TypeScript contracts: `ClvValue`,
+`ChoiceOption`, `AccordionItem`, `TabItem`, `DropdownMenuEntry`, and `ToastItem`.
 
 The stylesheet supplies default dark-theme tokens and all component styles. Override the public
 `--clv-*` custom properties in your application to theme the components:
@@ -123,11 +152,31 @@ reinstall the tarball when testing a new library revision; use linking for rapid
 
 ## Components
 
+- `Accordion` — single or multiple expandable sections from typed items and scoped slots
+- `AlertDialog` — focused confirmation dialog with default and destructive actions
+- `Avatar` — image avatar with accessible alt text, fallback content, sizes, and shapes
 - `Button` — polymorphic button with variants, sizes, disabled state, and loading semantics
 - `Card` — composable content container with header and footer slots
+- `Checkbox` — labelled boolean or indeterminate control with help and error messaging
+- `Collapsible` — controlled disclosure region with customizable trigger and content
+- `Combobox` — searchable single-select field with typed options and custom filtering
 - `Dialog` — accessible Reka UI dialog with controlled open state and composition slots
+- `DropdownMenu` — action menu with separators, disabled items, and destructive styling
 - `Input` — labelled text input with help, error, and model-value support
+- `Pagination` — controlled page navigation with sibling and edge controls
+- `Popover` — positioned, controlled content with a scoped close helper
+- `Progress` — determinate or indeterminate progress with sizes and semantic variants
+- `RadioGroup` — typed single-choice collection with orientation and field messaging
+- `ScrollArea` — styled vertical, horizontal, or bidirectional custom scrollbars
+- `Select` — typed single-select field with labels, validation, and scoped option rendering
+- `Separator` — decorative or semantic horizontal and vertical dividers
+- `Slider` — accessible single-value or range slider with keyboard support
 - `Spinner` — accessible or decorative loading indicator
+- `Switch` — labelled boolean control with sizes and field messaging
+- `Tabs` — typed tab collections with horizontal or vertical keyboard navigation
+- `Toast` — controlled notification collection with variants, actions, and swipe dismissal
+- `Toggle` — accessible pressed-state button with sizes and variants
+- `Tooltip` — accessible hover/focus description with configurable placement and delay
 
 ## Design principles
 
