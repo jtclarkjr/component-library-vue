@@ -115,7 +115,7 @@ vp run pack:local
 Install it into any local Vue project:
 
 ```sh
-vp add /Volumes/SSD/GitHub/component-library-vue/.local-pack/component-library-vue.tgz
+vp add /repo/.local-pack/component-library-vue.tgz
 ```
 
 The same `.tgz` path works with `bun add`, `npm install`, `pnpm add`, or `yarn add`. Rebuild and
