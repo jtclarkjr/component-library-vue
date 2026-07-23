@@ -1,8 +1,7 @@
-# component-library-vue
+# @jtclarkjr/component-library-vue
 
 Accessible Vue 3 components built with Reka UI, SCSS design tokens, Storybook, and the Vite+
-toolchain. The package can be developed and consumed entirely locally without publishing to GitHub
-or a registry.
+toolchain. The package is published to npm and can also be developed and consumed entirely locally.
 
 ## Requirements
 
@@ -26,12 +25,18 @@ vp test run              # Storybook interaction and accessibility tests
 vp run build-storybook   # static Storybook catalogue
 vp run build             # typed ESM library and style.css
 vp run dev               # continuously rebuild the package
-vp run pack:local        # build .local-pack/component-library-vue.tgz
+vp run pack:local        # build .local-pack/jtclarkjr-component-library-vue.tgz
 ```
 
 ## Package usage
 
-Install or link the package, then import its components and stylesheet:
+Install the package:
+
+```sh
+vp add @jtclarkjr/component-library-vue
+```
+
+Then import its components and stylesheet:
 
 ```ts
 import {
@@ -97,8 +102,8 @@ import {
   Tree,
   YearPicker,
   YearRangePicker,
-} from 'component-library-vue'
-import 'component-library-vue/style.css'
+} from '@jtclarkjr/component-library-vue'
+import '@jtclarkjr/component-library-vue/style.css'
 ```
 
 Data-driven components also export their TypeScript contracts, including `ClvValue`,
@@ -136,11 +141,11 @@ vp run dev
 In a Vite+/Bun consumer project, link the registered package:
 
 ```sh
-vp link component-library-vue
+vp link @jtclarkjr/component-library-vue
 ```
 
-Plain Bun projects can use `bun link component-library-vue`. Other package managers can use their
-native package-link command.
+Plain Bun projects can use `bun link @jtclarkjr/component-library-vue`. Other package managers can
+use their native package-link command.
 
 For a linked Vite consumer, deduplicate Vue and keep the library out of dependency optimization:
 
@@ -152,24 +157,24 @@ export default defineConfig({
     dedupe: ['vue'],
   },
   optimizeDeps: {
-    exclude: ['component-library-vue'],
+    exclude: ['@jtclarkjr/component-library-vue'],
   },
 })
 ```
 
-Vite+ exposes `vp unlink component-library-vue` for removing the consumer link. Bun 1.3.14 does
-not implement named unlinking yet, so projects using this repository's pinned Bun version should
-remove the linked dependency with `vp remove` instead. Then unregister the package from this
-repository:
+Vite+ exposes `vp unlink @jtclarkjr/component-library-vue` for removing the consumer link. Bun
+1.3.14 does not implement named unlinking yet, so projects using this repository's pinned Bun
+version should remove the linked dependency with `vp remove` instead. Then unregister the package
+from this repository:
 
 ```sh
 # Run in the consumer project.
-vp remove component-library-vue
+vp remove @jtclarkjr/component-library-vue
 
 # Once the active package manager supports named unlinking, this is equivalent:
-# vp unlink component-library-vue
+# vp unlink @jtclarkjr/component-library-vue
 
-# Run in component-library-vue.
+# Run in the component-library repository.
 vp unlink
 ```
 
@@ -184,7 +189,7 @@ vp run pack:local
 Install it into any local Vue project:
 
 ```sh
-vp add /repo/.local-pack/component-library-vue.tgz
+vp add /repo/.local-pack/jtclarkjr-component-library-vue.tgz
 ```
 
 The same `.tgz` path works with `bun add`, `npm install`, `pnpm add`, or `yarn add`. Rebuild and

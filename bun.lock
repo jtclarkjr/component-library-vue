@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "component-library-vue",
+      "name": "@jtclarkjr/component-library-vue",
       "dependencies": {
         "@internationalized/date": "^3.12.2",
         "reka-ui": "^2.10.1",

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2026-07-23
+
+### Changed
+
+- Renamed the npm package to `@jtclarkjr/component-library-vue` to publish under the maintainer's
+  personal scope and avoid the unrelated pre-existing unscoped package.
+- Added repository, homepage, and issue-tracker metadata to the published package.
+
 ## [0.2.0] - 2026-07-23
 
 ### Added
