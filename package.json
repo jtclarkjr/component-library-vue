@@ -1,6 +1,6 @@
 {
   "name": "component-library-vue",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Accessible Vue 3 components built with Reka UI, SCSS design tokens, and Vite+.",
   "license": "MIT",
   "files": [
@@ -32,6 +32,7 @@
     "prepare": "vp config"
   },
   "dependencies": {
+    "@internationalized/date": "^3.12.2",
     "reka-ui": "^2.10.1"
   },
   "devDependencies": {

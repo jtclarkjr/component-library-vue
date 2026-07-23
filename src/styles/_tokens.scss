@@ -6,11 +6,16 @@
   --clv-color-text: #f4f7fb;
   --clv-color-text-muted: #a9b7cb;
   --clv-color-primary: #74e0c1;
+  --clv-color-on-primary: #061712;
   --clv-color-primary-hover: #98ecd5;
   --clv-color-primary-strong: #35b991;
   --clv-color-danger: #ff7f91;
   --clv-color-success: #6ee7a8;
   --clv-color-warning: #f5c76b;
+  --clv-color-info: #7bb9ff;
+  --clv-color-selection: rgb(116 224 193 / 14%);
+  --clv-color-checker-a: #d5dbe5;
+  --clv-color-checker-b: #8793a6;
   --clv-color-focus: rgb(116 224 193 / 35%);
   --clv-color-overlay: rgb(2 7 15 / 72%);
   --clv-shadow-sm: 0 8px 24px rgb(0 0 0 / 22%);
@@ -28,6 +33,9 @@
   --clv-space-12: 3rem;
   --clv-motion-fast: 140ms;
   --clv-motion-medium: 220ms;
+  --clv-control-height: 2.65rem;
+  --clv-menu-min-width: 13rem;
+  --clv-drawer-size: min(32rem, 92vw);
   --clv-font-sans:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }

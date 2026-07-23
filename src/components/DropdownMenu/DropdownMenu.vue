@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import {
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuRoot,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from 'reka-ui'
 
-import type { DropdownMenuEntry } from '../../types'
+import MenuEntries from '../_shared/MenuEntries.vue'
+import type { ClvValue, DropdownMenuEntry } from '../../types'
 
 const open = defineModel<boolean>('open', { default: false })
 
@@ -25,6 +24,9 @@ withDefaults(
 
 const emit = defineEmits<{
   select: [entry: DropdownMenuEntry, event: Event]
+  action: [entry: DropdownMenuEntry]
+  checkboxChange: [entry: DropdownMenuEntry, checked: boolean]
+  radioChange: [entry: DropdownMenuEntry, value: ClvValue]
 }>()
 </script>
 
@@ -39,21 +41,20 @@ const emit = defineEmits<{
         :side-offset="sideOffset"
         :collision-padding="8"
       >
-        <template v-for="entry in items" :key="entry.value">
-          <DropdownMenuSeparator
-            v-if="entry.type === 'separator'"
-            class="clv-dropdown-menu__separator"
-          />
-          <DropdownMenuItem
-            v-else
-            class="clv-dropdown-menu__item"
-            :class="{ 'clv-dropdown-menu__item--destructive': entry.destructive }"
-            :disabled="entry.disabled"
-            @select="emit('select', entry, $event)"
+        <MenuEntries
+          :entries="items"
+          kind="dropdown"
+          @action="emit('action', $event)"
+          @select="(entry, event) => emit('select', entry, event)"
+          @checkbox-change="(entry, checked) => emit('checkboxChange', entry, checked)"
+          @radio-change="(entry, value) => emit('radioChange', entry, value)"
+        >
+          <template #item="{ entry }"
+            ><slot name="item" :item="entry">{{
+              'label' in entry ? entry.label : ''
+            }}</slot></template
           >
-            <slot name="item" :item="entry">{{ entry.label }}</slot>
-          </DropdownMenuItem>
-        </template>
+        </MenuEntries>
       </DropdownMenuContent>
     </DropdownMenuPortal>
   </DropdownMenuRoot>
@@ -65,41 +66,12 @@ const emit = defineEmits<{
 .clv-dropdown-menu {
   @include floating-surface;
   z-index: 1100;
-  min-width: 12rem;
+  min-width: var(--clv-menu-min-width);
   padding: var(--clv-space-1);
   font-family: var(--clv-font-sans);
 
   &[data-state='open'] {
     animation: clv-dropdown-in var(--clv-motion-fast) ease-out;
-  }
-
-  &__item {
-    display: flex;
-    min-height: 2.25rem;
-    align-items: center;
-    padding: 0.5rem 0.7rem;
-    border-radius: var(--clv-radius-sm);
-    color: var(--clv-color-text);
-    cursor: pointer;
-    outline: none;
-
-    &[data-highlighted] {
-      background: rgb(255 255 255 / 8%);
-    }
-
-    &[data-disabled] {
-      @include disabled;
-    }
-
-    &--destructive {
-      color: var(--clv-color-danger);
-    }
-  }
-
-  &__separator {
-    height: 1px;
-    margin: var(--clv-space-1) 0;
-    background: var(--clv-color-border);
   }
 }
 

@@ -3,8 +3,9 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 
 import Button from '../Button/Button.vue'
 import DropdownMenu from './DropdownMenu.vue'
+import type { DropdownMenuEntry } from '../../types'
 
-const items = [
+const items: DropdownMenuEntry[] = [
   { value: 'edit', label: 'Edit project' },
   { value: 'duplicate', label: 'Duplicate' },
   { type: 'separator' as const, value: 'divider' },
@@ -14,6 +15,7 @@ const items = [
 const meta = {
   title: 'Components/DropdownMenu',
   component: DropdownMenu,
+  tags: ['autodocs'],
   args: { items, onSelect: fn() },
   render: (args) => ({
     components: { Button, DropdownMenu },
@@ -36,5 +38,35 @@ export const Default: Story = {
     await userEvent.click(await page.findByRole('menuitem', { name: 'Edit project' }))
     await expect(args.onSelect).toHaveBeenCalledOnce()
     await waitFor(() => expect(trigger).toHaveFocus())
+  },
+}
+
+export const Advanced: Story = {
+  args: {
+    items: [
+      { type: 'label', value: 'view-label', label: 'View' },
+      { type: 'checkbox', value: 'sidebar', label: 'Show sidebar', checked: true },
+      {
+        type: 'radio-group',
+        value: 'density',
+        label: 'Density',
+        selectedValue: 'comfortable',
+        options: [
+          { value: 'compact', label: 'Compact' },
+          { value: 'comfortable', label: 'Comfortable' },
+        ],
+      },
+      {
+        type: 'submenu',
+        value: 'share',
+        label: 'Share',
+        items: [
+          { value: 'copy-link', label: 'Copy link' },
+          { value: 'email', label: 'Email' },
+        ],
+      },
+      { type: 'separator', value: 'danger-divider' },
+      { value: 'delete', label: 'Delete project', destructive: true },
+    ],
   },
 }

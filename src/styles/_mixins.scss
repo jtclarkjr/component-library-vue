@@ -9,12 +9,72 @@
 }
 
 @mixin field {
-  min-height: 2.65rem;
+  min-height: var(--clv-control-height);
   border: 1px solid var(--clv-color-border);
   border-radius: var(--clv-radius-sm);
   background: var(--clv-color-bg);
   color: var(--clv-color-text);
   font: inherit;
+}
+
+@mixin field-stack {
+  display: grid;
+  gap: var(--clv-space-2);
+  color: var(--clv-color-text-muted);
+  font-family: var(--clv-font-sans);
+  font-size: 0.875rem;
+}
+
+@mixin field-label {
+  color: var(--clv-color-text);
+  font-weight: 750;
+}
+
+@mixin segmented-field {
+  display: inline-flex;
+  min-height: var(--clv-control-height);
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--clv-color-border);
+  border-radius: var(--clv-radius-sm);
+  background: var(--clv-color-bg);
+  color: var(--clv-color-text);
+}
+
+@mixin menu-item {
+  display: flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: var(--clv-space-2);
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--clv-radius-sm);
+  color: var(--clv-color-text);
+  cursor: pointer;
+  outline: none;
+
+  &[data-highlighted] {
+    background: var(--clv-color-selection);
+  }
+
+  &[data-disabled] {
+    @include disabled;
+  }
+}
+
+@mixin checkerboard {
+  background-color: var(--clv-color-checker-a);
+  background-image:
+    linear-gradient(45deg, var(--clv-color-checker-b) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--clv-color-checker-b) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--clv-color-checker-b) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--clv-color-checker-b) 75%);
+  background-position:
+    0 0,
+    0 0.35rem,
+    0.35rem -0.35rem,
+    -0.35rem 0;
+  background-size: 0.7rem 0.7rem;
 }
 
 @mixin floating-surface {

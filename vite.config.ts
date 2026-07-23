@@ -21,7 +21,7 @@ export default defineConfig({
       fileName: 'style.css',
     },
     deps: {
-      neverBundle: ['vue', 'reka-ui'],
+      neverBundle: ['vue', 'reka-ui', '@internationalized/date'],
     },
     exports: true,
   },
