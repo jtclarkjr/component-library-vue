@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { AvatarFallback, AvatarImage, AvatarRoot } from 'reka-ui'
+import { useClvComponent } from '../../headless'
+import type { AvatarPartContext, AvatarParts } from '../../parts'
 
 const props = withDefaults(
   defineProps<{
@@ -9,6 +11,8 @@ const props = withDefaults(
     fallback?: string
     size?: 'sm' | 'md' | 'lg'
     shape?: 'circle' | 'rounded'
+    unstyled?: boolean
+    parts?: AvatarParts
   }>(),
   { size: 'md', shape: 'circle' },
 )
@@ -18,73 +22,85 @@ const emit = defineEmits<{
 }>()
 
 const fallbackText = computed(() => props.fallback ?? props.alt.trim().charAt(0).toUpperCase())
+const { classes, part, slotContext } = useClvComponent<AvatarPartContext>('avatar', props)
 </script>
 
 <template>
-  <AvatarRoot class="clv-avatar" :class="[`clv-avatar--${size}`, `clv-avatar--${shape}`]">
+  <AvatarRoot
+    :class="classes(['clv-avatar', `clv-avatar--${size}`, `clv-avatar--${shape}`])"
+    v-bind="part('root', { size, shape })"
+  >
     <AvatarImage
       v-if="src"
-      class="clv-avatar__image"
+      :class="classes('clv-avatar__image')"
+      @loading-status-change="emit('loadingStatusChange', $event)"
+      v-bind="part('image', { size, shape })"
       :src="src"
       :alt="alt"
-      @loading-status-change="emit('loadingStatusChange', $event)"
     />
-    <AvatarFallback class="clv-avatar__fallback">
-      <slot name="fallback">{{ fallbackText }}</slot>
+    <AvatarFallback
+      :class="classes('clv-avatar__fallback')"
+      v-bind="part('fallback', { size, shape })"
+    >
+      <slot name="fallback" :context="slotContext('fallback', { size, shape })">{{
+        fallbackText
+      }}</slot>
     </AvatarFallback>
   </AvatarRoot>
 </template>
 
 <style scoped lang="scss">
-.clv-avatar {
-  display: inline-flex;
-  overflow: hidden;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  border: 1px solid var(--clv-color-border);
-  background: var(--clv-color-surface-raised);
-  color: var(--clv-color-text);
-  font-family: var(--clv-font-sans);
-  font-weight: 800;
-
-  &--sm {
-    width: 2rem;
-    height: 2rem;
-    font-size: 0.75rem;
-  }
-
-  &--md {
-    width: 2.75rem;
-    height: 2.75rem;
-  }
-
-  &--lg {
-    width: 4rem;
-    height: 4rem;
-    font-size: 1.25rem;
-  }
-
-  &--circle {
-    border-radius: 50%;
-  }
-
-  &--rounded {
-    border-radius: var(--clv-radius-md);
-  }
-
-  &__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  &__fallback {
+@layer clv.components {
+  .clv-avatar {
     display: inline-flex;
-    width: 100%;
-    height: 100%;
+    overflow: hidden;
     align-items: center;
     justify-content: center;
+    flex: none;
+    border: 1px solid var(--clv-color-border);
+    background: var(--clv-color-surface-raised);
+    color: var(--clv-color-text);
+    font-family: var(--clv-font-sans);
+    font-weight: 800;
+
+    &--sm {
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.75rem;
+    }
+
+    &--md {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
+    &--lg {
+      width: 4rem;
+      height: 4rem;
+      font-size: 1.25rem;
+    }
+
+    &--circle {
+      border-radius: 50%;
+    }
+
+    &--rounded {
+      border-radius: var(--clv-radius-md);
+    }
+
+    &__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &__fallback {
+      display: inline-flex;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 </style>

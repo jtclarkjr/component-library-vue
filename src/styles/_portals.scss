@@ -1,0 +1,50 @@
+@layer clv.components {
+  :where([data-clv-component='select'][data-part='content']):not([data-clv-unstyled]) {
+    z-index: 1100;
+    min-width: var(--reka-select-trigger-width);
+    max-height: min(20rem, var(--reka-select-content-available-height));
+    overflow: hidden;
+    border: 1px solid var(--clv-color-border);
+    border-radius: var(--clv-radius-md);
+    background: var(--clv-color-surface-raised);
+    box-shadow: var(--clv-shadow-md);
+    color: var(--clv-color-text);
+    font-family: var(--clv-font-sans);
+  }
+
+  :where([data-clv-component='select'][data-part='content']):not([data-clv-unstyled])
+    :where([data-part='viewport']) {
+    padding: var(--clv-space-1);
+  }
+
+  :where([data-clv-component='select'][data-part='content']):not([data-clv-unstyled])
+    :where([data-part='item']) {
+    position: relative;
+    display: flex;
+    min-height: 2.25rem;
+    align-items: center;
+    padding: 0.5rem 2rem 0.5rem 0.7rem;
+    border-radius: var(--clv-radius-sm);
+    color: var(--clv-color-text);
+    cursor: pointer;
+    outline: none;
+  }
+
+  :where([data-clv-component='select'][data-part='content']):not([data-clv-unstyled])
+    :where([data-part='item'][data-highlighted]) {
+    background: var(--clv-color-selection);
+  }
+
+  :where([data-clv-component='select'][data-part='content']):not([data-clv-unstyled])
+    :where([data-part='item'][data-disabled]) {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  :where([data-clv-component='select'][data-part='content']):not([data-clv-unstyled])
+    :where([data-part='indicator']) {
+    position: absolute;
+    right: 0.65rem;
+    color: var(--clv-color-primary);
+  }
+}

@@ -51,3 +51,36 @@ export const Virtualized: Story = {
     })),
   },
 }
+
+export const IndicatorSlots: Story = {
+  render: (args) => ({
+    components: { Listbox },
+    setup() {
+      const normalValue = ref<string | number>('design')
+      const virtualValue = ref<string | number>('design')
+      return { args, normalValue, virtualValue }
+    },
+    template: `
+      <div style="display:grid;gap:1rem;width:20rem">
+        <Listbox v-model="normalValue" v-bind="args" label="Normal team">
+          <template #indicator="{ selected, context }">
+            <span data-testid="normal-indicator" :data-selected="selected" :data-part-name="context.part">chosen</span>
+          </template>
+        </Listbox>
+        <Listbox v-model="virtualValue" v-bind="args" label="Virtual team" virtualize>
+          <template #indicator="{ selected, context }">
+            <span data-testid="virtual-indicator" :data-selected="selected" :data-part-name="context.part">chosen</span>
+          </template>
+        </Listbox>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    for (const testId of ['normal-indicator', 'virtual-indicator']) {
+      const indicator = await canvas.findByTestId(testId)
+      await expect(indicator).toHaveAttribute('data-selected', 'true')
+      await expect(indicator).toHaveAttribute('data-part-name', 'indicator')
+    }
+  },
+}

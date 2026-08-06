@@ -6,6 +6,8 @@ import {
   NumberFieldInput,
   NumberFieldRoot,
 } from 'reka-ui'
+import { useClvComponent } from '../../headless'
+import type { NumberFieldPartContext, NumberFieldParts } from '../../parts'
 
 const model = defineModel<number | null>()
 const props = withDefaults(
@@ -24,6 +26,8 @@ const props = withDefaults(
     locale?: string
     formatOptions?: Intl.NumberFormatOptions
     disableWheelChange?: boolean
+    unstyled?: boolean
+    parts?: NumberFieldParts
   }>(),
   {
     required: false,
@@ -35,6 +39,10 @@ const props = withDefaults(
     disableWheelChange: false,
   },
 )
+const { classes, part, slotContext } = useClvComponent<NumberFieldPartContext>(
+  'number-field',
+  props,
+)
 const emit = defineEmits<{ increment: []; decrement: [] }>()
 
 const generatedId = useId()
@@ -45,11 +53,20 @@ const descriptionId = computed(() =>
 </script>
 
 <template>
-  <div class="clv-number-field">
-    <label v-if="label" class="clv-number-field__label" :for="inputId">{{ label }}</label>
+  <div
+    :class="classes('clv-number-field')"
+    v-bind="part('root', { disabled, readonly, invalid: Boolean(error) })"
+  >
+    <label
+      v-if="label"
+      :class="classes('clv-number-field__label')"
+      :for="inputId"
+      v-bind="part('label', { disabled, readonly, invalid: Boolean(error) })"
+      >{{ label }}</label
+    >
     <NumberFieldRoot
       v-model="model"
-      class="clv-number-field__control"
+      :class="classes('clv-number-field__control')"
       :id="inputId"
       :name="name"
       :required="required"
@@ -61,30 +78,57 @@ const descriptionId = computed(() =>
       :locale="locale"
       :format-options="formatOptions"
       :disable-wheel-change="disableWheelChange"
+      v-bind="part('control', { disabled, readonly, invalid: Boolean(error) })"
     >
       <NumberFieldDecrement
-        class="clv-number-field__button"
+        :class="classes('clv-number-field__button')"
         aria-label="Decrease value"
         @click="emit('decrement')"
+        v-bind="part('decrement', { disabled, readonly })"
       >
-        −
+        <slot
+          name="decrement-icon"
+          :value="model"
+          :disabled="disabled"
+          :readonly="readonly"
+          :context="slotContext('decrement', { disabled, readonly, value: model })"
+          >−</slot
+        >
       </NumberFieldDecrement>
-      <slot name="input" :value="model">
+      <slot
+        name="input"
+        :value="model"
+        :context="slotContext('input', { disabled, readonly, invalid: Boolean(error) })"
+      >
         <NumberFieldInput
-          class="clv-number-field__input"
+          :class="classes('clv-number-field__input')"
           :aria-invalid="error ? 'true' : undefined"
           :aria-describedby="descriptionId"
+          v-bind="part('input', { disabled, readonly, invalid: Boolean(error) })"
         />
       </slot>
       <NumberFieldIncrement
-        class="clv-number-field__button"
+        :class="classes('clv-number-field__button')"
         aria-label="Increase value"
         @click="emit('increment')"
+        v-bind="part('increment', { disabled, readonly })"
       >
-        +
+        <slot
+          name="increment-icon"
+          :value="model"
+          :disabled="disabled"
+          :readonly="readonly"
+          :context="slotContext('increment', { disabled, readonly, value: model })"
+          >+</slot
+        >
       </NumberFieldIncrement>
     </NumberFieldRoot>
-    <span v-if="help || error" :id="descriptionId" :class="{ 'clv-number-field__error': error }">
+    <span
+      v-if="help || error"
+      :id="descriptionId"
+      :class="classes({ 'clv-number-field__error': error })"
+      v-bind="part('description', { disabled, readonly, invalid: Boolean(error) })"
+    >
       {{ error ?? help }}
     </span>
   </div>
@@ -93,49 +137,51 @@ const descriptionId = computed(() =>
 <style scoped lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-number-field {
-  @include field-stack;
-  &__label {
-    @include field-label;
-  }
-  &__error {
-    color: var(--clv-color-danger);
-  }
-  &__control {
-    @include field;
-    display: grid;
-    grid-template-columns: auto minmax(4rem, 1fr) auto;
-    overflow: hidden;
-  }
-  &__control:focus-within {
-    @include focus-ring;
-  }
-  &__input {
-    min-width: 0;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: var(--clv-color-text);
-    text-align: center;
-    font: inherit;
-  }
-  &__button {
-    width: 2.5rem;
-    border: 0;
-    background: var(--clv-color-surface);
-    color: var(--clv-color-text);
-    cursor: pointer;
-    font-size: 1.15rem;
-  }
-  &__button:hover:not(:disabled) {
-    background: var(--clv-color-surface-raised);
-  }
-  &__button:focus-visible {
-    @include focus-ring;
-    outline-offset: -3px;
-  }
-  &__button:disabled {
-    @include disabled;
+@layer clv.components {
+  .clv-number-field {
+    @include field-stack;
+    &__label {
+      @include field-label;
+    }
+    &__error {
+      color: var(--clv-color-danger);
+    }
+    &__control {
+      @include field;
+      display: grid;
+      grid-template-columns: auto minmax(4rem, 1fr) auto;
+      overflow: hidden;
+    }
+    &__control:focus-within {
+      @include focus-ring;
+    }
+    &__input {
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--clv-color-text);
+      text-align: center;
+      font: inherit;
+    }
+    &__button {
+      width: 2.5rem;
+      border: 0;
+      background: var(--clv-color-surface);
+      color: var(--clv-color-text);
+      cursor: pointer;
+      font-size: 1.15rem;
+    }
+    &__button:hover:not(:disabled) {
+      background: var(--clv-color-surface-raised);
+    }
+    &__button:focus-visible {
+      @include focus-ring;
+      outline-offset: -3px;
+    }
+    &__button:disabled {
+      @include disabled;
+    }
   }
 }
 </style>

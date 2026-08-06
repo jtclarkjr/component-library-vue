@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { DateMatcher, DateValue } from '../../types'
+import { useClvComponent } from '../../headless'
+import type { MonthPickerPartContext, MonthPickerParts } from '../../parts'
 import PeriodPickerBase from '../_shared/PeriodPickerBase.vue'
 
 const model = defineModel<DateValue | DateValue[] | null>()
@@ -15,6 +17,8 @@ const props = withDefaults(
     preventDeselect?: boolean
     isMonthDisabled?: DateMatcher
     isMonthUnavailable?: DateMatcher
+    unstyled?: boolean
+    parts?: MonthPickerParts
   }>(),
   {
     label: 'Month picker',
@@ -25,6 +29,10 @@ const props = withDefaults(
     preventDeselect: false,
   },
 )
+const { unstyled: resolvedUnstyled } = useClvComponent<MonthPickerPartContext>(
+  'month-picker',
+  props,
+)
 </script>
 
 <template>
@@ -34,6 +42,7 @@ const props = withDefaults(
     v-bind="props"
     :is-period-disabled="isMonthDisabled"
     :is-period-unavailable="isMonthUnavailable"
+    :unstyled="resolvedUnstyled"
   >
     <template #heading="slotProps">
       <slot name="heading" v-bind="slotProps">{{ slotProps.headingValue }}</slot>
@@ -44,7 +53,7 @@ const props = withDefaults(
       </slot>
     </template>
     <template #cell="slotProps">
-      <slot name="cell" v-bind="slotProps">{{ slotProps.monthValue }}</slot>
+      <slot name="cell" v-bind="slotProps">{{ slotProps.value }}</slot>
     </template>
   </PeriodPickerBase>
 </template>

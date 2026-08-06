@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import {
   CalendarCell,
   CalendarCellTrigger,
@@ -27,6 +27,17 @@ import {
   RangeCalendarRoot,
 } from 'reka-ui'
 
+import { useClvComponent } from '../../headless'
+import type {
+  CalendarParts,
+  CalendarPartContext,
+  DatePickerParts,
+  DatePickerPartContext,
+  DateRangePickerParts,
+  DateRangePickerPartContext,
+  RangeCalendarParts,
+  RangeCalendarPartContext,
+} from '../../parts'
 import type { ClvDateRange, DateMatcher, DateValue } from '../../types'
 
 type CalendarValue = DateValue | DateValue[] | ClvDateRange | null | undefined
@@ -55,6 +66,10 @@ const props = withDefaults(
     allowNonContiguousRanges?: boolean
     maximumDays?: number
     fixedDate?: 'start' | 'end'
+    componentName?: 'calendar' | 'range-calendar' | 'date-picker' | 'date-range-picker'
+    rootPart?: 'root' | 'calendar'
+    unstyled?: boolean
+    parts?: CalendarParts | RangeCalendarParts | DatePickerParts | DateRangePickerParts
   }>(),
   {
     range: false,
@@ -72,6 +87,7 @@ const props = withDefaults(
     preventDeselect: false,
     disableDaysOutsideCurrentView: false,
     allowNonContiguousRanges: false,
+    rootPart: 'root',
   },
 )
 
@@ -106,6 +122,7 @@ const rangeSuite = {
   CellTrigger: RangeCalendarCellTrigger,
 }
 const suite = computed(() => (props.range ? rangeSuite : singleSuite))
+const rootComponent = computed<Component>(() => suite.value.Root)
 const rootProps = computed(() => ({
   calendarLabel: props.label,
   locale: props.locale,
@@ -131,45 +148,128 @@ const rootProps = computed(() => ({
       }
     : { multiple: props.multiple }),
 }))
+const componentName = props.componentName ?? (props.range ? 'range-calendar' : 'calendar')
+const { classes, part, slotContext } = useClvComponent<
+  | CalendarPartContext
+  | RangeCalendarPartContext
+  | DatePickerPartContext
+  | DateRangePickerPartContext
+>(componentName, props)
 </script>
 
 <template>
   <component
-    :is="suite.Root"
-    v-bind="rootProps"
-    class="clv-calendar"
-    :model-value="modelValue"
+    :is="rootComponent"
+    :class="classes('clv-calendar')"
     @update:model-value="emit('update:modelValue', $event)"
+    v-bind="{
+      ...part(rootPart, {
+        disabled,
+        readonly,
+        orientation: 'horizontal',
+        value: modelValue,
+        range,
+      }),
+      ...rootProps,
+    }"
+    :model-value="modelValue"
   >
     <template #default="calendarState">
-      <component :is="suite.Header" class="clv-calendar__header">
-        <component :is="suite.Prev" class="clv-calendar__nav" aria-label="Previous page">
-          <slot name="navigation-control" direction="previous" :state="calendarState">‹</slot>
+      <component
+        :is="suite.Header"
+        :class="classes('clv-calendar__header')"
+        v-bind="part('header', { disabled, readonly, value: modelValue, range })"
+      >
+        <component
+          :is="suite.Prev"
+          :class="classes('clv-calendar__nav')"
+          aria-label="Previous page"
+          v-bind="part('previous', { disabled, readonly, value: modelValue, range })"
+        >
+          <slot
+            name="navigation-control"
+            direction="previous"
+            :state="calendarState"
+            :context="slotContext('previous', { disabled, readonly, value: modelValue, range })"
+            >‹</slot
+          >
         </component>
-        <component :is="suite.Heading" v-slot="headingState" class="clv-calendar__heading">
-          <slot name="heading" v-bind="headingState" :state="calendarState">
+        <component
+          :is="suite.Heading"
+          v-slot="headingState"
+          :class="classes('clv-calendar__heading')"
+          v-bind="part('heading', { disabled, readonly, value: modelValue, range })"
+        >
+          <slot
+            name="heading"
+            v-bind="headingState"
+            :state="calendarState"
+            :context="slotContext('heading', { disabled, readonly, value: modelValue, range })"
+          >
             {{ headingState.headingValue }}
           </slot>
         </component>
-        <component :is="suite.Next" class="clv-calendar__nav" aria-label="Next page">
-          <slot name="navigation-control" direction="next" :state="calendarState">›</slot>
+        <component
+          :is="suite.Next"
+          :class="classes('clv-calendar__nav')"
+          aria-label="Next page"
+          v-bind="part('next', { disabled, readonly, value: modelValue, range })"
+        >
+          <slot
+            name="navigation-control"
+            direction="next"
+            :state="calendarState"
+            :context="slotContext('next', { disabled, readonly, value: modelValue, range })"
+            >›</slot
+          >
         </component>
       </component>
 
-      <div class="clv-calendar__months">
+      <div
+        :class="classes('clv-calendar__months')"
+        v-bind="part('months', { disabled, readonly, value: modelValue, range })"
+      >
         <component
           :is="suite.Grid"
-          v-for="month in calendarState.grid"
+          v-for="(month, monthIndex) in calendarState.grid"
           :key="month.value.toString()"
-          class="clv-calendar__grid"
+          :class="classes('clv-calendar__grid')"
+          v-bind="
+            part('grid', {
+              month: month.value,
+              index: monthIndex,
+              disabled,
+              readonly,
+              value: modelValue,
+              range,
+            })
+          "
         >
-          <component :is="suite.GridHead">
-            <component :is="suite.GridRow" class="clv-calendar__week">
+          <component
+            :is="suite.GridHead"
+            v-bind="
+              part('weekdays', { month: month.value, index: monthIndex, disabled, readonly, range })
+            "
+          >
+            <component
+              :is="suite.GridRow"
+              :class="classes('clv-calendar__week')"
+              v-bind="part('week', { month: month.value, index: -1, disabled, readonly, range })"
+            >
               <component
                 :is="suite.HeadCell"
-                v-for="weekDay in calendarState.weekDays"
+                v-for="(weekDay, weekdayIndex) in calendarState.weekDays"
                 :key="weekDay"
-                class="clv-calendar__weekday"
+                :class="classes('clv-calendar__weekday')"
+                v-bind="
+                  part('weekday', {
+                    month: month.value,
+                    index: weekdayIndex,
+                    disabled,
+                    readonly,
+                    range,
+                  })
+                "
               >
                 {{ weekDay }}
               </component>
@@ -180,25 +280,79 @@ const rootProps = computed(() => ({
               :is="suite.GridRow"
               v-for="(week, weekIndex) in month.rows"
               :key="weekIndex"
-              class="clv-calendar__week"
+              :class="classes('clv-calendar__week')"
+              v-bind="
+                part('week', { month: month.value, index: weekIndex, disabled, readonly, range })
+              "
             >
               <component
                 :is="suite.Cell"
-                v-for="day in week"
+                v-for="(day, dayIndex) in week"
                 :key="day.toString()"
                 :date="day"
-                class="clv-calendar__cell"
+                :class="classes('clv-calendar__cell')"
+                v-bind="
+                  part('cell', {
+                    date: day,
+                    month: month.value,
+                    index: dayIndex,
+                    disabled,
+                    readonly,
+                    range,
+                  })
+                "
               >
                 <component
                   :is="suite.CellTrigger"
                   v-slot="cellState"
-                  class="clv-calendar__day"
+                  as-child
                   :day="day"
                   :month="month.value"
                 >
-                  <slot name="cell" :day="day" :month="month.value" v-bind="cellState">
-                    {{ cellState.dayValue }}
-                  </slot>
+                  <div
+                    :class="classes('clv-calendar__day')"
+                    v-bind="
+                      part('day', {
+                        date: day,
+                        month: month.value,
+                        index: dayIndex,
+                        disabled,
+                        readonly,
+                        range,
+                        today: cellState.today,
+                        outside: cellState.outsideView,
+                        unavailable: cellState.unavailable,
+                        rangeStart: cellState.highlightedStart,
+                        rangeEnd: cellState.highlightedEnd,
+                        selected: cellState.selected,
+                      })
+                    "
+                  >
+                    <slot
+                      name="cell"
+                      :day="day"
+                      :month="month.value"
+                      v-bind="cellState"
+                      :context="
+                        slotContext('day', {
+                          date: day,
+                          month: month.value,
+                          index: dayIndex,
+                          disabled,
+                          readonly,
+                          range,
+                          today: cellState.today,
+                          outside: cellState.outsideView,
+                          unavailable: cellState.unavailable,
+                          rangeStart: cellState.highlightedStart,
+                          rangeEnd: cellState.highlightedEnd,
+                          selected: cellState.selected,
+                        })
+                      "
+                    >
+                      {{ cellState.dayValue }}
+                    </slot>
+                  </div>
                 </component>
               </component>
             </component>
@@ -212,107 +366,109 @@ const rootProps = computed(() => ({
 <style scoped lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-calendar {
-  width: max-content;
-  border: 1px solid var(--clv-color-border);
-  border-radius: var(--clv-radius-lg);
-  background: var(--clv-color-surface-raised);
-  padding: 0.75rem;
-  color: var(--clv-color-text);
-
-  &__header {
-    display: grid;
-    grid-template-columns: 2rem 1fr 2rem;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  &__heading {
-    text-align: center;
-    font-weight: 650;
-  }
-
-  &__nav {
-    height: 2rem;
+@layer clv.components {
+  .clv-calendar {
+    width: max-content;
     border: 1px solid var(--clv-color-border);
-    border-radius: var(--clv-radius-md);
-    background: var(--clv-color-surface);
-    color: inherit;
-    cursor: pointer;
-  }
+    border-radius: var(--clv-radius-lg);
+    background: var(--clv-color-surface-raised);
+    padding: 0.75rem;
+    color: var(--clv-color-text);
 
-  &__nav:focus-visible,
-  &__day:focus-visible {
-    @include focus-ring;
-  }
+    &__header {
+      display: grid;
+      grid-template-columns: 2rem 1fr 2rem;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
 
-  &__nav:disabled,
-  &__day:disabled {
-    @include disabled;
-  }
+    &__heading {
+      text-align: center;
+      font-weight: 650;
+    }
 
-  &__months {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
+    &__nav {
+      height: 2rem;
+      border: 1px solid var(--clv-color-border);
+      border-radius: var(--clv-radius-md);
+      background: var(--clv-color-surface);
+      color: inherit;
+      cursor: pointer;
+    }
 
-  &__grid {
-    border-collapse: collapse;
-  }
+    &__nav:focus-visible,
+    &__day:focus-visible {
+      @include focus-ring;
+    }
 
-  &__week {
-    display: grid;
-    grid-template-columns: repeat(7, 2.25rem);
-  }
+    &__nav:disabled,
+    &__day:disabled {
+      @include disabled;
+    }
 
-  &__weekday {
-    padding-block: 0.25rem;
-    color: var(--clv-color-text-muted);
-    text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
+    &__months {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
-  &__cell {
-    display: grid;
-    place-items: center;
-  }
+    &__grid {
+      border-collapse: collapse;
+    }
 
-  &__day {
-    display: grid;
-    width: 2.125rem;
-    height: 2.125rem;
-    place-items: center;
-    border: 0;
-    border-radius: var(--clv-radius-md);
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-  }
+    &__week {
+      display: grid;
+      grid-template-columns: repeat(7, 2.25rem);
+    }
 
-  &__day:hover:not(:disabled) {
-    background: var(--clv-color-surface);
-  }
+    &__weekday {
+      padding-block: 0.25rem;
+      color: var(--clv-color-text-muted);
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
 
-  &__day[data-outside-view] {
-    color: var(--clv-color-text-muted);
-  }
+    &__cell {
+      display: grid;
+      place-items: center;
+    }
 
-  &__day[data-unavailable] {
-    text-decoration: line-through;
-  }
+    &__day {
+      display: grid;
+      width: 2.125rem;
+      height: 2.125rem;
+      place-items: center;
+      border: 0;
+      border-radius: var(--clv-radius-md);
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
 
-  &__day[data-highlighted],
-  &__day[data-selected] {
-    background: var(--clv-color-primary);
-    color: var(--clv-color-on-primary);
-  }
+    &__day:hover:not(:disabled) {
+      background: var(--clv-color-surface);
+    }
 
-  &__day[data-highlighted-start],
-  &__day[data-highlighted-end] {
-    background: var(--clv-color-primary-hover);
+    &__day[data-outside-view] {
+      color: var(--clv-color-text-muted);
+    }
+
+    &__day[data-unavailable] {
+      text-decoration: line-through;
+    }
+
+    &__day[data-highlighted],
+    &__day[data-selected] {
+      background: var(--clv-color-primary);
+      color: var(--clv-color-on-primary);
+    }
+
+    &__day[data-highlighted-start],
+    &__day[data-highlighted-end] {
+      background: var(--clv-color-primary-hover);
+    }
   }
 }
 </style>

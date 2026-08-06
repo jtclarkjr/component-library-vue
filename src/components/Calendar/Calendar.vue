@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useClvComponent } from '../../headless'
+import type { CalendarPartContext, CalendarParts } from '../../parts'
 import type { DateMatcher, DateValue } from '../../types'
 import DayCalendarBase from '../_shared/DayCalendarBase.vue'
 
@@ -22,6 +24,8 @@ const props = withDefaults(
     disableDaysOutsideCurrentView?: boolean
     isDateDisabled?: DateMatcher
     isDateUnavailable?: DateMatcher
+    unstyled?: boolean
+    parts?: CalendarParts
   }>(),
   {
     label: 'Calendar',
@@ -39,10 +43,16 @@ const props = withDefaults(
     disableDaysOutsideCurrentView: false,
   },
 )
+const { unstyled: resolvedUnstyled } = useClvComponent<CalendarPartContext>('calendar', props)
 </script>
 
 <template>
-  <DayCalendarBase v-model="model" v-bind="props">
+  <DayCalendarBase
+    v-model="model"
+    component-name="calendar"
+    v-bind="props"
+    :unstyled="resolvedUnstyled"
+  >
     <template #heading="slotProps">
       <slot name="heading" v-bind="slotProps">{{ slotProps.headingValue }}</slot>
     </template>

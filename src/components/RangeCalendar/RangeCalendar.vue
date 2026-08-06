@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ClvDateRange, DateMatcher, DateValue } from '../../types'
+import { useClvComponent } from '../../headless'
+import type { RangeCalendarPartContext, RangeCalendarParts } from '../../parts'
 import DayCalendarBase from '../_shared/DayCalendarBase.vue'
 
 const model = defineModel<ClvDateRange>()
@@ -24,6 +26,8 @@ const props = withDefaults(
     allowNonContiguousRanges?: boolean
     maximumDays?: number
     fixedDate?: 'start' | 'end'
+    unstyled?: boolean
+    parts?: RangeCalendarParts
   }>(),
   {
     label: 'Date range calendar',
@@ -41,10 +45,14 @@ const props = withDefaults(
     allowNonContiguousRanges: false,
   },
 )
+const { unstyled: resolvedUnstyled } = useClvComponent<RangeCalendarPartContext>(
+  'range-calendar',
+  props,
+)
 </script>
 
 <template>
-  <DayCalendarBase v-model="model" range v-bind="props">
+  <DayCalendarBase v-model="model" range v-bind="props" :unstyled="resolvedUnstyled">
     <template #heading="slotProps">
       <slot name="heading" v-bind="slotProps">{{ slotProps.headingValue }}</slot>
     </template>

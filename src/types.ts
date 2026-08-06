@@ -1,8 +1,15 @@
 import type { DateValue, Time } from '@internationalized/date'
+import type { PrimitiveProps } from 'reka-ui'
 
 export type { DateValue, Time } from '@internationalized/date'
 
 export type ClvValue = string | number
+
+export type ButtonAs = PrimitiveProps['as']
+export type ButtonVariant = 'primary' | 'secondary' | 'surface' | 'ghost' | 'danger'
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon'
+export type InputType = 'text' | 'email' | 'password' | 'search' | 'url'
+export type SpinnerSize = 'sm' | 'md' | 'lg' | 'xl'
 
 export type TimeValue = Time
 
@@ -35,8 +42,8 @@ export type ClvColorChannel =
   | 'brightness'
   | 'alpha'
 
-export interface ChoiceOption {
-  value: ClvValue
+export interface ChoiceOption<T extends ClvValue = ClvValue> {
+  value: T
   label: string
   description?: string
   disabled?: boolean

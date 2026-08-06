@@ -26,6 +26,10 @@ export const Large: Story = {
   args: { size: 'lg' },
 }
 
+export const ExtraLarge: Story = {
+  args: { size: 'xl' },
+}
+
 export const Decorative: Story = {
   args: { decorative: true },
 }

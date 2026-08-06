@@ -44,3 +44,26 @@ export const Indeterminate: Story = {
 }
 
 export const Invalid: Story = { args: { help: undefined, error: 'This agreement is required.' } }
+
+export const IndicatorSlot: Story = {
+  render: (args) => ({
+    components: { Checkbox },
+    setup() {
+      const checked = ref(true)
+      return { args, checked }
+    },
+    template: `
+      <Checkbox v-model="checked" v-bind="args">
+        <template #indicator="{ checked: state, context }">
+          <span data-testid="checkbox-indicator" :data-checked="state" :data-part-name="context.part">ok</span>
+        </template>
+      </Checkbox>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const indicator = within(canvasElement).getByTestId('checkbox-indicator')
+    await expect(indicator).toHaveTextContent('ok')
+    await expect(indicator).toHaveAttribute('data-checked', 'true')
+    await expect(indicator).toHaveAttribute('data-part-name', 'indicator')
+  },
+}

@@ -8,6 +8,8 @@ import {
   ListboxVirtualizer,
 } from 'reka-ui'
 
+import { useClvComponent } from '../../headless'
+import type { ListboxPartContext, ListboxParts } from '../../parts'
 import type { ChoiceOption, ClvValue } from '../../types'
 
 const model = defineModel<ClvValue | ClvValue[]>()
@@ -28,6 +30,8 @@ const props = withDefaults(
     estimateSize?: number
     overscan?: number
     emptyText?: string
+    unstyled?: boolean
+    parts?: ListboxParts
   }>(),
   {
     multiple: false,
@@ -41,6 +45,7 @@ const props = withDefaults(
     emptyText: 'No options available.',
   },
 )
+const { classes, part, slotContext } = useClvComponent<ListboxPartContext>('listbox', props)
 
 const generatedId = useId()
 const listboxId = computed(() => props.id ?? generatedId)
@@ -54,30 +59,42 @@ function selected(value: ClvValue) {
 </script>
 
 <template>
-  <div class="clv-listbox-field">
-    <span v-if="label" :id="labelId" class="clv-listbox-field__label">{{ label }}</span>
+  <div
+    :class="classes('clv-listbox-field')"
+    v-bind="part('root', { disabled, invalid: Boolean(error), orientation })"
+  >
+    <span
+      v-if="label"
+      :id="labelId"
+      :class="classes('clv-listbox-field__label')"
+      v-bind="part('label', { disabled, invalid: Boolean(error), orientation })"
+      >{{ label }}</span
+    >
     <ListboxRoot
       :id="listboxId"
       v-model="model"
-      class="clv-listbox"
+      :class="classes('clv-listbox')"
       :multiple="multiple"
       :name="name"
       :required="required"
       :disabled="disabled"
       :orientation="orientation"
       :selection-behavior="selectionBehavior"
+      v-bind="part('control', { disabled, invalid: Boolean(error), orientation })"
     >
       <ListboxContent
-        class="clv-listbox__content"
+        :class="classes('clv-listbox__content')"
         :aria-labelledby="label ? labelId : undefined"
         :aria-describedby="descriptionId"
         :aria-invalid="error ? 'true' : undefined"
+        v-bind="part('content', { disabled, invalid: Boolean(error), orientation })"
       >
         <p
           v-if="options.length === 0"
-          class="clv-listbox__empty"
+          :class="classes('clv-listbox__empty')"
           role="option"
           aria-disabled="true"
+          v-bind="part('empty', { disabled, orientation })"
         >
           {{ emptyText }}
         </p>
@@ -90,13 +107,67 @@ function selected(value: ClvValue) {
         >
           <template #default="{ option }">
             <ListboxItem
-              class="clv-listbox__item"
+              :class="classes('clv-listbox__item')"
               :value="option.value"
               :disabled="option.disabled"
               :aria-disabled="option.disabled || undefined"
+              v-bind="
+                part('item', {
+                  item: option,
+                  index: options.indexOf(option),
+                  value: option.value,
+                  disabled: disabled || option.disabled,
+                  orientation,
+                })
+              "
             >
-              <ListboxItemIndicator class="clv-listbox__indicator">✓</ListboxItemIndicator>
-              <slot name="option" :option="option" :selected="selected(option.value)">
+              <ListboxItemIndicator
+                :class="classes('clv-listbox__indicator')"
+                v-bind="
+                  part('indicator', {
+                    item: option,
+                    index: options.indexOf(option),
+                    value: option.value,
+                    selected: selected(option.value),
+                    disabled: disabled || option.disabled,
+                    orientation,
+                  })
+                "
+              >
+                <slot
+                  name="indicator"
+                  :option="option"
+                  :index="options.indexOf(option)"
+                  :selected="selected(option.value)"
+                  :disabled="disabled || option.disabled"
+                  :orientation="orientation"
+                  :context="
+                    slotContext('indicator', {
+                      item: option,
+                      index: options.indexOf(option),
+                      value: option.value,
+                      selected: selected(option.value),
+                      disabled: disabled || option.disabled,
+                      orientation,
+                    })
+                  "
+                  >✓</slot
+                >
+              </ListboxItemIndicator>
+              <slot
+                name="option"
+                :option="option"
+                :selected="selected(option.value)"
+                :context="
+                  slotContext('item', {
+                    item: option,
+                    index: options.indexOf(option),
+                    value: option.value,
+                    disabled: disabled || option.disabled,
+                    orientation,
+                  })
+                "
+              >
                 <span>{{ option.label }}</span>
                 <small v-if="option.description">{{ option.description }}</small>
               </slot>
@@ -104,22 +175,81 @@ function selected(value: ClvValue) {
           </template>
         </ListboxVirtualizer>
         <ListboxItem
-          v-for="option in virtualize ? [] : options"
+          v-for="(option, index) in virtualize ? [] : options"
           :key="option.value"
-          class="clv-listbox__item"
+          :class="classes('clv-listbox__item')"
           :value="option.value"
           :disabled="option.disabled"
           :aria-disabled="option.disabled || undefined"
+          v-bind="
+            part('item', {
+              item: option,
+              index,
+              value: option.value,
+              disabled: disabled || option.disabled,
+              orientation,
+            })
+          "
         >
-          <ListboxItemIndicator class="clv-listbox__indicator">✓</ListboxItemIndicator>
-          <slot name="option" :option="option" :selected="selected(option.value)">
+          <ListboxItemIndicator
+            :class="classes('clv-listbox__indicator')"
+            v-bind="
+              part('indicator', {
+                item: option,
+                index,
+                value: option.value,
+                selected: selected(option.value),
+                disabled: disabled || option.disabled,
+                orientation,
+              })
+            "
+          >
+            <slot
+              name="indicator"
+              :option="option"
+              :index="index"
+              :selected="selected(option.value)"
+              :disabled="disabled || option.disabled"
+              :orientation="orientation"
+              :context="
+                slotContext('indicator', {
+                  item: option,
+                  index,
+                  value: option.value,
+                  selected: selected(option.value),
+                  disabled: disabled || option.disabled,
+                  orientation,
+                })
+              "
+              >✓</slot
+            >
+          </ListboxItemIndicator>
+          <slot
+            name="option"
+            :option="option"
+            :selected="selected(option.value)"
+            :context="
+              slotContext('item', {
+                item: option,
+                index,
+                value: option.value,
+                disabled: disabled || option.disabled,
+                orientation,
+              })
+            "
+          >
             <span>{{ option.label }}</span>
             <small v-if="option.description">{{ option.description }}</small>
           </slot>
         </ListboxItem>
       </ListboxContent>
     </ListboxRoot>
-    <span v-if="help || error" :id="descriptionId" :class="{ 'clv-listbox-field__error': error }">
+    <span
+      v-if="help || error"
+      :id="descriptionId"
+      :class="classes({ 'clv-listbox-field__error': error })"
+      v-bind="part('description', { disabled, invalid: Boolean(error), orientation })"
+    >
       {{ error ?? help }}
     </span>
   </div>
@@ -128,47 +258,49 @@ function selected(value: ClvValue) {
 <style scoped lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-listbox-field {
-  @include field-stack;
-  &__label {
-    @include field-label;
+@layer clv.components {
+  .clv-listbox-field {
+    @include field-stack;
+    &__label {
+      @include field-label;
+    }
+    &__error {
+      color: var(--clv-color-danger);
+    }
   }
-  &__error {
-    color: var(--clv-color-danger);
-  }
-}
-.clv-listbox {
-  @include field;
-  min-height: 5rem;
-  padding: var(--clv-space-1);
-  &:focus-visible {
-    @include focus-ring;
-  }
-  &[data-disabled] {
-    @include disabled;
-  }
-  &__content {
-    max-height: 18rem;
-    overflow: auto;
-  }
-  &__item {
-    @include menu-item;
-    position: relative;
-    padding-left: 2rem;
-  }
-  &__item small {
-    display: block;
-    color: var(--clv-color-text-muted);
-  }
-  &__indicator {
-    position: absolute;
-    left: 0.65rem;
-    color: var(--clv-color-primary);
-  }
-  &__empty {
-    margin: 0;
-    padding: var(--clv-space-4);
-    color: var(--clv-color-text-muted);
+  .clv-listbox {
+    @include field;
+    min-height: 5rem;
+    padding: var(--clv-space-1);
+    &:focus-visible {
+      @include focus-ring;
+    }
+    &[data-disabled] {
+      @include disabled;
+    }
+    &__content {
+      max-height: 18rem;
+      overflow: auto;
+    }
+    &__item {
+      @include menu-item;
+      position: relative;
+      padding-left: 2rem;
+    }
+    &__item small {
+      display: block;
+      color: var(--clv-color-text-muted);
+    }
+    &__indicator {
+      position: absolute;
+      left: 0.65rem;
+      color: var(--clv-color-primary);
+    }
+    &__empty {
+      margin: 0;
+      padding: var(--clv-space-4);
+      color: var(--clv-color-text-muted);
+    }
   }
 }
 </style>

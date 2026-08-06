@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
+import { ref } from 'vue'
 
 import Input from './Input.vue'
 
@@ -44,4 +45,28 @@ export const Invalid: Story = {
 
 export const Disabled: Story = {
   args: { disabled: true },
+}
+
+export const Clearable: Story = {
+  args: { label: 'Search', type: 'search', clearable: true, onClear: fn() },
+  render: (args) => ({
+    components: { Input },
+    setup() {
+      const value = ref('Frieren')
+      return { args, value }
+    },
+    template: `
+      <Input v-model="value" v-bind="args">
+        <template #leading>⌕</template>
+      </Input>
+    `,
+  }),
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('searchbox', { name: 'Search' })
+    await expect(input).toHaveValue('Frieren')
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear input' }))
+    await expect(input).toHaveValue('')
+    await expect(args.onClear).toHaveBeenCalledOnce()
+  },
 }

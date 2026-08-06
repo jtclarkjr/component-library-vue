@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ClvTimeRange, DateStep, TimeValue } from '../../types'
+import { useClvComponent } from '../../headless'
+import type { TimeRangeFieldPartContext, TimeRangeFieldParts } from '../../parts'
 import DateFieldBase from '../_shared/DateFieldBase.vue'
 
 const model = defineModel<ClvTimeRange>()
@@ -23,6 +25,8 @@ const props = withDefaults(
     maxValue?: TimeValue
     placeholder?: TimeValue
     isTimeUnavailable?: (time: TimeValue) => boolean
+    unstyled?: boolean
+    parts?: TimeRangeFieldParts
   }>(),
   {
     required: false,
@@ -35,10 +39,20 @@ const props = withDefaults(
     hideTimeZone: false,
   },
 )
+const { unstyled: resolvedUnstyled } = useClvComponent<TimeRangeFieldPartContext>(
+  'time-range-field',
+  props,
+)
 </script>
 
 <template>
-  <DateFieldBase v-model="model" kind="time-range" v-bind="props" :unavailable="isTimeUnavailable">
+  <DateFieldBase
+    v-model="model"
+    kind="time-range"
+    v-bind="props"
+    :unavailable="isTimeUnavailable"
+    :unstyled="resolvedUnstyled"
+  >
     <template #segment="slotProps">
       <slot name="segment" v-bind="slotProps">{{ slotProps.value }}</slot>
     </template>

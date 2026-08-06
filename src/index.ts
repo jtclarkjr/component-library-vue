@@ -26,7 +26,15 @@ export type {
   ToastItem,
   ToolbarEntry,
   TreeNode,
+  ButtonAs,
+  ButtonSize,
+  ButtonVariant,
+  InputType,
+  SpinnerSize,
 } from './types'
+
+export * from './parts'
+export { CLV_THEME_KEYS } from './headless'
 
 export { default as Accordion } from './components/Accordion/Accordion.vue'
 export { default as AlertDialog } from './components/AlertDialog/AlertDialog.vue'
@@ -38,6 +46,7 @@ export { default as Card } from './components/Card/Card.vue'
 export { default as Calendar } from './components/Calendar/Calendar.vue'
 export { default as Checkbox } from './components/Checkbox/Checkbox.vue'
 export { default as CheckboxGroup } from './components/CheckboxGroup/CheckboxGroup.vue'
+export { default as ClvProvider } from './components/ClvProvider/ClvProvider.vue'
 export { default as Collapsible } from './components/Collapsible/Collapsible.vue'
 export { default as ColorArea } from './components/ColorArea/ColorArea.vue'
 export { default as ColorField } from './components/ColorField/ColorField.vue'

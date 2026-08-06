@@ -43,6 +43,8 @@ import {
   YearRangePickerRoot,
 } from 'reka-ui'
 
+import { useClvComponent } from '../../headless'
+import type { MonthPickerPartContext, MonthPickerParts } from '../../parts'
 import type { ClvDateRange, DateMatcher, DateValue } from '../../types'
 
 type PeriodKind = 'month' | 'month-range' | 'year' | 'year-range'
@@ -66,6 +68,8 @@ const props = withDefaults(
     maximumPeriods?: number
     fixedDate?: 'start' | 'end'
     yearsPerPage?: number
+    unstyled?: boolean
+    parts?: MonthPickerParts
   }>(),
   {
     label: 'Period picker',
@@ -78,6 +82,8 @@ const props = withDefaults(
     yearsPerPage: 12,
   },
 )
+
+const { classes, part, slotContext } = useClvComponent<MonthPickerPartContext>(props.kind, props)
 
 const emit = defineEmits<{ 'update:modelValue': [value: PeriodValue] }>()
 
@@ -163,54 +169,141 @@ const rootProps = computed(() => ({
       }
     : { multiple: props.multiple }),
 }))
+
+function periodValue(state: { monthValue?: string; yearValue?: string }) {
+  return state.yearValue ?? state.monthValue ?? ''
+}
 </script>
 
 <template>
   <component
     :is="suite.Root"
-    v-bind="rootProps"
-    class="clv-period-picker"
+    :class="classes('clv-period-picker')"
+    v-bind="part('root', { disabled, readonly }, rootProps)"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
   >
     <template #default="pickerState">
-      <component :is="suite.Header" class="clv-period-picker__header">
-        <component :is="suite.Prev" class="clv-period-picker__nav" aria-label="Previous page">
-          <slot name="navigation-control" direction="previous" :state="pickerState">‹</slot>
+      <component
+        :is="suite.Header"
+        :class="classes('clv-period-picker__header')"
+        v-bind="part('header', { disabled, readonly })"
+      >
+        <component
+          :is="suite.Prev"
+          :class="classes('clv-period-picker__nav')"
+          aria-label="Previous page"
+          v-bind="part('previous', { disabled, readonly })"
+        >
+          <slot
+            name="navigation-control"
+            direction="previous"
+            :state="pickerState"
+            :context="slotContext('previous', { disabled, readonly })"
+            >‹</slot
+          >
         </component>
-        <component :is="suite.Heading" v-slot="headingState" class="clv-period-picker__heading">
-          <slot name="heading" v-bind="headingState" :state="pickerState">
+        <component
+          :is="suite.Heading"
+          v-slot="headingState"
+          :class="classes('clv-period-picker__heading')"
+          v-bind="part('heading', { disabled, readonly })"
+        >
+          <slot
+            name="heading"
+            v-bind="headingState"
+            :state="pickerState"
+            :context="slotContext('heading', { disabled, readonly })"
+          >
             {{ headingState.headingValue }}
           </slot>
         </component>
-        <component :is="suite.Next" class="clv-period-picker__nav" aria-label="Next page">
-          <slot name="navigation-control" direction="next" :state="pickerState">›</slot>
+        <component
+          :is="suite.Next"
+          :class="classes('clv-period-picker__nav')"
+          aria-label="Next page"
+          v-bind="part('next', { disabled, readonly })"
+        >
+          <slot
+            name="navigation-control"
+            direction="next"
+            :state="pickerState"
+            :context="slotContext('next', { disabled, readonly })"
+            >›</slot
+          >
         </component>
       </component>
-      <component :is="suite.Grid" class="clv-period-picker__grid">
+      <component
+        :is="suite.Grid"
+        :class="classes('clv-period-picker__grid')"
+        v-bind="part('grid', { disabled, readonly })"
+      >
         <component :is="suite.GridBody">
           <component
             :is="suite.GridRow"
             v-for="(row, rowIndex) in pickerState.grid.rows"
             :key="rowIndex"
-            class="clv-period-picker__row"
+            :class="classes('clv-period-picker__row')"
+            v-bind="part('row', { index: rowIndex, rowIndex, disabled, readonly })"
           >
             <component
               :is="suite.Cell"
-              v-for="period in row"
+              v-for="(period, periodIndex) in row"
               :key="period.toString()"
-              class="clv-period-picker__cell"
+              :class="classes('clv-period-picker__cell')"
               :date="period"
+              v-bind="
+                part('cell', { date: period, index: periodIndex, rowIndex, disabled, readonly })
+              "
             >
               <component
                 :is="suite.CellTrigger"
                 v-slot="cellState"
+                as-child
                 v-bind="isYear ? { year: period } : { month: period }"
-                class="clv-period-picker__option"
               >
-                <slot name="cell" :date="period" v-bind="cellState">
-                  {{ cellState.yearValue ?? cellState.monthValue }}
-                </slot>
+                <div
+                  :class="classes('clv-period-picker__option')"
+                  v-bind="
+                    part('option', {
+                      date: period,
+                      value: periodValue(cellState),
+                      index: periodIndex,
+                      rowIndex,
+                      disabled,
+                      readonly,
+                      today: cellState.today,
+                      unavailable: cellState.unavailable,
+                      rangeStart: cellState.selectionStart,
+                      rangeEnd: cellState.selectionEnd,
+                      selected: cellState.selected,
+                    })
+                  "
+                >
+                  <slot
+                    name="cell"
+                    :date="period"
+                    :value="periodValue(cellState)"
+                    :context="
+                      slotContext('option', {
+                        date: period,
+                        value: periodValue(cellState),
+                        index: periodIndex,
+                        rowIndex,
+                        disabled,
+                        readonly,
+                        today: cellState.today,
+                        unavailable: cellState.unavailable,
+                        rangeStart: cellState.selectionStart,
+                        rangeEnd: cellState.selectionEnd,
+                        selected: cellState.selected,
+                      })
+                    "
+                    v-bind="cellState"
+                  >
+                    {{ periodValue(cellState) }}
+                  </slot>
+                </div>
               </component>
             </component>
           </component>
@@ -223,80 +316,82 @@ const rootProps = computed(() => ({
 <style scoped lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-period-picker {
-  width: min(20rem, 100%);
-  border: 1px solid var(--clv-color-border);
-  border-radius: var(--clv-radius-lg);
-  background: var(--clv-color-surface-raised);
-  padding: 0.75rem;
-  color: var(--clv-color-text);
+@layer clv.components {
+  .clv-period-picker {
+    width: min(20rem, 100%);
+    border: 1px solid var(--clv-color-border);
+    border-radius: var(--clv-radius-lg);
+    background: var(--clv-color-surface-raised);
+    padding: 0.75rem;
+    color: var(--clv-color-text);
 
-  &__header {
-    display: grid;
-    grid-template-columns: 2rem 1fr 2rem;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.625rem;
-  }
+    &__header {
+      display: grid;
+      grid-template-columns: 2rem 1fr 2rem;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.625rem;
+    }
 
-  &__heading {
-    text-align: center;
-    font-weight: 650;
-  }
+    &__heading {
+      text-align: center;
+      font-weight: 650;
+    }
 
-  &__nav,
-  &__option {
-    border: 1px solid transparent;
-    border-radius: var(--clv-radius-md);
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-  }
+    &__nav,
+    &__option {
+      border: 1px solid transparent;
+      border-radius: var(--clv-radius-md);
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
 
-  &__nav {
-    height: 2rem;
-    border-color: var(--clv-color-border);
-    background: var(--clv-color-surface);
-  }
+    &__nav {
+      height: 2rem;
+      border-color: var(--clv-color-border);
+      background: var(--clv-color-surface);
+    }
 
-  &__nav:focus-visible,
-  &__option:focus-visible {
-    @include focus-ring;
-  }
+    &__nav:focus-visible,
+    &__option:focus-visible {
+      @include focus-ring;
+    }
 
-  &__nav:disabled,
-  &__option:disabled {
-    @include disabled;
-  }
+    &__nav:disabled,
+    &__option:disabled {
+      @include disabled;
+    }
 
-  &__grid {
-    width: 100%;
-  }
+    &__grid {
+      width: 100%;
+    }
 
-  &__row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.375rem;
-  }
+    &__row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.375rem;
+    }
 
-  &__option {
-    width: 100%;
-    min-height: 2.5rem;
-    padding: 0.375rem;
-  }
+    &__option {
+      width: 100%;
+      min-height: 2.5rem;
+      padding: 0.375rem;
+    }
 
-  &__option:hover:not(:disabled) {
-    background: var(--clv-color-surface);
-  }
+    &__option:hover:not(:disabled) {
+      background: var(--clv-color-surface);
+    }
 
-  &__option[data-highlighted],
-  &__option[data-selected] {
-    background: var(--clv-color-primary);
-    color: var(--clv-color-on-primary);
-  }
+    &__option[data-highlighted],
+    &__option[data-selected] {
+      background: var(--clv-color-primary);
+      color: var(--clv-color-on-primary);
+    }
 
-  &__option[data-unavailable] {
-    text-decoration: line-through;
+    &__option[data-unavailable] {
+      text-decoration: line-through;
+    }
   }
 }
 </style>

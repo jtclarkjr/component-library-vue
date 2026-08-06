@@ -42,3 +42,42 @@ export const Default: Story = {
 }
 
 export const Empty: Story = { args: { options: [], emptyText: 'Nothing found' } }
+
+export const GlyphSlots: Story = {
+  render: (args) => ({
+    components: { Combobox },
+    setup() {
+      const value = ref<string>('typescript')
+      const search = ref('')
+      return { args, search, value }
+    },
+    template: `
+      <div style="width: 20rem">
+        <Combobox v-model="value" v-model:search-term="search" v-bind="args">
+          <template #clear-icon="{ context }">
+            <span data-testid="combobox-clear" :data-part-name="context.part">clear</span>
+          </template>
+          <template #trigger-icon="{ context }">
+            <span data-testid="combobox-trigger" :data-part-name="context.part">open</span>
+          </template>
+          <template #indicator="{ selected, context }">
+            <span data-testid="combobox-indicator" :data-selected="selected" :data-part-name="context.part">chosen</span>
+          </template>
+        </Combobox>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const page = within(canvasElement.ownerDocument.body)
+    await expect(canvas.getByTestId('combobox-clear')).toHaveAttribute('data-part-name', 'clear')
+    await expect(canvas.getByTestId('combobox-trigger')).toHaveAttribute(
+      'data-part-name',
+      'trigger',
+    )
+    await userEvent.click(canvas.getByRole('button', { name: 'Show options' }))
+    const indicator = await page.findByTestId('combobox-indicator')
+    await expect(indicator).toHaveAttribute('data-selected', 'true')
+    await expect(indicator).toHaveAttribute('data-part-name', 'indicator')
+  },
+}

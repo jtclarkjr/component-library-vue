@@ -7,6 +7,8 @@ import {
   ScrollAreaThumb,
   ScrollAreaViewport,
 } from 'reka-ui'
+import { useClvComponent } from '../../headless'
+import type { ScrollAreaPartContext, ScrollAreaParts } from '../../parts'
 
 const props = withDefaults(
   defineProps<{
@@ -14,9 +16,12 @@ const props = withDefaults(
     orientation?: 'vertical' | 'horizontal' | 'both'
     scrollHideDelay?: number
     maxHeight?: string | number
+    unstyled?: boolean
+    parts?: ScrollAreaParts
   }>(),
   { type: 'hover', orientation: 'vertical', scrollHideDelay: 600, maxHeight: '24rem' },
 )
+const { classes, part, slotContext } = useClvComponent<ScrollAreaPartContext>('scroll-area', props)
 
 const resolvedMaxHeight = computed(() =>
   typeof props.maxHeight === 'number' ? `${props.maxHeight}px` : props.maxHeight,
@@ -25,74 +30,92 @@ const resolvedMaxHeight = computed(() =>
 
 <template>
   <ScrollAreaRoot
-    class="clv-scroll-area"
+    :class="classes('clv-scroll-area')"
     :type="type"
     :scroll-hide-delay="scrollHideDelay"
     :style="{ maxHeight: resolvedMaxHeight }"
+    v-bind="part('root', { orientation })"
   >
-    <ScrollAreaViewport class="clv-scroll-area__viewport"><slot /></ScrollAreaViewport>
+    <ScrollAreaViewport
+      :class="classes('clv-scroll-area__viewport')"
+      v-bind="part('viewport', { orientation })"
+      ><slot :context="slotContext('viewport', { orientation })"
+    /></ScrollAreaViewport>
     <ScrollAreaScrollbar
       v-if="orientation === 'vertical' || orientation === 'both'"
-      class="clv-scroll-area__scrollbar"
+      :class="classes('clv-scroll-area__scrollbar')"
       orientation="vertical"
+      v-bind="part('scrollbar', { orientation: 'vertical' })"
     >
-      <ScrollAreaThumb class="clv-scroll-area__thumb" />
+      <ScrollAreaThumb
+        :class="classes('clv-scroll-area__thumb')"
+        v-bind="part('thumb', { orientation: 'vertical' })"
+      />
     </ScrollAreaScrollbar>
     <ScrollAreaScrollbar
       v-if="orientation === 'horizontal' || orientation === 'both'"
-      class="clv-scroll-area__scrollbar"
+      :class="classes('clv-scroll-area__scrollbar')"
       orientation="horizontal"
+      v-bind="part('scrollbar', { orientation: 'horizontal' })"
     >
-      <ScrollAreaThumb class="clv-scroll-area__thumb" />
+      <ScrollAreaThumb
+        :class="classes('clv-scroll-area__thumb')"
+        v-bind="part('thumb', { orientation: 'horizontal' })"
+      />
     </ScrollAreaScrollbar>
-    <ScrollAreaCorner class="clv-scroll-area__corner" />
+    <ScrollAreaCorner
+      :class="classes('clv-scroll-area__corner')"
+      v-bind="part('corner', { orientation })"
+    />
   </ScrollAreaRoot>
 </template>
 
 <style scoped lang="scss">
-.clv-scroll-area {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  border: 1px solid var(--clv-color-border);
-  border-radius: var(--clv-radius-md);
-  background: var(--clv-color-surface);
-  color: var(--clv-color-text-muted);
-  font-family: var(--clv-font-sans);
-
-  &__viewport {
-    width: 100%;
-    height: 100%;
-    max-height: inherit;
-    border-radius: inherit;
-  }
-
-  &__scrollbar {
-    display: flex;
-    padding: 2px;
-    background: rgb(255 255 255 / 3%);
-    touch-action: none;
-    user-select: none;
-
-    &[data-orientation='vertical'] {
-      width: 0.7rem;
-    }
-
-    &[data-orientation='horizontal'] {
-      height: 0.7rem;
-      flex-direction: column;
-    }
-  }
-
-  &__thumb {
+@layer clv.components {
+  .clv-scroll-area {
     position: relative;
-    flex: 1;
-    border-radius: 999px;
-    background: var(--clv-color-border);
-  }
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid var(--clv-color-border);
+    border-radius: var(--clv-radius-md);
+    background: var(--clv-color-surface);
+    color: var(--clv-color-text-muted);
+    font-family: var(--clv-font-sans);
 
-  &__corner {
-    background: var(--clv-color-surface-raised);
+    &__viewport {
+      width: 100%;
+      height: 100%;
+      max-height: inherit;
+      border-radius: inherit;
+    }
+
+    &__scrollbar {
+      display: flex;
+      padding: 2px;
+      background: rgb(255 255 255 / 3%);
+      touch-action: none;
+      user-select: none;
+
+      &[data-orientation='vertical'] {
+        width: 0.7rem;
+      }
+
+      &[data-orientation='horizontal'] {
+        height: 0.7rem;
+        flex-direction: column;
+      }
+    }
+
+    &__thumb {
+      position: relative;
+      flex: 1;
+      border-radius: 999px;
+      background: var(--clv-color-border);
+    }
+
+    &__corner {
+      background: var(--clv-color-surface-raised);
+    }
   }
 }
 </style>

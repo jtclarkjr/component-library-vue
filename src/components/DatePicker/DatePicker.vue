@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useClvComponent } from '../../headless'
+import type { DatePickerPartContext, DatePickerParts } from '../../parts'
 import type { DateMatcher, DateStep, DateValue } from '../../types'
 import DatePickerBase from '../_shared/DatePickerBase.vue'
 
@@ -36,6 +38,8 @@ const props = withDefaults(
     side?: 'top' | 'right' | 'bottom' | 'left'
     align?: 'start' | 'center' | 'end'
     sideOffset?: number
+    unstyled?: boolean
+    parts?: DatePickerParts
   }>(),
   {
     label: 'Choose date',
@@ -60,10 +64,17 @@ const props = withDefaults(
     sideOffset: 6,
   },
 )
+const { unstyled: resolvedUnstyled } = useClvComponent<DatePickerPartContext>('date-picker', props)
 </script>
 
 <template>
-  <DatePickerBase v-model="model" v-model:open="open" v-bind="props">
+  <DatePickerBase
+    v-model="model"
+    v-model:open="open"
+    component-name="date-picker"
+    v-bind="props"
+    :unstyled="resolvedUnstyled"
+  >
     <template v-for="(_, slotName) in $slots" #[slotName]="slotProps">
       <slot :name="slotName" v-bind="slotProps ?? {}" />
     </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useClvComponent } from '../../headless'
+import type { DateRangeFieldPartContext, DateRangeFieldParts } from '../../parts'
 import type { ClvDateRange, DateMatcher, DateStep, DateValue } from '../../types'
 import DateFieldBase from '../_shared/DateFieldBase.vue'
 
@@ -23,6 +25,8 @@ const props = withDefaults(
     maxValue?: DateValue
     placeholder?: DateValue
     isDateUnavailable?: DateMatcher
+    unstyled?: boolean
+    parts?: DateRangeFieldParts
   }>(),
   {
     required: false,
@@ -35,12 +39,27 @@ const props = withDefaults(
     hideTimeZone: false,
   },
 )
+const { unstyled: resolvedUnstyled } = useClvComponent<DateRangeFieldPartContext>(
+  'date-range-field',
+  props,
+)
+
+function segmentValue(slotProps: unknown) {
+  return (slotProps as { value?: string }).value ?? ''
+}
 </script>
 
 <template>
-  <DateFieldBase v-model="model" kind="date-range" v-bind="props" :unavailable="isDateUnavailable">
+  <DateFieldBase
+    v-model="model"
+    kind="date-range"
+    component-name="date-range-field"
+    v-bind="props"
+    :unstyled="resolvedUnstyled"
+    :unavailable="isDateUnavailable"
+  >
     <template #segment="slotProps">
-      <slot name="segment" v-bind="slotProps">{{ slotProps.value }}</slot>
+      <slot name="segment" v-bind="slotProps">{{ segmentValue(slotProps) }}</slot>
     </template>
   </DateFieldBase>
 </template>

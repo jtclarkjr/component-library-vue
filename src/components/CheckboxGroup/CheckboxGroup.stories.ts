@@ -39,3 +39,26 @@ export const Default: Story = {
 }
 export const Horizontal: Story = { args: { orientation: 'horizontal' } }
 export const Invalid: Story = { args: { help: undefined, error: 'Select at least one channel.' } }
+
+export const IndicatorSlot: Story = {
+  render: (args) => ({
+    components: { CheckboxGroup },
+    setup() {
+      const value = ref<Array<string | number>>(['email'])
+      return { args, value }
+    },
+    template: `
+      <CheckboxGroup v-model="value" v-bind="args">
+        <template #indicator="{ index, selected, context }">
+          <span data-testid="group-indicator" :data-index="index" :data-selected="selected" :data-part-name="context.part">chosen</span>
+        </template>
+      </CheckboxGroup>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const indicator = within(canvasElement).getByTestId('group-indicator')
+    await expect(indicator).toHaveAttribute('data-index', '0')
+    await expect(indicator).toHaveAttribute('data-selected', 'true')
+    await expect(indicator).toHaveAttribute('data-part-name', 'indicator')
+  },
+}

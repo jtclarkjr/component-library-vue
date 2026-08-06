@@ -50,6 +50,7 @@ import {
   Card,
   Checkbox,
   CheckboxGroup,
+  ClvProvider,
   Collapsible,
   ColorArea,
   ColorField,
@@ -111,6 +112,46 @@ Data-driven components also export their TypeScript contracts, including `ClvVal
 `SplitterPanelDefinition`, `StepperStep`, `ToolbarEntry`, and `ColorSwatchOption`. Date and time
 controls export native `DateValue` and `TimeValue` models plus `ClvDateRange`, `ClvTimeRange`,
 `DateMatcher`, and `DateStep`; color controls export `ClvColorSpace` and `ClvColorChannel`.
+
+### Themes and headless composition
+
+The default theme remains active without configuration. Use the bundled Aqua theme either at the
+document boundary (recommended when the app uses teleported overlays) or through `ClvProvider`:
+
+```html
+<html data-clv-theme="aqua"></html>
+```
+
+```vue
+<ClvProvider theme="aqua">
+  <RouterView />
+</ClvProvider>
+```
+
+`ClvProvider` also accepts `unstyled`. Individual components can explicitly override inherited
+presentation with `:unstyled="false"`, or opt out locally with `unstyled`. Omitting `style.css`
+remains the package-wide headless path.
+
+Every component exposes a readonly part tuple and typed `parts` resolver contract. Ordinary
+attributes still target the same physical root as earlier releases; named parts target internal
+surfaces without changing fallthrough behavior:
+
+```vue
+<Input
+  v-model="query"
+  clearable
+  :parts="{
+    root: { class: 'search-field' },
+    input: ({ invalid }) => ({ autocomplete: 'off', 'data-invalid': invalid }),
+  }"
+  @clear="refresh"
+/>
+```
+
+Part resolvers receive component state and are merged after built-in attributes. Classes and styles
+are composed in order and event listeners run internal-first; required accessibility and model
+attributes remain component-owned. Physical and teleported surfaces expose
+`data-clv-component`, `data-part`, and applicable state attributes for CSS-only customization.
 
 The stylesheet supplies default dark-theme tokens and all component styles. Override the public
 `--clv-*` custom properties in your application to theme the components:
@@ -202,7 +243,7 @@ reinstall the tarball when testing a new library revision; use linking for rapid
 - `AspectRatio` — responsive media frame with a controlled width-to-height ratio
 - `Autocomplete` — free-form suggestions with filtering, scoped rendering, and virtualization
 - `Avatar` — image avatar with accessible alt text, fallback content, sizes, and shapes
-- `Button` — polymorphic button with variants, sizes, disabled state, and loading semantics
+- `Button` — polymorphic button with surface/icon recipes, disabled state, and loading semantics
 - `Calendar` — single or multiple date selection with bounds, localization, and multi-page views
 - `Card` — composable content container with header and footer slots
 - `Checkbox` — labelled boolean or indeterminate control with help and error messaging
@@ -224,7 +265,7 @@ reinstall the tarball when testing a new library revision; use linking for rapid
 - `DropdownMenu` — nested action, checkbox, radio, group, label, and separator menu entries
 - `Editable` — inline preview and edit field with submit and cancel controls
 - `HoverCard` — delayed rich preview surface for hover and keyboard focus
-- `Input` — labelled text input with help, error, and model-value support
+- `Input` — labelled text input with clear, leading/trailing, help, error, and model-value support
 - `Label` — accessible form label with required, disabled, and size styling
 - `Listbox` — typed single or multiple selection with orientation and optional virtualization
 - `Menubar` — keyboard-navigable top-level menus using the shared recursive menu schema
@@ -243,7 +284,7 @@ reinstall the tarball when testing a new library revision; use linking for rapid
 - `Select` — typed single-select field with labels, validation, and scoped option rendering
 - `Separator` — decorative or semantic horizontal and vertical dividers
 - `Slider` — accessible single-value or range slider with keyboard support
-- `Spinner` — accessible or decorative loading indicator
+- `Spinner` — accessible or decorative loading indicator in sizes from `sm` through `xl`
 - `Splitter` — constrained resizable panels with persistence, collapse, and layout events
 - `Stepper` — linear or non-linear numbered workflow with scoped navigation helpers
 - `Switch` — labelled boolean control with sizes and field messaging

@@ -70,3 +70,63 @@ export const Advanced: Story = {
     ],
   },
 }
+
+export const RecursiveGlyphSlots: Story = {
+  args: {
+    items: [
+      { type: 'checkbox', value: 'top-choice', label: 'Top choice', checked: true },
+      {
+        type: 'group',
+        value: 'nested-group',
+        label: 'Nested',
+        items: [
+          { type: 'checkbox', value: 'nested-choice', label: 'Nested choice', checked: true },
+        ],
+      },
+      {
+        type: 'submenu',
+        value: 'more',
+        label: 'More choices',
+        items: [{ value: 'future-choice', label: 'Future choice' }],
+      },
+    ],
+  },
+  render: (args) => ({
+    components: { Button, DropdownMenu },
+    setup: () => ({ args }),
+    template: `
+      <DropdownMenu v-bind="args">
+        <template #trigger><Button variant="secondary">Glyph actions</Button></template>
+        <template #submenu-indicator="{ depth, context }">
+          <span data-testid="submenu-indicator" :data-depth="depth" :data-part-name="context.part">next</span>
+        </template>
+        <template #indicator="{ entry, depth, checked, context }">
+          <span data-testid="menu-indicator" :data-entry="entry.value" :data-depth="depth" :data-checked="checked" :data-part-name="context.part">chosen</span>
+        </template>
+      </DropdownMenu>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const page = within(canvasElement.ownerDocument.body)
+    await userEvent.click(canvas.getByRole('button', { name: 'Glyph actions' }))
+    const initialIndicators = await page.findAllByTestId('menu-indicator')
+    const topIndicator = initialIndicators.find(
+      (indicator) => indicator.dataset.entry === 'top-choice',
+    )
+    await expect(topIndicator).toHaveAttribute('data-entry', 'top-choice')
+    await expect(topIndicator).toHaveAttribute('data-depth', '0')
+    await expect(topIndicator).toHaveAttribute('data-checked', 'true')
+    await expect(topIndicator).toHaveAttribute('data-part-name', 'indicator')
+    const submenuIndicator = page.getByTestId('submenu-indicator')
+    await expect(submenuIndicator).toHaveAttribute('data-part-name', 'submenuTrigger')
+    const indicators = await page.findAllByTestId('menu-indicator')
+    const nestedIndicator = indicators.find(
+      (indicator) => indicator.dataset.entry === 'nested-choice',
+    )
+    await expect(nestedIndicator).toHaveAttribute('data-depth', '1')
+    await expect(nestedIndicator).toHaveAttribute('data-part-name', 'indicator')
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Glyph actions' })).toHaveFocus())
+  },
+}

@@ -43,3 +43,33 @@ export const Empty: Story = {
   }),
 }
 export const Invalid: Story = { args: { help: undefined, error: 'Add at least one skill.' } }
+
+export const GlyphSlots: Story = {
+  render: (args) => ({
+    components: { TagsInput },
+    setup() {
+      const value = ref(['Vue', 'TypeScript'])
+      return { args, value }
+    },
+    template: `
+      <TagsInput v-model="value" v-bind="args">
+        <template #delete-icon="{ tag, index, context }">
+          <span data-testid="delete-icon" :data-tag="tag" :data-index="index" :data-part-name="context.part">remove</span>
+        </template>
+        <template #clear-icon="{ values, context }">
+          <span data-testid="clear-icon" :data-count="values.length" :data-part-name="context.part">clear all</span>
+        </template>
+      </TagsInput>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const deleteIcon = canvas.getAllByTestId('delete-icon')[0]
+    await expect(deleteIcon).toHaveAttribute('data-tag', 'Vue')
+    await expect(deleteIcon).toHaveAttribute('data-index', '0')
+    await expect(deleteIcon).toHaveAttribute('data-part-name', 'delete')
+    const clearIcon = canvas.getByTestId('clear-icon')
+    await expect(clearIcon).toHaveAttribute('data-count', '2')
+    await expect(clearIcon).toHaveAttribute('data-part-name', 'clear')
+  },
+}

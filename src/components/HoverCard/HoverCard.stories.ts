@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import HoverCard from './HoverCard.vue'
 
@@ -28,7 +28,8 @@ export const Default: Story = {
     const canvas = within(canvasElement)
     const page = within(canvasElement.ownerDocument.body)
     await userEvent.hover(canvas.getByRole('link', { name: '@ada' }))
-    await expect(await page.findByText(/first published algorithm/)).toBeVisible()
+    const content = await page.findByText(/first published algorithm/)
+    await waitFor(() => expect(content).toBeVisible())
   },
 }
 export const RichContent: Story = {

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, useId } from 'vue'
 import { PinInputInput, PinInputRoot } from 'reka-ui'
+import { useClvComponent } from '../../headless'
+import type { PinInputPartContext, PinInputParts } from '../../parts'
 
 const model = defineModel<string[] | number[]>({ default: () => [] })
 const props = withDefaults(
@@ -17,6 +19,8 @@ const props = withDefaults(
     mask?: boolean
     otp?: boolean
     type?: 'text' | 'number'
+    unstyled?: boolean
+    parts?: PinInputParts
   }>(),
   {
     length: 6,
@@ -28,6 +32,7 @@ const props = withDefaults(
     type: 'text',
   },
 )
+const { classes, part, slotContext } = useClvComponent<PinInputPartContext>('pin-input', props)
 const emit = defineEmits<{ complete: [value: string[] | number[]] }>()
 
 const generatedId = useId()
@@ -39,12 +44,21 @@ const descriptionId = computed(() =>
 </script>
 
 <template>
-  <div class="clv-pin-input-field">
-    <span v-if="label" :id="labelId" class="clv-pin-input-field__label">{{ label }}</span>
+  <div
+    :class="classes('clv-pin-input-field')"
+    v-bind="part('root', { disabled, invalid: Boolean(error) })"
+  >
+    <span
+      v-if="label"
+      :id="labelId"
+      :class="classes('clv-pin-input-field__label')"
+      v-bind="part('label', { disabled, invalid: Boolean(error) })"
+      >{{ label }}</span
+    >
     <PinInputRoot
       :id="rootId"
       v-model="model"
-      class="clv-pin-input"
+      :class="classes('clv-pin-input')"
       :name="name"
       :required="required"
       :disabled="disabled"
@@ -56,6 +70,7 @@ const descriptionId = computed(() =>
       :aria-describedby="descriptionId"
       :aria-invalid="error ? 'true' : undefined"
       @complete="emit('complete', $event)"
+      v-bind="part('group', { disabled, invalid: Boolean(error) })"
     >
       <slot
         v-for="index in length"
@@ -63,11 +78,21 @@ const descriptionId = computed(() =>
         :key="index"
         :index="index - 1"
         :value="model[index - 1]"
+        :context="slotContext('digit', { index: index - 1, disabled, invalid: Boolean(error) })"
       >
-        <PinInputInput class="clv-pin-input__digit" :index="index - 1" />
+        <PinInputInput
+          :class="classes('clv-pin-input__digit')"
+          :index="index - 1"
+          v-bind="part('digit', { index: index - 1, disabled, invalid: Boolean(error) })"
+        />
       </slot>
     </PinInputRoot>
-    <span v-if="help || error" :id="descriptionId" :class="{ 'clv-pin-input-field__error': error }">
+    <span
+      v-if="help || error"
+      :id="descriptionId"
+      :class="classes({ 'clv-pin-input-field__error': error })"
+      v-bind="part('description', { disabled, invalid: Boolean(error) })"
+    >
       {{ error ?? help }}
     </span>
   </div>
@@ -76,32 +101,34 @@ const descriptionId = computed(() =>
 <style scoped lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-pin-input-field {
-  @include field-stack;
-  &__label {
-    @include field-label;
-  }
-  &__error {
-    color: var(--clv-color-danger);
-  }
-}
-.clv-pin-input {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--clv-space-2);
-  &__digit {
-    @include field;
-    width: 2.75rem;
-    padding: 0.55rem;
-    text-align: center;
-    font-size: 1.15rem;
-    font-weight: 800;
-    &:focus-visible {
-      @include focus-ring;
-      border-color: var(--clv-color-primary);
+@layer clv.components {
+  .clv-pin-input-field {
+    @include field-stack;
+    &__label {
+      @include field-label;
     }
-    &:disabled {
-      @include disabled;
+    &__error {
+      color: var(--clv-color-danger);
+    }
+  }
+  .clv-pin-input {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--clv-space-2);
+    &__digit {
+      @include field;
+      width: 2.75rem;
+      padding: 0.55rem;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      &:focus-visible {
+        @include focus-ring;
+        border-color: var(--clv-color-primary);
+      }
+      &:disabled {
+        @include disabled;
+      }
     }
   }
 }

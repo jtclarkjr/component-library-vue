@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ClvDateRange, DateMatcher, DateValue } from '../../types'
+import { useClvComponent } from '../../headless'
+import type { YearRangePickerPartContext, YearRangePickerParts } from '../../parts'
 import PeriodPickerBase from '../_shared/PeriodPickerBase.vue'
 
 const model = defineModel<ClvDateRange>()
@@ -18,6 +20,8 @@ const props = withDefaults(
     maximumYears?: number
     fixedDate?: 'start' | 'end'
     yearsPerPage?: number
+    unstyled?: boolean
+    parts?: YearRangePickerParts
   }>(),
   {
     label: 'Year range picker',
@@ -29,6 +33,10 @@ const props = withDefaults(
     yearsPerPage: 12,
   },
 )
+const { unstyled: resolvedUnstyled } = useClvComponent<YearRangePickerPartContext>(
+  'year-range-picker',
+  props,
+)
 </script>
 
 <template>
@@ -39,6 +47,7 @@ const props = withDefaults(
     :is-period-disabled="isYearDisabled"
     :is-period-unavailable="isYearUnavailable"
     :maximum-periods="maximumYears"
+    :unstyled="resolvedUnstyled"
   >
     <template #heading="slotProps">
       <slot name="heading" v-bind="slotProps">{{ slotProps.headingValue }}</slot>
@@ -49,7 +58,7 @@ const props = withDefaults(
       </slot>
     </template>
     <template #cell="slotProps">
-      <slot name="cell" v-bind="slotProps">{{ slotProps.yearValue }}</slot>
+      <slot name="cell" v-bind="slotProps">{{ slotProps.value }}</slot>
     </template>
   </PeriodPickerBase>
 </template>

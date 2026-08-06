@@ -5,6 +5,8 @@ import { ref } from 'vue'
 import type { ToastItem } from '../../types'
 import Toast from './Toast.vue'
 
+const rootPart = fn(() => ({}))
+
 const initialItems: ToastItem[] = [
   {
     id: 'deployed',
@@ -19,7 +21,12 @@ const initialItems: ToastItem[] = [
 const meta = {
   title: 'Components/Toast',
   component: Toast,
-  args: { duration: 30_000, onAction: fn(), onDismiss: fn() },
+  args: {
+    duration: 30_000,
+    onAction: fn(),
+    onDismiss: fn(),
+    parts: { root: rootPart },
+  },
   render: (args) => ({
     components: { Toast },
     setup() {
@@ -36,7 +43,9 @@ type Story = StoryObj<typeof meta>
 export const Success: Story = {
   play: async ({ args, canvasElement }) => {
     const page = within(canvasElement.ownerDocument.body)
-    await expect(await page.findByText('Deployment complete')).toBeVisible()
+    await expect(rootPart).toHaveBeenCalled()
+    const title = await page.findByText('Deployment complete')
+    await waitFor(() => expect(title).toBeVisible())
     await userEvent.click(page.getByRole('button', { name: 'View' }))
     await expect(args.onAction).toHaveBeenCalledOnce()
     await waitFor(() => expect(page.queryByText('Deployment complete')).not.toBeInTheDocument())
@@ -61,4 +70,31 @@ export const Danger: Story = {
     },
     template: '<Toast v-model:items="items" v-bind="args" />',
   }),
+}
+
+export const CloseIconSlot: Story = {
+  render: (args) => ({
+    components: { Toast },
+    setup() {
+      const items = ref([...initialItems])
+      return { args, items }
+    },
+    template: `
+      <Toast v-model:items="items" v-bind="args">
+        <template #close-icon="{ item, index, variant, context }">
+          <span data-testid="toast-close-icon" :data-item="item.id" :data-index="index" :data-variant="variant" :data-part-name="context.part">dismiss</span>
+        </template>
+      </Toast>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body)
+    const icon = await page.findByTestId('toast-close-icon')
+    await expect(icon).toHaveAttribute('data-item', 'deployed')
+    await expect(icon).toHaveAttribute('data-index', '0')
+    await expect(icon).toHaveAttribute('data-variant', 'success')
+    await expect(icon).toHaveAttribute('data-part-name', 'close')
+    await userEvent.click(page.getByRole('button', { name: 'Dismiss notification' }))
+    await waitFor(() => expect(page.queryByText('Deployment complete')).not.toBeInTheDocument())
+  },
 }

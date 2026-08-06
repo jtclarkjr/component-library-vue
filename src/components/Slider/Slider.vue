@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { SliderRange, SliderRoot, SliderThumb, SliderTrack } from 'reka-ui'
+import { useClvComponent } from '../../headless'
+import type { SliderPartContext, SliderParts } from '../../parts'
 
 const model = defineModel<number | number[]>({ default: 0 })
 const props = withDefaults(
@@ -13,9 +15,12 @@ const props = withDefaults(
     inverted?: boolean
     minStepsBetweenThumbs?: number
     labels?: string[]
+    unstyled?: boolean
+    parts?: SliderParts
   }>(),
   { min: 0, max: 100, step: 1, orientation: 'horizontal', disabled: false, inverted: false },
 )
+const { classes, part } = useClvComponent<SliderPartContext>('slider', props)
 
 const emit = defineEmits<{
   commit: [value: number | number[]]
@@ -36,8 +41,7 @@ function normalize(next: number[]) {
 <template>
   <SliderRoot
     v-model="values"
-    class="clv-slider"
-    :class="`clv-slider--${orientation}`"
+    :class="classes(['clv-slider', `clv-slider--${orientation}`])"
     :min="min"
     :max="max"
     :step="step"
@@ -46,15 +50,23 @@ function normalize(next: number[]) {
     :inverted="inverted"
     :min-steps-between-thumbs="minStepsBetweenThumbs"
     @value-commit="emit('commit', normalize($event))"
+    v-bind="part('root', { disabled, orientation })"
   >
-    <SliderTrack class="clv-slider__track">
-      <SliderRange class="clv-slider__range" />
+    <SliderTrack
+      :class="classes('clv-slider__track')"
+      v-bind="part('track', { disabled, orientation })"
+    >
+      <SliderRange
+        :class="classes('clv-slider__range')"
+        v-bind="part('range', { disabled, orientation })"
+      />
     </SliderTrack>
     <SliderThumb
       v-for="(_, index) in values"
       :key="index"
-      class="clv-slider__thumb"
+      :class="classes('clv-slider__thumb')"
       :aria-label="labels?.[index] ?? (values.length > 1 ? `Value ${index + 1}` : 'Value')"
+      v-bind="part('thumb', { disabled, orientation, index, value: values[index] })"
     />
   </SliderRoot>
 </template>
@@ -62,72 +74,74 @@ function normalize(next: number[]) {
 <style scoped lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-slider {
-  position: relative;
-  display: flex;
-  align-items: center;
-  touch-action: none;
-  user-select: none;
-
-  &--horizontal {
-    width: 100%;
-    height: 1.5rem;
-  }
-
-  &--vertical {
-    width: 1.5rem;
-    height: 12rem;
-    flex-direction: column;
-  }
-
-  &[data-disabled] {
-    @include disabled;
-  }
-
-  &__track {
+@layer clv.components {
+  .clv-slider {
     position: relative;
-    overflow: hidden;
-    flex: 1;
-    border-radius: 999px;
-    background: var(--clv-color-surface-raised);
-  }
+    display: flex;
+    align-items: center;
+    touch-action: none;
+    user-select: none;
 
-  &--horizontal &__track {
-    width: 100%;
-    height: 0.4rem;
-  }
+    &--horizontal {
+      width: 100%;
+      height: 1.5rem;
+    }
 
-  &--vertical &__track {
-    width: 0.4rem;
-    height: 100%;
-  }
+    &--vertical {
+      width: 1.5rem;
+      height: 12rem;
+      flex-direction: column;
+    }
 
-  &__range {
-    position: absolute;
-    border-radius: inherit;
-    background: var(--clv-color-primary);
-  }
+    &[data-disabled] {
+      @include disabled;
+    }
 
-  &--horizontal &__range {
-    height: 100%;
-  }
+    &__track {
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+      border-radius: 999px;
+      background: var(--clv-color-surface-raised);
+    }
 
-  &--vertical &__range {
-    width: 100%;
-  }
+    &--horizontal &__track {
+      width: 100%;
+      height: 0.4rem;
+    }
 
-  &__thumb {
-    display: block;
-    width: 1.25rem;
-    height: 1.25rem;
-    border: 2px solid var(--clv-color-primary);
-    border-radius: 50%;
-    background: var(--clv-color-text);
-    box-shadow: var(--clv-shadow-sm);
-    cursor: grab;
+    &--vertical &__track {
+      width: 0.4rem;
+      height: 100%;
+    }
 
-    &:focus-visible {
-      @include focus-ring;
+    &__range {
+      position: absolute;
+      border-radius: inherit;
+      background: var(--clv-color-primary);
+    }
+
+    &--horizontal &__range {
+      height: 100%;
+    }
+
+    &--vertical &__range {
+      width: 100%;
+    }
+
+    &__thumb {
+      display: block;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid var(--clv-color-primary);
+      border-radius: 50%;
+      background: var(--clv-color-text);
+      box-shadow: var(--clv-shadow-sm);
+      cursor: grab;
+
+      &:focus-visible {
+        @include focus-ring;
+      }
     }
   }
 }

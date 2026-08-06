@@ -9,6 +9,8 @@ import {
   EditableRoot,
   EditableSubmitTrigger,
 } from 'reka-ui'
+import { useClvComponent } from '../../headless'
+import type { EditablePartContext, EditableParts } from '../../parts'
 
 const model = defineModel<string | null>({ default: '' })
 const props = withDefaults(
@@ -27,6 +29,8 @@ const props = withDefaults(
     startWithEditMode?: boolean
     selectOnFocus?: boolean
     maxLength?: number
+    unstyled?: boolean
+    parts?: EditableParts
   }>(),
   {
     placeholder: 'Click to edit',
@@ -49,15 +53,25 @@ const controlId = computed(() => props.id ?? generatedId)
 const descriptionId = computed(() =>
   props.help || props.error ? `${controlId.value}-description` : undefined,
 )
+const { classes, part, slotContext } = useClvComponent<EditablePartContext>('editable', props)
 </script>
 
 <template>
-  <div class="clv-editable-field">
-    <label v-if="label" class="clv-editable-field__label" :for="controlId">{{ label }}</label>
+  <div
+    :class="classes('clv-editable-field')"
+    v-bind="part('root', { disabled, readonly, required, invalid: Boolean(error), value: model })"
+  >
+    <label
+      v-if="label"
+      :class="classes('clv-editable-field__label')"
+      :for="controlId"
+      v-bind="part('label', { disabled, readonly, invalid: Boolean(error), value: model })"
+      >{{ label }}</label
+    >
     <EditableRoot
       v-slot="state"
       v-model="model"
-      class="clv-editable"
+      :class="classes('clv-editable')"
       :id="controlId"
       :name="name"
       :required="required"
@@ -73,34 +87,87 @@ const descriptionId = computed(() =>
       :aria-describedby="descriptionId"
       @submit="emit('submit', $event)"
       @update:state="emit('stateChange', $event)"
+      v-bind="
+        part('control', { disabled, readonly, required, invalid: Boolean(error), value: model })
+      "
     >
-      <EditableArea class="clv-editable__area">
-        <EditablePreview class="clv-editable__preview">
-          <slot name="preview" v-bind="state">{{ model }}</slot>
+      <EditableArea
+        :class="classes('clv-editable__area')"
+        v-bind="
+          part('area', { ...state, disabled, readonly, invalid: Boolean(error), value: model })
+        "
+      >
+        <EditablePreview
+          :class="classes('clv-editable__preview')"
+          v-bind="part('preview', { ...state, disabled, readonly, value: model })"
+        >
+          <slot
+            name="preview"
+            v-bind="state"
+            :context="slotContext('preview', { ...state, disabled, readonly, value: model })"
+            >{{ model }}</slot
+          >
         </EditablePreview>
-        <EditableInput class="clv-editable__input" :aria-label="label">
-          <slot name="input" v-bind="state" />
+        <EditableInput
+          :class="classes('clv-editable__input')"
+          :aria-label="label"
+          v-bind="
+            part('input', {
+              ...state,
+              disabled,
+              readonly,
+              required,
+              invalid: Boolean(error),
+              value: model,
+            })
+          "
+        >
+          <slot
+            name="input"
+            v-bind="state"
+            :context="slotContext('input', { ...state, disabled, readonly, value: model })"
+          />
         </EditableInput>
       </EditableArea>
-      <div class="clv-editable__actions">
-        <slot name="actions" v-bind="state">
-          <EditableEditTrigger v-if="!state.isEditing && !readonly" class="clv-editable__button"
+      <div
+        :class="classes('clv-editable__actions')"
+        v-bind="part('actions', { ...state, disabled, readonly, value: model })"
+      >
+        <slot
+          name="actions"
+          v-bind="state"
+          :context="slotContext('actions', { ...state, disabled, readonly, value: model })"
+        >
+          <EditableEditTrigger
+            v-if="!state.isEditing && !readonly"
+            :class="classes('clv-editable__button')"
+            v-bind="part('edit', { ...state, disabled, readonly, value: model })"
             >Edit</EditableEditTrigger
           >
           <template v-else-if="state.isEditing">
             <EditableSubmitTrigger
-              class="clv-editable__button clv-editable__button--primary"
+              :class="classes('clv-editable__button clv-editable__button--primary')"
               aria-label="Save changes"
+              v-bind="part('submit', { ...state, disabled, readonly, value: model })"
               >Save</EditableSubmitTrigger
             >
-            <EditableCancelTrigger class="clv-editable__button" aria-label="Cancel changes">
+            <EditableCancelTrigger
+              :class="classes('clv-editable__button')"
+              aria-label="Cancel changes"
+              v-bind="part('cancel', { ...state, disabled, readonly, value: model })"
+            >
               Cancel
             </EditableCancelTrigger>
           </template>
         </slot>
       </div>
     </EditableRoot>
-    <span v-if="help || error" :id="descriptionId" :class="{ 'clv-editable-field__error': error }">
+    <span
+      v-if="help || error"
+      :id="descriptionId"
+      :class="classes({ 'clv-editable-field__error': error })"
+      v-bind="part('description', { disabled, readonly, invalid: Boolean(error), value: model })"
+    >
       {{ error ?? help }}
     </span>
   </div>
@@ -109,58 +176,60 @@ const descriptionId = computed(() =>
 <style scoped lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-editable-field {
-  @include field-stack;
-  &__label {
-    @include field-label;
+@layer clv.components {
+  .clv-editable-field {
+    @include field-stack;
+    &__label {
+      @include field-label;
+    }
+    &__error {
+      color: var(--clv-color-danger);
+    }
   }
-  &__error {
-    color: var(--clv-color-danger);
-  }
-}
-.clv-editable {
-  display: flex;
-  align-items: center;
-  gap: var(--clv-space-2);
-  &__area {
-    @include field;
-    display: grid;
-    flex: 1;
-    padding: 0.65rem 0.8rem;
-  }
-  &__preview,
-  &__input {
-    grid-area: 1 / 1;
-    color: var(--clv-color-text);
-    font: inherit;
-  }
-  &__input {
-    width: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-  }
-  &__area:focus-within {
-    @include focus-ring;
-  }
-  &__actions {
+  .clv-editable {
     display: flex;
-    gap: var(--clv-space-1);
-  }
-  &__button {
-    padding: 0.55rem 0.7rem;
-    border: 1px solid var(--clv-color-border);
-    border-radius: var(--clv-radius-sm);
-    background: var(--clv-color-surface);
-    color: var(--clv-color-text);
-    cursor: pointer;
-  }
-  &__button:focus-visible {
-    @include focus-ring;
-  }
-  &__button--primary {
-    border-color: var(--clv-color-primary);
-    color: var(--clv-color-primary);
+    align-items: center;
+    gap: var(--clv-space-2);
+    &__area {
+      @include field;
+      display: grid;
+      flex: 1;
+      padding: 0.65rem 0.8rem;
+    }
+    &__preview,
+    &__input {
+      grid-area: 1 / 1;
+      color: var(--clv-color-text);
+      font: inherit;
+    }
+    &__input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+    }
+    &__area:focus-within {
+      @include focus-ring;
+    }
+    &__actions {
+      display: flex;
+      gap: var(--clv-space-1);
+    }
+    &__button {
+      padding: 0.55rem 0.7rem;
+      border: 1px solid var(--clv-color-border);
+      border-radius: var(--clv-radius-sm);
+      background: var(--clv-color-surface);
+      color: var(--clv-color-text);
+      cursor: pointer;
+    }
+    &__button:focus-visible {
+      @include focus-ring;
+    }
+    &__button--primary {
+      border-color: var(--clv-color-primary);
+      color: var(--clv-color-primary);
+    }
   }
 }
 </style>

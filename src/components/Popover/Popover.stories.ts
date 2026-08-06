@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, waitFor, within } from 'storybook/test'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 
 import Button from '../Button/Button.vue'
 import Popover from './Popover.vue'
 
+const rootPart = fn(() => ({}))
+
 const meta = {
   title: 'Components/Popover',
   component: Popover,
+  args: { parts: { root: rootPart } },
   render: (args) => ({
     components: { Button, Popover },
     setup: () => ({ args }),
@@ -28,8 +31,10 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const page = within(canvasElement.ownerDocument.body)
+    await expect(rootPart).toHaveBeenCalled()
     await userEvent.click(canvas.getByRole('button', { name: 'Open details' }))
-    await expect(await page.findByText('Deployment details')).toBeVisible()
+    const details = await page.findByText('Deployment details')
+    await waitFor(() => expect(details).toBeVisible())
     await userEvent.click(page.getByRole('button', { name: 'Done' }))
     await waitFor(() => expect(page.queryByText('Deployment details')).not.toBeInTheDocument())
   },

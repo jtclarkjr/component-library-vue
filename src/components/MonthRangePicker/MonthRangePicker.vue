@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ClvDateRange, DateMatcher, DateValue } from '../../types'
+import { useClvComponent } from '../../headless'
+import type { MonthRangePickerPartContext, MonthRangePickerParts } from '../../parts'
 import PeriodPickerBase from '../_shared/PeriodPickerBase.vue'
 
 const model = defineModel<ClvDateRange>()
@@ -17,6 +19,8 @@ const props = withDefaults(
     allowNonContiguousRanges?: boolean
     maximumMonths?: number
     fixedDate?: 'start' | 'end'
+    unstyled?: boolean
+    parts?: MonthRangePickerParts
   }>(),
   {
     label: 'Month range picker',
@@ -26,6 +30,10 @@ const props = withDefaults(
     preventDeselect: false,
     allowNonContiguousRanges: false,
   },
+)
+const { unstyled: resolvedUnstyled } = useClvComponent<MonthRangePickerPartContext>(
+  'month-range-picker',
+  props,
 )
 </script>
 
@@ -37,6 +45,7 @@ const props = withDefaults(
     :is-period-disabled="isMonthDisabled"
     :is-period-unavailable="isMonthUnavailable"
     :maximum-periods="maximumMonths"
+    :unstyled="resolvedUnstyled"
   >
     <template #heading="slotProps">
       <slot name="heading" v-bind="slotProps">{{ slotProps.headingValue }}</slot>
@@ -47,7 +56,7 @@ const props = withDefaults(
       </slot>
     </template>
     <template #cell="slotProps">
-      <slot name="cell" v-bind="slotProps">{{ slotProps.monthValue }}</slot>
+      <slot name="cell" v-bind="slotProps">{{ slotProps.value }}</slot>
     </template>
   </PeriodPickerBase>
 </template>

@@ -1,8 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { CalendarDate } from '@internationalized/date'
+import type { DateValue } from '@internationalized/date'
+import { expect, userEvent, within } from 'storybook/test'
 import { ref } from 'vue'
 
+import type { DateRangePickerParts } from '../../parts'
 import DateRangePicker from './DateRangePicker.vue'
+
+const stateParts = {
+  day: ({ today, outside, unavailable, rangeStart, rangeEnd, selected }) => ({
+    'data-context-today': String(Boolean(today)),
+    'data-context-outside': String(Boolean(outside)),
+    'data-context-unavailable': String(Boolean(unavailable)),
+    'data-context-range-start': String(Boolean(rangeStart)),
+    'data-context-range-end': String(Boolean(rangeEnd)),
+    'data-context-selected': String(Boolean(selected)),
+  }),
+} satisfies DateRangePickerParts
 
 const meta = {
   title: 'Components/DateRangePicker',
@@ -29,3 +43,34 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const Localized: Story = { args: { locale: 'de-DE', weekStartsOn: 1 } }
+export const PartResolverState: Story = {
+  args: {
+    isDateUnavailable: (date: DateValue) => date.day === 13,
+    parts: stateParts,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const page = within(canvasElement.ownerDocument.body)
+    await userEvent.click(canvas.getByRole('button', { name: 'Open calendar' }))
+    const dialog = await page.findByRole('dialog', { name: 'Open calendar' })
+    const days = [...dialog.querySelectorAll<HTMLElement>('[data-part="day"]')]
+    await expect(days.length).toBeGreaterThan(0)
+    for (const day of days) {
+      await expect(day.dataset.contextToday).toBe(String(day.hasAttribute('data-today')))
+      await expect(day.dataset.contextOutside).toBe(String(day.hasAttribute('data-outside-view')))
+      await expect(day.dataset.contextUnavailable).toBe(
+        String(day.hasAttribute('data-unavailable')),
+      )
+      await expect(day.dataset.contextRangeStart).toBe(
+        String(day.hasAttribute('data-highlighted-start')),
+      )
+      await expect(day.dataset.contextRangeEnd).toBe(
+        String(day.hasAttribute('data-highlighted-end')),
+      )
+      if (!day.hasAttribute('data-unavailable')) {
+        await expect(day.dataset.contextSelected).toBe(String(day.hasAttribute('data-selected')))
+      }
+    }
+    await userEvent.keyboard('{Escape}')
+  },
+}

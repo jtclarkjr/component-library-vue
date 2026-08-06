@@ -8,7 +8,12 @@ const meta = {
   title: 'Components/Rating',
   component: Rating,
   tags: ['autodocs'],
-  args: { label: 'Experience', help: 'Rate from one to five stars.', clearable: true },
+  args: {
+    label: 'Experience',
+    help: 'Rate from one to five stars.',
+    clearable: true,
+    parts: { description: { 'data-testid': 'rating-description' } },
+  },
   render: (args) => ({
     components: { Rating },
     setup() {
@@ -25,6 +30,10 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    await expect(canvas.getByTestId('rating-description')).toHaveAttribute(
+      'data-part',
+      'description',
+    )
     await userEvent.click(canvas.getByRole('radio', { name: '4 stars' }))
     await expect(canvas.getByText('4 / 5')).toBeVisible()
   },

@@ -12,6 +12,8 @@ import {
   AutocompleteVirtualizer,
 } from 'reka-ui'
 
+import { useClvComponent } from '../../headless'
+import type { AutocompletePartContext, AutocompleteParts } from '../../parts'
 import type { AutocompleteSuggestion } from '../../types'
 
 const model = defineModel<string>({ default: '' })
@@ -36,6 +38,8 @@ const props = withDefaults(
     estimateSize?: number
     overscan?: number
     filter?: (suggestion: AutocompleteSuggestion, term: string) => boolean
+    unstyled?: boolean
+    parts?: AutocompleteParts
   }>(),
   {
     placeholder: 'Start typing…',
@@ -71,6 +75,10 @@ const filteredSuggestions = computed(() => {
       .some((candidate) => candidate!.toLocaleLowerCase().includes(term))
   })
 })
+const { classes, part, slotContext } = useClvComponent<AutocompletePartContext>(
+  'autocomplete',
+  props,
+)
 
 function clear() {
   model.value = ''
@@ -91,8 +99,19 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
 </script>
 
 <template>
-  <div class="clv-autocomplete-field">
-    <label v-if="label" :id="labelId" class="clv-autocomplete-field__label" :for="inputId">
+  <div
+    :class="classes('clv-autocomplete-field')"
+    v-bind="
+      part('root', { open, disabled, readonly, required, invalid: Boolean(error), value: model })
+    "
+  >
+    <label
+      v-if="label"
+      :id="labelId"
+      :class="classes('clv-autocomplete-field__label')"
+      :for="inputId"
+      v-bind="part('label', { open, disabled, readonly, invalid: Boolean(error) })"
+    >
       {{ label }}
     </label>
     <AutocompleteRoot
@@ -105,37 +124,85 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
       :open-on-click="openOnClick"
       :ignore-filter="true"
     >
-      <AutocompleteAnchor class="clv-autocomplete">
+      <AutocompleteAnchor
+        :class="classes('clv-autocomplete')"
+        v-bind="
+          part('control', {
+            open,
+            disabled,
+            readonly,
+            required,
+            invalid: Boolean(error),
+            value: model,
+          })
+        "
+      >
         <AutocompleteInput
           ref="inputRef"
           :id="inputId"
-          class="clv-autocomplete__input"
+          :class="classes('clv-autocomplete__input')"
           :placeholder="placeholder"
           :aria-labelledby="label ? labelId : undefined"
           :aria-describedby="descriptionId"
           :aria-invalid="error ? 'true' : undefined"
           :readonly="readonly"
+          v-bind="
+            part('input', {
+              open,
+              disabled,
+              readonly,
+              required,
+              invalid: Boolean(error),
+              value: model,
+            })
+          "
         />
         <button
           v-if="clearable && model"
-          class="clv-autocomplete__clear"
+          :class="classes('clv-autocomplete__clear')"
           type="button"
           aria-label="Clear value"
           :disabled="disabled || readonly"
           @click="clear"
+          v-bind="part('clear', { open, disabled, readonly, value: model })"
         >
-          ×
+          <slot
+            name="clear-icon"
+            :open="open"
+            :disabled="disabled"
+            :readonly="readonly"
+            :value="model"
+            :context="slotContext('clear', { open, disabled, readonly, value: model })"
+            >×</slot
+          >
         </button>
       </AutocompleteAnchor>
       <AutocompletePortal>
-        <AutocompleteContent class="clv-autocomplete-content" position="popper" :side-offset="6">
+        <AutocompleteContent
+          :class="classes('clv-autocomplete-content')"
+          position="popper"
+          :side-offset="6"
+          v-bind="
+            part(
+              'content',
+              { open, disabled, readonly, invalid: Boolean(error), value: model },
+              {},
+              { surface: true },
+            )
+          "
+        >
           <AutocompleteEmpty
             v-if="filteredSuggestions.length === 0"
-            class="clv-autocomplete-content__empty"
+            :class="classes('clv-autocomplete-content__empty')"
+            v-bind="part('empty', { open, value: model })"
           >
             {{ emptyText }}
           </AutocompleteEmpty>
-          <AutocompleteViewport v-else class="clv-autocomplete-content__viewport">
+          <AutocompleteViewport
+            v-else
+            :class="classes('clv-autocomplete-content__viewport')"
+            v-bind="part('viewport', { open, value: model })"
+          >
             <AutocompleteVirtualizer
               v-if="virtualize"
               :options="filteredSuggestions"
@@ -145,12 +212,35 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
             >
               <template #default="{ option: suggestion }">
                 <AutocompleteItem
-                  class="clv-autocomplete-content__item"
+                  :class="classes('clv-autocomplete-content__item')"
                   :value="suggestion.label"
                   :disabled="suggestion.disabled"
                   @select="selectSuggestion(suggestion)"
+                  v-bind="
+                    part('item', {
+                      suggestion,
+                      index: filteredSuggestions.indexOf(suggestion),
+                      disabled: suggestion.disabled,
+                      virtualized: true,
+                      open,
+                      value: model,
+                    })
+                  "
                 >
-                  <slot name="option" :suggestion="suggestion">
+                  <slot
+                    name="option"
+                    :suggestion="suggestion"
+                    :context="
+                      slotContext('item', {
+                        suggestion,
+                        index: filteredSuggestions.indexOf(suggestion),
+                        disabled: suggestion.disabled,
+                        virtualized: true,
+                        open,
+                        value: model,
+                      })
+                    "
+                  >
                     <span>{{ suggestion.label }}</span>
                     <small v-if="suggestion.description">{{ suggestion.description }}</small>
                   </slot>
@@ -158,14 +248,37 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
               </template>
             </AutocompleteVirtualizer>
             <AutocompleteItem
-              v-for="suggestion in virtualize ? [] : filteredSuggestions"
+              v-for="(suggestion, index) in virtualize ? [] : filteredSuggestions"
               :key="suggestion.value"
-              class="clv-autocomplete-content__item"
+              :class="classes('clv-autocomplete-content__item')"
               :value="suggestion.label"
               :disabled="suggestion.disabled"
               @select="selectSuggestion(suggestion)"
+              v-bind="
+                part('item', {
+                  suggestion,
+                  index,
+                  disabled: suggestion.disabled,
+                  virtualized: false,
+                  open,
+                  value: model,
+                })
+              "
             >
-              <slot name="option" :suggestion="suggestion">
+              <slot
+                name="option"
+                :suggestion="suggestion"
+                :context="
+                  slotContext('item', {
+                    suggestion,
+                    index,
+                    disabled: suggestion.disabled,
+                    virtualized: false,
+                    open,
+                    value: model,
+                  })
+                "
+              >
                 <span>{{ suggestion.label }}</span>
                 <small v-if="suggestion.description">{{ suggestion.description }}</small>
               </slot>
@@ -177,79 +290,84 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
     <span
       v-if="help || error"
       :id="descriptionId"
-      :class="{ 'clv-autocomplete-field__error': error }"
+      :class="classes({ 'clv-autocomplete-field__error': error })"
+      v-bind="
+        part('description', { open, disabled, readonly, invalid: Boolean(error), value: model })
+      "
     >
       {{ error ?? help }}
     </span>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @use '../../styles/mixins' as *;
 
-.clv-autocomplete-field {
-  @include field-stack;
+@layer clv.components {
+  .clv-autocomplete-field {
+    @include field-stack;
 
-  &__label {
-    @include field-label;
-  }
-  &__error {
-    color: var(--clv-color-danger);
-  }
-}
-
-.clv-autocomplete {
-  @include field;
-  display: flex;
-  align-items: center;
-
-  &:focus-within {
-    @include focus-ring;
+    &__label {
+      @include field-label;
+    }
+    &__error {
+      color: var(--clv-color-danger);
+    }
   }
 
-  &__input {
-    width: 100%;
-    min-width: 0;
-    padding: 0.65rem 0.8rem;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-  }
+  .clv-autocomplete {
+    @include field;
+    display: flex;
+    align-items: center;
 
-  &__clear {
-    margin-right: var(--clv-space-2);
-    border: 0;
-    background: transparent;
-    color: var(--clv-color-text-muted);
-    cursor: pointer;
-    font-size: 1.25rem;
-  }
-}
+    &:focus-within {
+      @include focus-ring;
+    }
 
-.clv-autocomplete-content {
-  @include floating-surface;
-  z-index: 1100;
-  width: var(--reka-combobox-trigger-width);
-  max-height: min(20rem, var(--reka-combobox-content-available-height));
-  overflow: hidden;
-  font-family: var(--clv-font-sans);
+    &__input {
+      width: 100%;
+      min-width: 0;
+      padding: 0.65rem 0.8rem;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+    }
 
-  &__viewport {
-    max-height: 20rem;
-    padding: var(--clv-space-1);
-    overflow: auto;
-  }
-  &__empty {
-    padding: var(--clv-space-4);
-    color: var(--clv-color-text-muted);
-  }
-  &__item {
-    @include menu-item;
-    display: grid;
-    small {
+    &__clear {
+      margin-right: var(--clv-space-2);
+      border: 0;
+      background: transparent;
       color: var(--clv-color-text-muted);
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
+  }
+
+  .clv-autocomplete-content {
+    @include floating-surface;
+    z-index: 1100;
+    width: var(--reka-combobox-trigger-width);
+    max-height: min(20rem, var(--reka-combobox-content-available-height));
+    overflow: hidden;
+    font-family: var(--clv-font-sans);
+
+    &__viewport {
+      max-height: 20rem;
+      padding: var(--clv-space-1);
+      overflow: auto;
+    }
+    &__empty {
+      padding: var(--clv-space-4);
+      color: var(--clv-color-text-muted);
+    }
+    &__item {
+      @include menu-item;
+      display: grid;
+      small {
+        color: var(--clv-color-text-muted);
+      }
     }
   }
 }

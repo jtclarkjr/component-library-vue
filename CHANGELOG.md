@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-08-06
+
+### Added
+
+- Typed `parts` resolver contracts, stable component/part data attributes, and additive unstyled
+  presentation control across the public component suite.
+- `ClvProvider` for SSR-safe inherited themes and presentation state, plus the built-in `aqua`
+  theme and direct `data-clv-theme` activation.
+- Native Button `surface` and `icon` recipes, Input clear and adornment APIs, generic Select option
+  values, and the `xl` Spinner size.
+
+### Changed
+
+- Moved portal presentation rules into the global package stylesheet so teleported surfaces retain
+  their component styles and provider theme state.
+- Replaced fixed component colors with public theme tokens while preserving the default theme,
+  existing props, slots, events, DOM structure, and legacy `clv-*` classes.
+
 ## [0.2.1] - 2026-07-23
 
 ### Changed
