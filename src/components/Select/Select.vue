@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends ClvValue = ClvValue">
-import { computed, ref, toRef, useAttrs, useId } from 'vue'
+import { computed, ref, toRef, useAttrs, useId, useSlots } from 'vue'
 import {
   SelectContent,
   SelectIcon,
@@ -44,6 +44,7 @@ const props = withDefaults(
 )
 
 const attrs = useAttrs()
+const slots = useSlots()
 const clv = useClvComponent<SelectPartContext<T>>('select', {
   attrs,
   parts: toRef(props, 'parts'),
@@ -141,7 +142,10 @@ const descriptionAttrs = computed(() =>
             clv.part(
               'icon',
               context,
-              { class: 'clv-select__icon', 'aria-hidden': 'true' },
+              {
+                class: ['clv-select__icon', !slots['trigger-icon'] && 'clv-select__icon--default'],
+                'aria-hidden': 'true',
+              },
               { protected: ['aria-hidden'] },
             )
           "
@@ -306,6 +310,16 @@ const descriptionAttrs = computed(() =>
     &__icon {
       flex: 0 0 auto;
       color: var(--clv-color-text-muted);
+    }
+
+    &__icon--default:not([data-clv-unstyled]) {
+      width: var(--clv-select-icon-size, auto);
+      height: var(--clv-select-icon-size, auto);
+      border-right: var(--clv-select-icon-stroke-width, 0) solid currentcolor;
+      border-bottom: var(--clv-select-icon-stroke-width, 0) solid currentcolor;
+      font-size: var(--clv-select-icon-font-size, inherit);
+      line-height: var(--clv-select-icon-line-height, normal);
+      transform: var(--clv-select-icon-transform, none);
     }
   }
 }

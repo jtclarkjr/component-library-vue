@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2026-08-06
+
+### Fixed
+
+- Restored Aqua Select's centered stroke chevron after direct consumers no longer inherited the
+  former AniChart wrapper recipe, while preserving the default theme, custom icon slot, and
+  unstyled presentation.
+
 ## [0.3.0] - 2026-08-06
 
 ### Added
