@@ -1,6 +1,6 @@
 {
   "name": "@jtclarkjr/component-library-vue",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Accessible Vue 3 components built with Reka UI, SCSS design tokens, and Vite+.",
   "homepage": "https://github.com/jtclarkjr/component-library-vue#readme",
   "bugs": {
@@ -59,7 +59,7 @@
     "storybook": "^10.5.6",
     "typescript": "~6.0.3",
     "unplugin-vue": "^7.2.0",
-    "vite": "npm:@voidzero-dev/vite-plus-core@0.2.5",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.2.7",
     "vite-plus": "^0.2.7",
     "vue": "^3.5.40",
     "vue-tsc": "^3.3.9"
@@ -68,7 +68,7 @@
     "vue": "^3.5.0"
   },
   "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@0.2.5"
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.2.7"
   },
   "devEngines": {
     "packageManager": {

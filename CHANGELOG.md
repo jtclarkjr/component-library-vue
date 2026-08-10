@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-11
+
 ### Added
 
 - A built-in grayscale `neutral` theme with dark and light palettes, Aqua-derived component
@@ -19,6 +21,8 @@ All notable changes to this project will be documented in this file.
   preserving the generated public stylesheet and complete nested-theme resets.
 - Split the headless implementation into focused attribute-policy, composable, constant, context,
   helper, and type modules while preserving the existing barrel exports and component behavior.
+- Aligned the Vite compatibility alias and override with Vite+ 0.2.7 so configuration and plugin
+  types resolve against the same Vite core.
 
 ## [0.3.2] - 2026-08-10
 
