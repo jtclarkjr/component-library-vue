@@ -7,7 +7,12 @@ const preview: Preview = {
   decorators: [
     (story, context) => {
       if (typeof document !== 'undefined') {
-        document.documentElement.dataset.clvTheme = String(context.globals.theme ?? 'default')
+        const root = document.documentElement
+        const mode = String(context.globals.mode ?? 'default')
+        root.dataset.clvTheme = String(context.globals.theme ?? 'default')
+
+        if (mode === 'default') delete root.dataset.clvThemeMode
+        else root.dataset.clvThemeMode = mode
       }
 
       return story()
@@ -18,11 +23,23 @@ const preview: Preview = {
       description: 'Component library theme',
       toolbar: {
         icon: 'paintbrush',
-        items: ['default', 'aqua'],
+        items: ['default', 'aqua', 'neutral'],
+      },
+    },
+    mode: {
+      description: 'Optional component library theme mode',
+      toolbar: {
+        icon: 'mirror',
+        items: [
+          { value: 'default', title: 'Default' },
+          { value: 'dark', title: 'Dark' },
+          { value: 'light', title: 'Light' },
+        ],
       },
     },
   },
   initialGlobals: {
+    mode: 'default',
     theme: 'default',
   },
   parameters: {

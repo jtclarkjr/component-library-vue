@@ -34,7 +34,7 @@ export type {
 } from './types'
 
 export * from './parts'
-export { CLV_THEME_KEYS } from './headless'
+export { CLV_THEME_KEYS, CLV_THEME_MODES } from './headless'
 
 export { default as Accordion } from './components/Accordion/Accordion.vue'
 export { default as AlertDialog } from './components/AlertDialog/AlertDialog.vue'

@@ -3,7 +3,7 @@ import { CalendarDate } from '@internationalized/date'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { ref } from 'vue'
 
-import type { ButtonParts, InputParts } from '../../parts'
+import type { ButtonParts, ClvThemeModeInput, InputParts } from '../../parts'
 import type { MenubarMenu, NavigationMenuItem } from '../../types'
 import Button from '../Button/Button.vue'
 import Calendar from '../Calendar/Calendar.vue'
@@ -30,6 +30,9 @@ export const ThemeAndPartsContract: Story = {
     components: { Button, ClvProvider, Input },
     setup() {
       const theme = ref<'default' | 'aqua'>('default')
+      const neutralMode = ref<ClvThemeModeInput>('Light')
+      const invalidMode = ref<ClvThemeModeInput>()
+      Reflect.set(invalidMode, 'value', 'SYSTEM')
       const providerUnstyled = ref(false)
       const value = ref('Search')
       const toggleTheme = () => {
@@ -38,8 +41,12 @@ export const ThemeAndPartsContract: Story = {
       const toggleProviderStyles = () => {
         providerUnstyled.value = !providerUnstyled.value
       }
+      const toggleNeutralMode = () => {
+        neutralMode.value = neutralMode.value === 'Light' ? 'DARK' : 'lIgHt'
+      }
       const buttonParts: ButtonParts = {
-        root: ({ theme: currentTheme, unstyled }) => ({
+        root: ({ mode: currentMode, theme: currentTheme, unstyled }) => ({
+          'data-resolved-mode': currentMode,
           'data-resolved-theme': currentTheme,
           'data-resolved-unstyled': String(unstyled),
         }),
@@ -50,9 +57,12 @@ export const ThemeAndPartsContract: Story = {
       }
       return {
         buttonParts,
+        invalidMode,
         inputParts,
+        neutralMode,
         providerUnstyled,
         theme,
+        toggleNeutralMode,
         toggleProviderStyles,
         toggleTheme,
         value,
@@ -95,6 +105,51 @@ export const ThemeAndPartsContract: Story = {
           </template>
         </Input>
       </ClvProvider>
+      <ClvProvider data-testid="neutral-default-provider" theme="neutral">
+        <Button :parts="buttonParts">
+          <template #default="{ context }">
+            <span
+              data-testid="neutral-dark-slot-context"
+              :data-slot-mode="context.mode"
+            >Neutral dark button</span>
+          </template>
+        </Button>
+      </ClvProvider>
+      <ClvProvider
+        data-testid="neutral-explicit-provider"
+        theme="neutral"
+        :mode="neutralMode"
+      >
+        <ClvProvider data-testid="neutral-inherited-provider">
+          <button type="button" @click="toggleNeutralMode">Toggle neutral mode</button>
+          <Button :parts="buttonParts">
+            <template #default="{ context }">
+              <span
+                data-testid="neutral-light-slot-context"
+                :data-slot-mode="context.mode"
+              >Neutral inherited button</span>
+            </template>
+          </Button>
+        </ClvProvider>
+        <ClvProvider
+          data-testid="neutral-invalid-inherited-provider"
+          :mode="invalidMode"
+        >
+          <Button>Neutral invalid inherited mode button</Button>
+        </ClvProvider>
+      </ClvProvider>
+      <ClvProvider data-testid="neutral-invalid-provider" theme="neutral" :mode="invalidMode">
+        <Button>Neutral invalid mode button</Button>
+      </ClvProvider>
+      <ClvProvider data-testid="custom-mode-provider" theme="brand" mode="LiGhT">
+        <Button>Custom mixed-case mode button</Button>
+      </ClvProvider>
+      <div
+        data-testid="neutral-uppercase-raw"
+        data-clv-theme="neutral"
+        data-clv-theme-mode="LIGHT"
+        style="background: var(--clv-color-bg); color: var(--clv-color-text)"
+      >Raw uppercase light mode</div>
     `,
   }),
   play: async ({ canvasElement }) => {
@@ -103,8 +158,23 @@ export const ThemeAndPartsContract: Story = {
     const inherited = canvas.getByRole('button', { name: 'Inherited button' })
     const explicitlyStyled = canvas.getByRole('button', { name: 'Explicitly styled button' })
     const explicitlyHeadless = canvas.getByRole('button', { name: 'Explicitly headless button' })
+    const neutralDefaultProvider = canvas.getByTestId('neutral-default-provider')
+    const neutralDarkButton = canvas.getByRole('button', { name: 'Neutral dark button' })
+    const neutralExplicitProvider = canvas.getByTestId('neutral-explicit-provider')
+    const neutralInheritedProvider = canvas.getByTestId('neutral-inherited-provider')
+    const neutralInheritedButton = canvas.getByRole('button', { name: 'Neutral inherited button' })
+    const neutralInvalidInheritedProvider = canvas.getByTestId('neutral-invalid-inherited-provider')
+    const neutralInvalidInheritedButton = canvas.getByRole('button', {
+      name: 'Neutral invalid inherited mode button',
+    })
+    const neutralInvalidProvider = canvas.getByTestId('neutral-invalid-provider')
+    const neutralInvalidButton = canvas.getByRole('button', { name: 'Neutral invalid mode button' })
+    const customModeProvider = canvas.getByTestId('custom-mode-provider')
+    const customModeButton = canvas.getByRole('button', { name: 'Custom mixed-case mode button' })
+    const neutralUppercaseRaw = canvas.getByTestId('neutral-uppercase-raw')
 
     await expect(provider).toHaveAttribute('data-clv-theme', 'default')
+    await expect(provider).not.toHaveAttribute('data-clv-theme-mode')
     await expect(inherited).toHaveAttribute('data-clv-component', 'button')
     await expect(inherited).toHaveAttribute('data-part', 'root')
     await expect(inherited).toHaveAttribute('data-resolved-theme', 'default')
@@ -130,10 +200,61 @@ export const ThemeAndPartsContract: Story = {
     await expect(canvas.getByTestId('input-control').tagName).toBe('SPAN')
     await expect(canvas.getByTestId('native-input').tagName).toBe('INPUT')
     await expect(canvas.getByTestId('native-input')).toHaveAttribute('autocomplete', 'off')
+    await expect(neutralDefaultProvider).toHaveAttribute('data-clv-theme', 'neutral')
+    await expect(neutralDefaultProvider).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(neutralDarkButton).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(neutralDarkButton).toHaveAttribute('data-resolved-mode', 'dark')
+    await expect(canvas.getByTestId('neutral-dark-slot-context')).toHaveAttribute(
+      'data-slot-mode',
+      'dark',
+    )
+    await expect(neutralExplicitProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInheritedProvider).toHaveAttribute('data-clv-theme', 'neutral')
+    await expect(neutralInheritedProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInheritedButton).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInheritedButton).toHaveAttribute('data-resolved-mode', 'light')
+    await expect(neutralInvalidInheritedProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInvalidInheritedButton).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(canvas.getByTestId('neutral-light-slot-context')).toHaveAttribute(
+      'data-slot-mode',
+      'light',
+    )
+    await expect(neutralInvalidProvider).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(neutralInvalidButton).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(customModeProvider).toHaveAttribute('data-clv-theme', 'brand')
+    await expect(customModeProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(customModeButton).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(getComputedStyle(neutralUppercaseRaw).colorScheme).toBe('light')
+    await expect(getComputedStyle(neutralUppercaseRaw).backgroundColor).toBe('rgb(245, 245, 245)')
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Toggle neutral mode' }))
+    await expect(neutralExplicitProvider).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(neutralInheritedProvider).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(neutralInheritedButton).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(neutralInheritedButton).toHaveAttribute('data-resolved-mode', 'dark')
+    await expect(neutralInvalidInheritedProvider).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(neutralInvalidInheritedButton).toHaveAttribute('data-clv-theme-mode', 'dark')
+    await expect(canvas.getByTestId('neutral-light-slot-context')).toHaveAttribute(
+      'data-slot-mode',
+      'dark',
+    )
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Toggle neutral mode' }))
+    await expect(neutralExplicitProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInheritedProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInheritedButton).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInheritedButton).toHaveAttribute('data-resolved-mode', 'light')
+    await expect(neutralInvalidInheritedProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(neutralInvalidInheritedButton).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(canvas.getByTestId('neutral-light-slot-context')).toHaveAttribute(
+      'data-slot-mode',
+      'light',
+    )
 
     await userEvent.click(canvas.getByRole('button', { name: 'Toggle theme' }))
     await expect(canvas.getByTestId('provider')).toBe(provider)
     await expect(provider).toHaveAttribute('data-clv-theme', 'aqua')
+    await expect(provider).not.toHaveAttribute('data-clv-theme-mode')
     await expect(inherited).toHaveAttribute('data-resolved-theme', 'aqua')
     await expect(canvas.getByTestId('button-slot-context')).toHaveAttribute(
       'data-slot-theme',

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- A built-in grayscale `neutral` theme with dark and light palettes, Aqua-derived component
+  recipes, and mode-aware Storybook visual references.
+- Optional inherited `ClvProvider` theme modes, public mode types and constants, and propagated
+  `data-clv-theme-mode` attributes for physical and teleported component surfaces.
+
+### Changed
+
+- Made provider mode inputs and Neutral's direct mode selector case-insensitive while keeping all
+  resolved contexts and emitted `data-clv-theme-mode` values canonical and reactively synchronized.
+- Split the built-in theme tokens into dedicated Default, Aqua, and Neutral partials while
+  preserving the generated public stylesheet and complete nested-theme resets.
+
 ## [0.3.2] - 2026-08-10
 
 ### Added

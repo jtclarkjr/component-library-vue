@@ -16,14 +16,17 @@ import type {
   ClvPartContext,
   ClvParts,
   ClvThemeKey,
+  ClvThemeMode,
 } from '../parts'
 
 type ClvData = Record<string, unknown>
 
-export const CLV_THEME_KEYS = ['default', 'aqua'] as const
+export const CLV_THEME_KEYS = ['default', 'aqua', 'neutral'] as const
+export const CLV_THEME_MODES = ['dark', 'light'] as const
 
 export interface ClvContext {
   theme: ComputedRef<ClvThemeKey | undefined>
+  mode: ComputedRef<ClvThemeMode | undefined>
   unstyled: ComputedRef<boolean>
 }
 
@@ -207,6 +210,7 @@ export function useClvComponent<C extends ClvPartContext & ClvCommonPartState>(
     return (explicitlySet ? local : undefined) ?? provider?.unstyled.value ?? false
   })
   const theme = computed<ClvThemeKey | undefined>(() => provider?.theme.value)
+  const mode = computed<ClvThemeMode | undefined>(() => provider?.mode.value)
 
   function slotContext<K extends C['part']>(
     name: K,
@@ -218,6 +222,7 @@ export function useClvComponent<C extends ClvPartContext & ClvCommonPartState>(
       ...state,
       part: name,
       theme: theme.value,
+      mode: mode.value,
       unstyled: unstyled.value,
     } as Extract<C, { part: K }>)
   }
@@ -263,6 +268,7 @@ export function useClvComponent<C extends ClvPartContext & ClvCommonPartState>(
       builtInAttrs['data-clv-component'] = component
       builtInAttrs['data-clv-unstyled'] = unstyled.value ? '' : undefined
       if (theme.value !== undefined) builtInAttrs['data-clv-theme'] = theme.value
+      if (mode.value !== undefined) builtInAttrs['data-clv-theme-mode'] = mode.value
     }
 
     const consumerAttrs = sanitizeConsumerAttrs(configuredAttrs, builtInAttrs, componentPropNames)
@@ -281,5 +287,5 @@ export function useClvComponent<C extends ClvPartContext & ClvCommonPartState>(
     return unstyled.value ? undefined : value
   }
 
-  return { classes, part, slotContext, theme, unstyled }
+  return { classes, mode, part, slotContext, theme, unstyled }
 }

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { ref, type ConcreteComponent } from 'vue'
 
+import type { ClvThemeModeInput } from '../../parts'
 import type { ChoiceOption } from '../../types'
 import ClvProvider from '../ClvProvider/ClvProvider.vue'
 import Select from './Select.vue'
@@ -13,6 +14,30 @@ const options = [
   { value: 'london', label: 'London' },
   { value: 'new-york', label: 'New York' },
 ] satisfies ChoiceOption<Office>[]
+
+async function expectAquaSelectGeometry(canvasElement: HTMLElement, trigger: HTMLElement) {
+  const triggerIcon = canvasElement.querySelector<HTMLElement>('[data-part="icon"]')
+  if (!triggerIcon) throw new Error('Expected the Select trigger icon part')
+  const triggerIconStyle = canvasElement.ownerDocument.defaultView?.getComputedStyle(triggerIcon)
+  if (!triggerIconStyle) throw new Error('Expected computed Select trigger icon styles')
+  await expect(triggerIcon).toHaveClass('clv-select__icon--default')
+  await expect(Number.parseFloat(triggerIconStyle.width)).toBeCloseTo(7.2, 1)
+  await expect(Number.parseFloat(triggerIconStyle.height)).toBeCloseTo(7.2, 1)
+  await expect(triggerIconStyle.getPropertyValue('--clv-select-icon-stroke-width').trim()).toBe(
+    '1.5px',
+  )
+  await expect(triggerIconStyle.borderRightWidth).not.toBe('0px')
+  await expect(triggerIconStyle.borderBottomWidth).not.toBe('0px')
+  await expect(triggerIconStyle.fontSize).toBe('0px')
+  await expect(triggerIconStyle.lineHeight).toBe('0px')
+  await expect(triggerIconStyle.transform).not.toBe('none')
+  const triggerBounds = trigger.getBoundingClientRect()
+  const iconBounds = triggerIcon.getBoundingClientRect()
+  const verticalOffset = Math.abs(
+    triggerBounds.top + triggerBounds.height / 2 - (iconBounds.top + iconBounds.height / 2),
+  )
+  await expect(verticalOffset).toBeLessThanOrEqual(2)
+}
 
 const meta = {
   title: 'Components/Select',
@@ -61,33 +86,82 @@ export const AquaPortal: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const page = within(canvasElement.ownerDocument.body)
-    const triggerIcon = canvasElement.querySelector<HTMLElement>('[data-part="icon"]')
-    if (!triggerIcon) throw new Error('Expected the Select trigger icon part')
-    const triggerIconStyle = canvasElement.ownerDocument.defaultView?.getComputedStyle(triggerIcon)
-    if (!triggerIconStyle) throw new Error('Expected computed Select trigger icon styles')
     const trigger = canvas.getByRole('combobox', { name: 'Office' })
-    await expect(triggerIcon).toHaveClass('clv-select__icon--default')
-    await expect(Number.parseFloat(triggerIconStyle.width)).toBeCloseTo(7.2, 1)
-    await expect(Number.parseFloat(triggerIconStyle.height)).toBeCloseTo(7.2, 1)
-    await expect(triggerIconStyle.getPropertyValue('--clv-select-icon-stroke-width').trim()).toBe(
-      '1.5px',
-    )
-    await expect(triggerIconStyle.borderRightWidth).not.toBe('0px')
-    await expect(triggerIconStyle.borderBottomWidth).not.toBe('0px')
-    await expect(triggerIconStyle.fontSize).toBe('0px')
-    await expect(triggerIconStyle.lineHeight).toBe('0px')
-    await expect(triggerIconStyle.transform).not.toBe('none')
-    const triggerBounds = trigger.getBoundingClientRect()
-    const iconBounds = triggerIcon.getBoundingClientRect()
-    const verticalOffset = Math.abs(
-      triggerBounds.top + triggerBounds.height / 2 - (iconBounds.top + iconBounds.height / 2),
-    )
-    await expect(verticalOffset).toBeLessThanOrEqual(2)
+    await expectAquaSelectGeometry(canvasElement, trigger)
     await userEvent.click(trigger)
     const option = await page.findByRole('option', { name: 'London' })
     const content = option.closest('[data-clv-component="select"]')
     await expect(content).toHaveAttribute('data-part', 'content')
     await expect(content).toHaveAttribute('data-clv-theme', 'aqua')
+    await userEvent.click(option)
+  },
+}
+
+export const NeutralLightPortal: Story = {
+  render: (args) => ({
+    components: { ClvProvider, Select },
+    setup() {
+      const mode = ref<ClvThemeModeInput>('LIGHT')
+      const value = ref<Office>()
+      const toggleMode = () => {
+        mode.value = mode.value === 'LIGHT' ? 'dArK' : 'LiGhT'
+      }
+      return { args, mode, toggleMode, value }
+    },
+    template: `
+      <ClvProvider
+        data-testid="neutral-mode-provider"
+        theme="neutral"
+        :mode="mode"
+        style="width: 18rem; padding: 1rem; background: var(--clv-color-bg)"
+      >
+        <button hidden data-testid="neutral-mode-toggle" type="button" @click="toggleMode">
+          Toggle mode
+        </button>
+        <Select v-model="value" v-bind="args" />
+      </ClvProvider>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const page = within(canvasElement.ownerDocument.body)
+    const provider = canvas.getByTestId('neutral-mode-provider')
+    const modeToggle = canvas.getByTestId('neutral-mode-toggle')
+    const trigger = canvas.getByRole('combobox', { name: 'Office' })
+    const root = trigger.closest('[data-part="root"]')
+    if (!root) throw new Error('Expected the Select root part')
+    await expect(root).toHaveAttribute('data-clv-theme', 'neutral')
+    await expect(root).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expectAquaSelectGeometry(canvasElement, trigger)
+    await userEvent.click(trigger)
+    const option = await page.findByRole('option', { name: 'London' })
+    const content = option.closest('[data-clv-component="select"]')
+    await expect(content).toHaveAttribute('data-part', 'content')
+    await expect(content).toHaveAttribute('data-clv-theme', 'neutral')
+    await expect(content).toHaveAttribute('data-clv-theme-mode', 'light')
+    await expect(getComputedStyle(content!).getPropertyValue('--clv-color-bg').trim()).toBe(
+      '#f5f5f5',
+    )
+
+    modeToggle.click()
+    await waitFor(async () => {
+      await expect(provider).toHaveAttribute('data-clv-theme-mode', 'dark')
+      await expect(root).toHaveAttribute('data-clv-theme-mode', 'dark')
+      await expect(content).toHaveAttribute('data-clv-theme-mode', 'dark')
+      await expect(getComputedStyle(content!).getPropertyValue('--clv-color-bg').trim()).toBe(
+        '#151515',
+      )
+    })
+    await expect(
+      page.getByRole('option', { name: 'London' }).closest('[data-part="content"]'),
+    ).toBe(content)
+
+    modeToggle.click()
+    await waitFor(async () => {
+      await expect(provider).toHaveAttribute('data-clv-theme-mode', 'light')
+      await expect(root).toHaveAttribute('data-clv-theme-mode', 'light')
+      await expect(content).toHaveAttribute('data-clv-theme-mode', 'light')
+    })
     await userEvent.click(option)
   },
 }
@@ -98,17 +172,50 @@ export const ThemeBoundaries: Story = {
     setup() {
       const aquaValue = ref<Office>('tokyo')
       const defaultValue = ref<Office>('tokyo')
+      const nestedDefaultValue = ref<Office>('tokyo')
+      const neutralDarkValue = ref<Office>('tokyo')
+      const neutralLightValue = ref<Office>('tokyo')
       const unstyledValue = ref<Office>('tokyo')
-      return { aquaValue, defaultValue, options, unstyledValue }
+      return {
+        aquaValue,
+        defaultValue,
+        nestedDefaultValue,
+        neutralDarkValue,
+        neutralLightValue,
+        options,
+        unstyledValue,
+      }
     },
     template: `
-      <ClvProvider theme="aqua" style="display: grid; width: 18rem; gap: 1rem">
-        <Select id="aqua-icon-select" v-model="aquaValue" :options="options" label="Aqua office" />
-        <ClvProvider theme="default">
-          <Select id="default-icon-select" v-model="defaultValue" :options="options" label="Default office" />
+      <div style="display: grid; grid-template-columns: repeat(2, 18rem); gap: 1rem">
+        <ClvProvider
+          theme="aqua"
+          style="display: grid; gap: 1rem; padding: 1rem; background: var(--clv-color-bg)"
+        >
+          <Select id="aqua-icon-select" v-model="aquaValue" :options="options" label="Aqua office" />
+          <ClvProvider theme="default" style="padding: 1rem; background: var(--clv-color-bg)">
+            <Select id="default-icon-select" v-model="defaultValue" :options="options" label="Default office" />
+          </ClvProvider>
+          <Select id="unstyled-icon-select" v-model="unstyledValue" :options="options" aria-label="Unstyled office" unstyled />
         </ClvProvider>
-        <Select id="unstyled-icon-select" v-model="unstyledValue" :options="options" aria-label="Unstyled office" unstyled />
-      </ClvProvider>
+        <ClvProvider
+          theme="neutral"
+          mode="light"
+          style="display: grid; gap: 1rem; padding: 1rem; background: var(--clv-color-bg)"
+        >
+          <Select id="neutral-light-icon-select" v-model="neutralLightValue" :options="options" label="Neutral light office" />
+          <ClvProvider
+            theme="neutral"
+            mode="dark"
+            style="padding: 1rem; background: var(--clv-color-bg)"
+          >
+            <Select id="neutral-dark-icon-select" v-model="neutralDarkValue" :options="options" label="Neutral dark office" />
+          </ClvProvider>
+          <ClvProvider theme="default" style="padding: 1rem; background: var(--clv-color-bg)">
+            <Select id="nested-default-icon-select" v-model="nestedDefaultValue" :options="options" label="Nested default office" />
+          </ClvProvider>
+        </ClvProvider>
+      </div>
     `,
   }),
   play: async ({ canvasElement }) => {
@@ -121,15 +228,55 @@ export const ThemeBoundaries: Story = {
     if (!view) throw new Error('Expected a document view')
     const aquaIcon = getIcon('aqua-icon-select')
     const defaultIcon = getIcon('default-icon-select')
+    const neutralLightIcon = getIcon('neutral-light-icon-select')
+    const neutralDarkIcon = getIcon('neutral-dark-icon-select')
+    const nestedDefaultIcon = getIcon('nested-default-icon-select')
     const unstyledIcon = getIcon('unstyled-icon-select')
     const aquaStyle = view.getComputedStyle(aquaIcon)
     const defaultStyle = view.getComputedStyle(defaultIcon)
+    const neutralLightStyle = view.getComputedStyle(neutralLightIcon)
+    const neutralDarkStyle = view.getComputedStyle(neutralDarkIcon)
+    const nestedDefaultStyle = view.getComputedStyle(nestedDefaultIcon)
     const unstyledStyle = view.getComputedStyle(unstyledIcon)
     await expect(aquaStyle.fontSize).toBe('0px')
     await expect(aquaStyle.borderRightWidth).not.toBe('0px')
     await expect(defaultStyle.fontSize).not.toBe('0px')
     await expect(defaultStyle.borderRightWidth).toBe('0px')
     await expect(defaultStyle.transform).toBe('none')
+    await expect(neutralLightIcon.closest('[data-part="root"]')).toHaveAttribute(
+      'data-clv-theme-mode',
+      'light',
+    )
+    await expect(neutralLightStyle.getPropertyValue('--clv-color-bg').trim()).toBe('#f5f5f5')
+    await expect(neutralLightStyle.getPropertyValue('--clv-color-text').trim()).toBe('#171717')
+    await expect(neutralLightStyle.getPropertyValue('--clv-select-icon-stroke-width').trim()).toBe(
+      '1.5px',
+    )
+    await expect(neutralLightStyle.fontSize).toBe('0px')
+    await expect(neutralLightStyle.borderRightWidth).not.toBe('0px')
+    await expect(neutralDarkIcon.closest('[data-part="root"]')).toHaveAttribute(
+      'data-clv-theme-mode',
+      'dark',
+    )
+    await expect(neutralDarkStyle.getPropertyValue('--clv-color-bg').trim()).toBe('#151515')
+    await expect(neutralDarkStyle.getPropertyValue('--clv-color-text').trim()).toBe('#ffffff')
+    await expect(neutralDarkStyle.getPropertyValue('--clv-select-icon-stroke-width').trim()).toBe(
+      '1.5px',
+    )
+    await expect(neutralDarkStyle.fontSize).toBe('0px')
+    await expect(neutralDarkStyle.borderRightWidth).not.toBe('0px')
+    await expect(nestedDefaultIcon.closest('[data-part="root"]')).toHaveAttribute(
+      'data-clv-theme',
+      'default',
+    )
+    await expect(nestedDefaultStyle.getPropertyValue('--clv-color-bg').trim()).toBe('#09111f')
+    await expect(nestedDefaultStyle.getPropertyValue('--clv-color-text').trim()).toBe('#f4f7fb')
+    await expect(nestedDefaultStyle.getPropertyValue('--clv-select-icon-stroke-width').trim()).toBe(
+      '0',
+    )
+    await expect(nestedDefaultStyle.fontSize).not.toBe('0px')
+    await expect(nestedDefaultStyle.borderRightWidth).toBe('0px')
+    await expect(nestedDefaultStyle.transform).toBe('none')
     await expect(unstyledIcon).not.toHaveClass('clv-select__icon--default')
     await expect(unstyledStyle.fontSize).not.toBe('0px')
     await expect(unstyledStyle.borderRightWidth).toBe('0px')

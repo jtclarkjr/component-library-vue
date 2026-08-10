@@ -3,17 +3,6 @@
 Accessible Vue 3 components built with Reka UI, SCSS design tokens, Storybook, and the Vite+
 toolchain. The package is published to npm and can also be developed and consumed entirely locally.
 
-## What's new in 0.3.2
-
-- Complete Default and Aqua CSS-token coverage across all 62 visual components without changing
-  the public Vue API.
-- Deterministic tagged Storybook visual fixtures and Default/Aqua reference capture tooling for
-  open, focused, selected, checked, loading, placeholder, and other meaningful component states.
-- A Storybook-reconciled Figma UI kit with reusable components, content blocks, compositions, and
-  desktop/mobile reference screens.
-- Exact browser-error filtering for Chromium's known ScrollArea `ResizeObserver` notification
-  while preserving failures for every other unhandled error.
-
 ## Requirements
 
 - Vue 3.5 or newer
@@ -34,7 +23,7 @@ Common commands:
 vp check                 # Oxfmt, Oxlint, and type checks
 vp test run              # Storybook interaction and accessibility tests
 vp run build-storybook   # static Storybook catalogue
-vp run visual:capture    # deterministic Default/Aqua visual references
+vp run visual:capture    # deterministic Default/Aqua/Neutral visual references
 vp run build             # typed ESM library and style.css
 vp run dev               # continuously rebuild the package
 vp run pack:local        # build .local-pack/jtclarkjr-component-library-vue.tgz
@@ -127,8 +116,9 @@ controls export native `DateValue` and `TimeValue` models plus `ClvDateRange`, `
 
 ### Themes and headless composition
 
-The default theme remains active without configuration. Use the bundled Aqua theme either at the
-document boundary (recommended when the app uses teleported overlays) or through `ClvProvider`:
+The default theme remains active without configuration. Aqua and Neutral are bundled alternatives.
+Apply a theme at the document boundary (recommended when the app uses teleported overlays) or
+through `ClvProvider`:
 
 ```html
 <html data-clv-theme="aqua"></html>
@@ -139,6 +129,25 @@ document boundary (recommended when the app uses teleported overlays) or through
   <RouterView />
 </ClvProvider>
 ```
+
+Neutral keeps Aqua's typography, geometry, motion, and component recipes while replacing the
+interface chrome with grayscale colors. It defaults to dark and accepts an optional light mode:
+
+```html
+<html data-clv-theme="neutral" data-clv-theme-mode="light"></html>
+```
+
+```vue
+<ClvProvider theme="neutral" mode="light">
+  <RouterView />
+</ClvProvider>
+```
+
+The `mode` prop accepts `dark` or `light` in any letter casing, can be driven by a reactive ref or
+computed value, inherits through nested providers, and defaults to `dark` for Neutral. Provider,
+component, part, slot, and teleported-surface output is normalized to canonical lowercase. Neutral's
+direct `data-clv-theme-mode` selector is also case-insensitive. Default and Aqua do not supply
+mode-specific styles; custom themes can opt into the same hook.
 
 `ClvProvider` also accepts `unstyled`. Individual components can explicitly override inherited
 presentation with `:unstyled="false"`, or opt out locally with `unstyled`. Omitting `style.css`
@@ -163,7 +172,8 @@ surfaces without changing fallthrough behavior:
 Part resolvers receive component state and are merged after built-in attributes. Classes and styles
 are composed in order and event listeners run internal-first; required accessibility and model
 attributes remain component-owned. Physical and teleported surfaces expose
-`data-clv-component`, `data-part`, and applicable state attributes for CSS-only customization.
+`data-clv-component`, `data-part`, resolved theme and mode attributes, and applicable state
+attributes for CSS-only customization.
 
 The stylesheet supplies default dark-theme tokens and all component styles. Override the public
 `--clv-*` custom properties in your application to theme the components:
@@ -178,15 +188,17 @@ The stylesheet supplies default dark-theme tokens and all component styles. Over
 
 ### Design-system and Figma workflow
 
-`src/styles/_tokens.scss` is the canonical token source for the built-in Default and Aqua themes.
-Reusable component colors, typography, spacing, radii, borders, effects, and motion are exposed as
-`--clv-*` custom properties with explicit values in both themes. Preserve those CSS names as Figma
-variable code syntax so design and implementation stay traceable.
+The per-theme partials in `src/styles/tokens/` are the canonical token sources for Default, Aqua,
+and Neutral; `src/styles/_tokens.scss` assembles them into the public token layer. Reusable component
+colors, typography, spacing, radii, borders, effects, and motion are exposed as `--clv-*` custom
+properties with explicit values in every base theme; Neutral adds a light-mode color and effect
+override. Preserve those CSS names as Figma variable code syntax so design and implementation stay
+traceable.
 
 Storybook is the visual reconciliation surface. The tagged `Visual*` stories leave meaningful
 states deterministic, and `vp run visual:capture` builds the catalogue and captures each fixture
-under both theme globals with reduced motion. Output is written to the ignored
-`.visual-reference/` directory.
+under Default, Aqua, Neutral Dark, and Neutral Light profiles with reduced motion. Output is written
+to the ignored `.visual-reference/` directory.
 
 The design workflow can generate a local-only `figma/` handoff containing deferred Code Connect
 metadata for all 62 visual public components. That directory is intentionally ignored and is not

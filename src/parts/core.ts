@@ -1,7 +1,12 @@
 import type { HTMLAttributes } from 'vue'
 
-export type ClvBuiltInThemeKey = 'default' | 'aqua'
+export type ClvBuiltInThemeKey = 'default' | 'aqua' | 'neutral'
 export type ClvThemeKey = ClvBuiltInThemeKey | (string & Record<never, never>)
+export type ClvThemeMode = 'dark' | 'light'
+type CaseInsensitive<S extends string> = S extends `${infer Head}${infer Tail}`
+  ? `${Lowercase<Head> | Uppercase<Head>}${CaseInsensitive<Tail>}`
+  : S
+export type ClvThemeModeInput = CaseInsensitive<ClvThemeMode>
 
 type UnsafePartAttribute =
   | 'innerHTML'
@@ -28,6 +33,7 @@ export type ClvPartAttrs = Omit<HTMLAttributes, UnsafePartAttribute> & {
 export interface ClvPartContext<P extends string = string> {
   part: P
   theme?: ClvThemeKey
+  mode?: ClvThemeMode
   unstyled: boolean
 }
 

@@ -14,7 +14,26 @@ type StorybookIndexEntry = {
   type: string
 }
 
-const themes = ['default', 'aqua'] as const
+type CaptureTheme = 'default' | 'aqua' | 'neutral'
+type CaptureMode = 'dark' | 'light'
+type CaptureProfile = {
+  directory: string
+  effectiveMode?: CaptureMode
+  globalMode?: CaptureMode
+  theme: CaptureTheme
+}
+
+const captureProfiles: readonly CaptureProfile[] = [
+  { directory: 'default', theme: 'default' },
+  { directory: 'aqua', theme: 'aqua' },
+  { directory: 'neutral-dark', effectiveMode: 'dark', theme: 'neutral' },
+  {
+    directory: 'neutral-light',
+    effectiveMode: 'light',
+    globalMode: 'light',
+    theme: 'neutral',
+  },
+]
 const viewport = { width: 1280, height: 800 }
 const resizeObserverLoopMessage = 'ResizeObserver loop completed with undelivered notifications.'
 const contentTypes = new Map([
@@ -153,10 +172,12 @@ await mkdir(outputDirectory, { recursive: true })
 
 const browser = await chromium.launch({ headless: true })
 const captures: Array<{
+  effectiveMode?: CaptureMode
   file: string
   id: string
   name: string
-  theme: (typeof themes)[number]
+  profile: string
+  theme: CaptureTheme
   title: string
 }> = []
 
@@ -173,14 +194,16 @@ try {
     if (error.message !== resizeObserverLoopMessage) unexpectedPageErrors.push(error)
   })
 
-  for (const theme of themes) {
-    const themeDirectory = resolve(outputDirectory, theme)
-    await mkdir(themeDirectory, { recursive: true })
+  for (const profile of captureProfiles) {
+    const profileDirectory = resolve(outputDirectory, profile.directory)
+    await mkdir(profileDirectory, { recursive: true })
 
     for (const story of visualStories) {
       unexpectedPageErrors = []
       const storyUrl = new URL('/iframe.html', `http://127.0.0.1:${address.port}`)
-      storyUrl.searchParams.set('globals', `theme:${theme}`)
+      const globals = [`theme:${profile.theme}`]
+      if (profile.globalMode !== undefined) globals.push(`mode:${profile.globalMode}`)
+      storyUrl.searchParams.set('globals', globals.join(';'))
       storyUrl.searchParams.set('id', story.id)
       storyUrl.searchParams.set('viewMode', 'story')
 
@@ -198,13 +221,15 @@ try {
 
       if (unexpectedPageErrors.length > 0) throw unexpectedPageErrors[0]
 
-      const file = resolve(themeDirectory, `${story.id}.png`)
+      const file = resolve(profileDirectory, `${story.id}.png`)
       await page.screenshot({ animations: 'disabled', fullPage: true, path: file })
       captures.push({
+        effectiveMode: profile.effectiveMode,
         file: file.slice(outputDirectory.length + 1),
         id: story.id,
         name: story.name,
-        theme,
+        profile: profile.directory,
+        theme: profile.theme,
         title: story.title,
       })
     }
@@ -216,6 +241,13 @@ try {
   await closeServer(server)
 }
 
+const expectedCaptureCount = visualStories.length * captureProfiles.length
+if (captures.length !== expectedCaptureCount) {
+  throw new Error(
+    `Expected ${expectedCaptureCount} captures for ${visualStories.length} stories across ${captureProfiles.length} profiles, but received ${captures.length}.`,
+  )
+}
+
 const componentCount = new Set(visualStories.map((story) => story.title)).size
 await writeFile(
   resolve(outputDirectory, 'manifest.json'),
@@ -224,8 +256,12 @@ await writeFile(
       captureCount: captures.length,
       componentCount,
       generatedAt: new Date().toISOString(),
+      profiles: captureProfiles.map(({ directory, effectiveMode, theme }) => ({
+        directory,
+        effectiveMode,
+        theme,
+      })),
       stories: visualStories.length,
-      themes,
       viewport,
       captures,
     },
@@ -235,5 +271,5 @@ await writeFile(
 )
 
 console.log(
-  `Captured ${visualStories.length} visual stories across ${componentCount} components and ${themes.length} themes (${captures.length} images).`,
+  `Captured ${visualStories.length} visual stories across ${componentCount} components and ${captureProfiles.length} profiles (${captures.length} images).`,
 )
