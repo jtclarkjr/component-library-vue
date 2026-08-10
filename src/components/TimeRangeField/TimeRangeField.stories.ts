@@ -24,3 +24,15 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const WithSeconds: Story = { args: { granularity: 'second', step: { second: 15 } } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualWithSeconds: Story = {
+  ...WithSeconds,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

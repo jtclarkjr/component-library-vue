@@ -118,10 +118,10 @@ const descriptionId = computed(() =>
     &__digit {
       @include field;
       width: 2.75rem;
-      padding: 0.55rem;
+      padding: var(--clv-pin-input-padding);
       text-align: center;
-      font-size: 1.15rem;
-      font-weight: 800;
+      font-size: var(--clv-pin-input-font-size);
+      font-weight: var(--clv-font-weight-bold);
       &:focus-visible {
         @include focus-ring;
         border-color: var(--clv-color-primary);

@@ -319,28 +319,28 @@ function periodValue(state: { monthValue?: string; yearValue?: string }) {
 @layer clv.components {
   .clv-period-picker {
     width: min(20rem, 100%);
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-lg);
     background: var(--clv-color-surface-raised);
-    padding: 0.75rem;
+    padding: var(--clv-space-3);
     color: var(--clv-color-text);
 
     &__header {
       display: grid;
       grid-template-columns: 2rem 1fr 2rem;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.625rem;
+      gap: var(--clv-space-2);
+      margin-bottom: var(--clv-space-2-5);
     }
 
     &__heading {
       text-align: center;
-      font-weight: 650;
+      font-weight: var(--clv-font-weight-emphasis);
     }
 
     &__nav,
     &__option {
-      border: 1px solid transparent;
+      border: var(--clv-border-width) solid transparent;
       border-radius: var(--clv-radius-md);
       background: transparent;
       color: inherit;
@@ -370,13 +370,13 @@ function periodValue(state: { monthValue?: string; yearValue?: string }) {
     &__row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.375rem;
+      gap: var(--clv-space-1-5);
     }
 
     &__option {
       width: 100%;
       min-height: 2.5rem;
-      padding: 0.375rem;
+      padding: var(--clv-space-1-5);
     }
 
     &__option:hover:not(:disabled) {

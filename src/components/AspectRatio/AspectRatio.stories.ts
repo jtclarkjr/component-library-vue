@@ -20,3 +20,15 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const Square: Story = { args: { ratio: 1, label: 'Square preview' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSquare: Story = {
+  ...Square,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

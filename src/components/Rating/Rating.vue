@@ -155,8 +155,8 @@ const descriptionId = computed(() =>
       background: transparent;
       color: var(--clv-color-text-muted);
       cursor: pointer;
-      font-size: 1.75rem;
-      line-height: 1;
+      font-size: var(--clv-rating-icon-font-size);
+      line-height: var(--clv-line-height-tight);
     }
     &__item:focus-visible {
       @include focus-ring;

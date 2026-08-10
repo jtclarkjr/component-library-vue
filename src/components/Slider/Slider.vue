@@ -101,7 +101,7 @@ function normalize(next: number[]) {
       position: relative;
       overflow: hidden;
       flex: 1;
-      border-radius: 999px;
+      border-radius: var(--clv-radius-pill);
       background: var(--clv-color-surface-raised);
     }
 
@@ -133,8 +133,8 @@ function normalize(next: number[]) {
       display: block;
       width: 1.25rem;
       height: 1.25rem;
-      border: 2px solid var(--clv-color-primary);
-      border-radius: 50%;
+      border: var(--clv-border-width-strong) solid var(--clv-color-primary);
+      border-radius: var(--clv-radius-round);
       background: var(--clv-color-text);
       box-shadow: var(--clv-shadow-sm);
       cursor: grab;

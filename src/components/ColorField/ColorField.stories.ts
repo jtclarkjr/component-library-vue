@@ -37,3 +37,27 @@ export const RedChannel: Story = {
 }
 export const Invalid: Story = { args: { error: 'Enter a valid CSS color.' } }
 export const Readonly: Story = { args: { readonly: true } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualRedChannel: Story = {
+  ...RedChannel,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualReadonly: Story = {
+  ...Readonly,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

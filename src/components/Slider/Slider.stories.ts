@@ -41,3 +41,15 @@ export const Range: Story = {
     template: '<div style="width: 20rem"><Slider v-model="value" v-bind="args" /></div>',
   }),
 }
+
+export const VisualDefault: Story = {
+  ...Single,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualRange: Story = {
+  ...Range,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

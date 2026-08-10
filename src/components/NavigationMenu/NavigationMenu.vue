@@ -228,7 +228,7 @@ const emit = defineEmits<{ select: [item: NavigationMenuItem, event: Event] }>()
     gap: var(--clv-space-1);
     margin: 0;
     padding: var(--clv-space-1);
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     list-style: none;
@@ -240,7 +240,7 @@ const emit = defineEmits<{ select: [item: NavigationMenuItem, event: Event] }>()
     display: inline-flex;
     align-items: center;
     gap: var(--clv-space-1);
-    padding: 0.55rem 0.7rem;
+    padding: var(--clv-navigation-menu-trigger-padding);
     border: 0;
     border-radius: var(--clv-radius-sm);
     background: transparent;
@@ -264,7 +264,7 @@ const emit = defineEmits<{ select: [item: NavigationMenuItem, event: Event] }>()
     position: absolute;
     top: calc(100% + var(--clv-space-2));
     left: 0;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
   }
   .clv-navigation-menu__viewport {
     @include floating-surface;
@@ -272,8 +272,8 @@ const emit = defineEmits<{ select: [item: NavigationMenuItem, event: Event] }>()
     height: var(--reka-navigation-menu-viewport-height);
     overflow: hidden;
     transition:
-      width var(--clv-motion-medium),
-      height var(--clv-motion-medium);
+      width var(--clv-motion-medium) var(--clv-motion-easing-standard),
+      height var(--clv-motion-medium) var(--clv-motion-easing-standard);
   }
   .clv-navigation-menu__content {
     padding: var(--clv-space-3);

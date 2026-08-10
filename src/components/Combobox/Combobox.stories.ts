@@ -81,3 +81,23 @@ export const GlyphSlots: Story = {
     await expect(indicator).toHaveAttribute('data-part-name', 'indicator')
   },
 }
+
+export const VisualPlaceholder: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.type(within(canvasElement).getByRole('combobox', { name: 'Language' }), 'java')
+  },
+}
+
+export const VisualEmpty: Story = {
+  ...Empty,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

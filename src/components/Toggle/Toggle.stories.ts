@@ -46,3 +46,20 @@ export const Default: Story = {
 }
 
 export const Disabled: Story = { args: { disabled: true } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualPressed: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+}
+
+export const VisualDisabled: Story = {
+  ...Disabled,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

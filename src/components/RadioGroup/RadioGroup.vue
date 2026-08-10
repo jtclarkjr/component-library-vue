@@ -150,12 +150,12 @@ const descriptionId = computed(() =>
     gap: var(--clv-space-2);
     color: var(--clv-color-text-muted);
     font-family: var(--clv-font-sans);
-    font-size: 0.875rem;
+    font-size: var(--clv-font-size-body-sm);
 
     &__label {
       padding: 0;
       color: var(--clv-color-text);
-      font-weight: 750;
+      font-weight: var(--clv-font-weight-strong);
     }
 
     &__error {
@@ -196,8 +196,8 @@ const descriptionId = computed(() =>
       align-items: center;
       justify-content: center;
       flex: none;
-      border: 1px solid var(--clv-color-border);
-      border-radius: 50%;
+      border: var(--clv-border-width) solid var(--clv-color-border);
+      border-radius: var(--clv-radius-round);
       background: var(--clv-color-bg);
       cursor: pointer;
 
@@ -209,7 +209,7 @@ const descriptionId = computed(() =>
     &__indicator {
       width: 0.6rem;
       height: 0.6rem;
-      border-radius: 50%;
+      border-radius: var(--clv-radius-round);
       background: var(--clv-color-primary);
     }
   }

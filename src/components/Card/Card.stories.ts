@@ -31,3 +31,21 @@ export const Accent: Story = {
 export const Subtle: Story = {
   args: { variant: 'subtle' },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualAccent: Story = {
+  ...Accent,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSubtle: Story = {
+  ...Subtle,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

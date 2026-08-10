@@ -3,6 +3,17 @@
 Accessible Vue 3 components built with Reka UI, SCSS design tokens, Storybook, and the Vite+
 toolchain. The package is published to npm and can also be developed and consumed entirely locally.
 
+## What's new in 0.3.2
+
+- Complete Default and Aqua CSS-token coverage across all 62 visual components without changing
+  the public Vue API.
+- Deterministic tagged Storybook visual fixtures and Default/Aqua reference capture tooling for
+  open, focused, selected, checked, loading, placeholder, and other meaningful component states.
+- A Storybook-reconciled Figma UI kit with reusable components, content blocks, compositions, and
+  desktop/mobile reference screens.
+- Exact browser-error filtering for Chromium's known ScrollArea `ResizeObserver` notification
+  while preserving failures for every other unhandled error.
+
 ## Requirements
 
 - Vue 3.5 or newer
@@ -23,6 +34,7 @@ Common commands:
 vp check                 # Oxfmt, Oxlint, and type checks
 vp test run              # Storybook interaction and accessibility tests
 vp run build-storybook   # static Storybook catalogue
+vp run visual:capture    # deterministic Default/Aqua visual references
 vp run build             # typed ESM library and style.css
 vp run dev               # continuously rebuild the package
 vp run pack:local        # build .local-pack/jtclarkjr-component-library-vue.tgz
@@ -163,6 +175,27 @@ The stylesheet supplies default dark-theme tokens and all component styles. Over
   --clv-radius-sm: 0.6rem;
 }
 ```
+
+### Design-system and Figma workflow
+
+`src/styles/_tokens.scss` is the canonical token source for the built-in Default and Aqua themes.
+Reusable component colors, typography, spacing, radii, borders, effects, and motion are exposed as
+`--clv-*` custom properties with explicit values in both themes. Preserve those CSS names as Figma
+variable code syntax so design and implementation stay traceable.
+
+Storybook is the visual reconciliation surface. The tagged `Visual*` stories leave meaningful
+states deterministic, and `vp run visual:capture` builds the catalogue and captures each fixture
+under both theme globals with reduced motion. Output is written to the ignored
+`.visual-reference/` directory.
+
+The design workflow can generate a local-only `figma/` handoff containing deferred Code Connect
+metadata for all 62 visual public components. That directory is intentionally ignored and is not
+part of the repository or npm package; `ClvProvider` remains engineering guidance rather than a
+visual component. The corresponding private design library preserves stable component-set IDs;
+live Code Connect activation still requires an Organization or Enterprise Figma plan and
+published components. Its designer-facing UI-kit pages organize those sets into 12 reusable
+content blocks, 6 responsive compositions, and 4 desktop plus 4 mobile reference screens. Local
+Storybook remains the visual and behavioral source of truth.
 
 ## Live local linking
 

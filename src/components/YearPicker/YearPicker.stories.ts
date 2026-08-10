@@ -26,3 +26,15 @@ export const Default: Story = {}
 export const Bounded: Story = {
   args: { minValue: new CalendarDate(2020, 1, 1), maxValue: new CalendarDate(2030, 1, 1) },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualBounded: Story = {
+  ...Bounded,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

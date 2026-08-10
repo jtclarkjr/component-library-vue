@@ -332,7 +332,7 @@ const expandedKeys = computed<string[]>({
     margin: 0;
     padding: var(--clv-space-1);
     overflow: auto;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     color: var(--clv-color-text);
@@ -344,7 +344,7 @@ const expandedKeys = computed<string[]>({
     min-height: 2.25rem;
     align-items: center;
     gap: var(--clv-space-2);
-    padding-block: 0.35rem;
+    padding-block: var(--clv-tree-item-padding-block);
     padding-right: var(--clv-space-2);
     border-radius: var(--clv-radius-sm);
     cursor: pointer;
@@ -371,7 +371,7 @@ const expandedKeys = computed<string[]>({
     height: 1.5rem;
     place-items: center;
     border: 0;
-    border-radius: 0.25rem;
+    border-radius: var(--clv-tree-guide-radius);
     background: transparent;
     color: var(--clv-color-text-muted);
     cursor: pointer;

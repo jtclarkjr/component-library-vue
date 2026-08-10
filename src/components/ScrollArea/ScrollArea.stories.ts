@@ -31,3 +31,15 @@ export const Vertical: Story = {
 }
 
 export const Both: Story = { args: { orientation: 'both' } }
+
+export const VisualDefault: Story = {
+  ...Vertical,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualBothAxes: Story = {
+  ...Both,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

@@ -57,16 +57,16 @@ const { classes, part, slotContext } = useClvComponent<AvatarPartContext>('avata
     align-items: center;
     justify-content: center;
     flex: none;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     background: var(--clv-color-surface-raised);
     color: var(--clv-color-text);
     font-family: var(--clv-font-sans);
-    font-weight: 800;
+    font-weight: var(--clv-font-weight-bold);
 
     &--sm {
       width: 2rem;
       height: 2rem;
-      font-size: 0.75rem;
+      font-size: var(--clv-font-size-xs);
     }
 
     &--md {
@@ -77,11 +77,11 @@ const { classes, part, slotContext } = useClvComponent<AvatarPartContext>('avata
     &--lg {
       width: 4rem;
       height: 4rem;
-      font-size: 1.25rem;
+      font-size: var(--clv-font-size-lg);
     }
 
     &--circle {
-      border-radius: 50%;
+      border-radius: var(--clv-radius-round);
     }
 
     &--rounded {

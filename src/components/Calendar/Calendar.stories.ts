@@ -32,3 +32,21 @@ export const LocalizedAndBounded: Story = {
     maxValue: new CalendarDate(2026, 7, 22),
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualMultiple: Story = {
+  ...Multiple,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualLocalizedAndBounded: Story = {
+  ...LocalizedAndBounded,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

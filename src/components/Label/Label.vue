@@ -43,15 +43,15 @@ const { classes, part, slotContext } = useClvComponent<LabelPartContext>('label'
     gap: var(--clv-space-1);
     color: var(--clv-color-text);
     font-family: var(--clv-font-sans);
-    font-weight: 750;
+    font-weight: var(--clv-font-weight-strong);
     &--sm {
-      font-size: 0.75rem;
+      font-size: var(--clv-font-size-xs);
     }
     &--md {
-      font-size: 0.875rem;
+      font-size: var(--clv-font-size-body-sm);
     }
     &--lg {
-      font-size: 1rem;
+      font-size: var(--clv-font-size-md);
     }
     &--disabled {
       opacity: 0.55;

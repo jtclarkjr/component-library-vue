@@ -38,3 +38,26 @@ export const Default: Story = {
 }
 export const Multiple: Story = { args: { type: 'multiple' } }
 export const VerticalOutline: Story = { args: { orientation: 'vertical', variant: 'outline' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSelected: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+}
+
+export const VisualMultiple: Story = {
+  ...Multiple,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualVerticalOutline: Story = {
+  ...VerticalOutline,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

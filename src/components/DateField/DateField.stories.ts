@@ -44,3 +44,21 @@ export const DateAndTime: Story = {
   }),
 }
 export const Invalid: Story = { args: { error: 'Choose a date in the available range.' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualDateAndTime: Story = {
+  ...DateAndTime,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

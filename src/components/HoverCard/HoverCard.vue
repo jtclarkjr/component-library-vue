@@ -63,13 +63,13 @@ const { classes, part, slotContext } = useClvComponent<HoverCardPartContext>('ho
 @layer clv.components {
   .clv-hover-card {
     @include floating-surface;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     width: min(22rem, var(--reka-hover-card-content-available-width));
     padding: var(--clv-space-4);
     font-family: var(--clv-font-sans);
-    line-height: 1.5;
+    line-height: var(--clv-line-height-readable);
     &[data-state='open'] {
-      animation: clv-hover-in var(--clv-motion-fast) ease-out;
+      animation: clv-hover-in var(--clv-motion-fast) var(--clv-motion-easing);
     }
     @include reduced-motion;
   }

@@ -75,12 +75,12 @@ const emit = defineEmits<{ select: [item: NavigationMenuItem, event: Event] }>()
   .clv-navigation-links .clv-navigation-links {
     margin-top: var(--clv-space-1);
     padding-left: var(--clv-space-4);
-    border-left: 1px solid var(--clv-color-border);
+    border-left: var(--clv-border-width) solid var(--clv-color-border);
   }
   .clv-navigation-links__link {
     display: grid;
     gap: var(--clv-space-1);
-    padding: 0.6rem 0.7rem;
+    padding: var(--clv-navigation-link-padding);
     border-radius: var(--clv-radius-sm);
     color: var(--clv-color-text);
     text-decoration: none;

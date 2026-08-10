@@ -69,3 +69,15 @@ export const PartResolverState: Story = {
     }
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualUnavailableDates: Story = {
+  ...UnavailableDates,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

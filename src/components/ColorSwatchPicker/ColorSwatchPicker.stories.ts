@@ -52,3 +52,27 @@ export const Multiple: Story = {
 }
 export const Vertical: Story = { args: { orientation: 'vertical' } }
 export const Empty: Story = { args: { options: [], label: 'No colors available' } }
+
+export const VisualDefault: Story = {
+  ...Single,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualMultiple: Story = {
+  ...Multiple,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualVertical: Story = {
+  ...Vertical,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualEmpty: Story = {
+  ...Empty,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

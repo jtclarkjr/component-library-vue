@@ -62,3 +62,26 @@ export const Virtualized: Story = {
     })),
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualExpandedSelected: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+}
+
+export const VisualMultiple: Story = {
+  ...Multiple,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualVirtualized: Story = {
+  ...Virtualized,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

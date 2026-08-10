@@ -40,3 +40,21 @@ export const Default: Story = {
 }
 export const Granular: Story = { args: { step: 0.5 } }
 export const Readonly: Story = { args: { readonly: true } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualGranular: Story = {
+  ...Granular,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualReadonly: Story = {
+  ...Readonly,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

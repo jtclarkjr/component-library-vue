@@ -35,3 +35,21 @@ export const Default: Story = {
 }
 export const Readonly: Story = { args: { readonly: true } }
 export const Invalid: Story = { args: { help: undefined, error: 'A display name is required.' } }
+
+export const VisualEditing: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualReadonly: Story = {
+  ...Readonly,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

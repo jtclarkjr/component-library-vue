@@ -35,3 +35,15 @@ export const Default: Story = {
   },
 }
 export const Vertical: Story = { args: { direction: 'vertical' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualVertical: Story = {
+  ...Vertical,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

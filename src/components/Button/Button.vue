@@ -127,22 +127,22 @@ const loaderAttrs = computed(() =>
     align-items: center;
     justify-content: center;
     gap: var(--clv-space-2);
-    border: 1px solid transparent;
+    border: var(--clv-border-width) solid transparent;
     border-radius: var(--clv-radius-sm);
     font-family: var(--clv-font-sans);
-    font-weight: var(--clv-button-font-weight, 750);
-    line-height: 1;
+    font-weight: var(--clv-button-font-weight);
+    line-height: var(--clv-line-height-tight);
     text-decoration: none;
     cursor: pointer;
     transition:
-      background-color var(--clv-motion-fast) ease,
-      border-color var(--clv-motion-fast) ease,
-      color var(--clv-motion-fast) ease,
-      opacity var(--clv-motion-fast) ease;
+      background-color var(--clv-motion-fast) var(--clv-motion-easing-standard),
+      border-color var(--clv-motion-fast) var(--clv-motion-easing-standard),
+      color var(--clv-motion-fast) var(--clv-motion-easing-standard),
+      opacity var(--clv-motion-fast) var(--clv-motion-easing-standard);
 
     &:focus-visible {
-      outline: 3px solid var(--clv-color-focus);
-      outline-offset: 2px;
+      outline: var(--clv-focus-ring-width-strong) solid var(--clv-color-focus);
+      outline-offset: var(--clv-focus-ring-offset);
     }
 
     &:disabled,
@@ -153,27 +153,27 @@ const loaderAttrs = computed(() =>
 
     &--sm {
       min-height: 2rem;
-      padding: 0.45rem 0.7rem;
-      font-size: 0.82rem;
+      padding: var(--clv-button-padding-sm);
+      font-size: var(--clv-button-font-size-sm);
     }
 
     &--md {
       min-height: 2.65rem;
-      padding: 0.7rem 1rem;
+      padding: var(--clv-button-padding-md);
     }
 
     &--lg {
       min-height: 3.2rem;
-      padding: 0.9rem 1.3rem;
-      font-size: 1.08rem;
+      padding: var(--clv-button-padding-lg);
+      font-size: var(--clv-button-font-size-lg);
     }
 
     &--icon {
-      width: var(--clv-button-icon-size, 3rem);
-      height: var(--clv-button-icon-size, 3rem);
-      min-height: var(--clv-button-icon-size, 3rem);
+      width: var(--clv-button-icon-size);
+      height: var(--clv-button-icon-size);
+      min-height: var(--clv-button-icon-size);
       padding: 0;
-      border-radius: 50%;
+      border-radius: var(--clv-radius-round);
     }
 
     &--primary {
@@ -197,14 +197,14 @@ const loaderAttrs = computed(() =>
 
     &--surface {
       border-color: var(--clv-color-border);
-      background: var(--clv-button-surface-bg, var(--clv-color-surface));
-      box-shadow: var(--clv-button-surface-shadow, var(--clv-shadow-sm));
+      background: var(--clv-button-surface-bg);
+      box-shadow: var(--clv-button-surface-shadow);
       color: var(--clv-color-text);
-      backdrop-filter: var(--clv-button-surface-backdrop, none);
+      backdrop-filter: var(--clv-button-surface-backdrop);
 
       &:hover:not(:disabled, [aria-disabled='true']) {
         border-color: var(--clv-color-primary);
-        background: var(--clv-button-surface-hover, var(--clv-color-surface-raised));
+        background: var(--clv-button-surface-hover);
       }
     }
 

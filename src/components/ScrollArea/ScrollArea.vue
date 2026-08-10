@@ -76,7 +76,7 @@ const resolvedMaxHeight = computed(() =>
     position: relative;
     overflow: hidden;
     width: 100%;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     color: var(--clv-color-text-muted);
@@ -91,8 +91,8 @@ const resolvedMaxHeight = computed(() =>
 
     &__scrollbar {
       display: flex;
-      padding: 2px;
-      background: rgb(255 255 255 / 3%);
+      padding: var(--clv-scroll-area-scrollbar-padding);
+      background: var(--clv-scroll-area-scrollbar-bg);
       touch-action: none;
       user-select: none;
 
@@ -109,7 +109,7 @@ const resolvedMaxHeight = computed(() =>
     &__thumb {
       position: relative;
       flex: 1;
-      border-radius: 999px;
+      border-radius: var(--clv-radius-pill);
       background: var(--clv-color-border);
     }
 

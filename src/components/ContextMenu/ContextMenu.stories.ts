@@ -46,3 +46,20 @@ export const Default: Story = {
     await expect(args.onAction).toHaveBeenCalled()
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.pointer({
+      target: within(canvasElement).getByText('Right-click this surface'),
+      keys: '[MouseRight]',
+    })
+  },
+}

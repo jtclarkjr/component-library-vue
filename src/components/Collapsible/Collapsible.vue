@@ -66,7 +66,7 @@ const { classes, part, slotContext } = useClvComponent<CollapsiblePartContext>('
 @layer clv.components {
   .clv-collapsible {
     width: 100%;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     color: var(--clv-color-text);
@@ -84,7 +84,7 @@ const { classes, part, slotContext } = useClvComponent<CollapsiblePartContext>('
       color: inherit;
       cursor: pointer;
       font: inherit;
-      font-weight: 750;
+      font-weight: var(--clv-font-weight-strong);
       text-align: left;
 
       &:focus-visible {
@@ -101,7 +101,7 @@ const { classes, part, slotContext } = useClvComponent<CollapsiblePartContext>('
     }
 
     &__chevron {
-      transition: transform var(--clv-motion-fast) ease;
+      transition: transform var(--clv-motion-fast) var(--clv-motion-easing-standard);
     }
 
     &__content {

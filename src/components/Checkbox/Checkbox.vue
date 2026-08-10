@@ -91,7 +91,7 @@ const { classes, part, slotContext } = useClvComponent<CheckboxPartContext>('che
     gap: var(--clv-space-2);
     color: var(--clv-color-text-muted);
     font-family: var(--clv-font-sans);
-    font-size: 0.875rem;
+    font-size: var(--clv-font-size-body-sm);
 
     &__control {
       display: flex;
@@ -100,10 +100,10 @@ const { classes, part, slotContext } = useClvComponent<CheckboxPartContext>('che
     }
 
     &__label {
-      padding-top: 0.15rem;
+      padding-top: var(--clv-checkbox-content-offset);
       color: var(--clv-color-text);
       cursor: pointer;
-      font-weight: 700;
+      font-weight: var(--clv-font-weight-label);
     }
 
     &__error {
@@ -118,10 +118,10 @@ const { classes, part, slotContext } = useClvComponent<CheckboxPartContext>('che
     align-items: center;
     justify-content: center;
     flex: none;
-    border: 1px solid var(--clv-color-border);
-    border-radius: 0.35rem;
+    border: var(--clv-border-width) solid var(--clv-color-border);
+    border-radius: var(--clv-checkbox-radius);
     background: var(--clv-color-bg);
-    color: #06231b;
+    color: var(--clv-choice-selected-text);
     cursor: pointer;
 
     &:focus-visible {
@@ -139,9 +139,9 @@ const { classes, part, slotContext } = useClvComponent<CheckboxPartContext>('che
     }
 
     &__indicator {
-      font-size: 0.9rem;
-      font-weight: 900;
-      line-height: 1;
+      font-size: var(--clv-checkbox-indicator-font-size);
+      font-weight: var(--clv-font-weight-black);
+      line-height: var(--clv-line-height-tight);
     }
   }
 }

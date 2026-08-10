@@ -378,9 +378,9 @@ function singleSegments(segments: unknown): FieldSegment[] {
       @include segmented-field;
       display: flex;
       align-items: center;
-      gap: 0.125rem;
+      gap: var(--clv-space-0-5);
       min-height: var(--clv-control-height);
-      padding: 0.375rem 0.625rem;
+      padding: var(--clv-space-1-5) var(--clv-space-2-5);
     }
 
     &__segments:focus-within {
@@ -389,7 +389,7 @@ function singleSegments(segments: unknown): FieldSegment[] {
 
     &__range {
       display: flex;
-      gap: 0.125rem;
+      gap: var(--clv-space-0-5);
     }
 
     &__separator {
@@ -398,7 +398,7 @@ function singleSegments(segments: unknown): FieldSegment[] {
 
     &__segment {
       border-radius: var(--clv-radius-sm);
-      padding: 0.125rem;
+      padding: var(--clv-space-0-5);
       outline: 0;
       color: var(--clv-color-text);
       font-variant-numeric: tabular-nums;

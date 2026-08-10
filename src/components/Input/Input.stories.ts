@@ -70,3 +70,43 @@ export const Clearable: Story = {
     await expect(args.onClear).toHaveBeenCalledOnce()
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualDisabled: Story = {
+  ...Disabled,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualClearable: Story = {
+  ...Clearable,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualHover: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(within(canvasElement).getByRole('textbox', { name: 'Email address' }))
+  },
+}
+
+export const VisualFocus: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    within(canvasElement).getByRole('textbox', { name: 'Email address' }).focus()
+  },
+}

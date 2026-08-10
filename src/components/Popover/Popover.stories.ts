@@ -39,3 +39,17 @@ export const Default: Story = {
     await waitFor(() => expect(page.queryByText('Deployment details')).not.toBeInTheDocument())
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open details' }))
+  },
+}

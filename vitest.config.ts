@@ -8,6 +8,7 @@ import { defineConfig, mergeConfig } from 'vite-plus'
 import viteConfig from './vite.config'
 
 const directory = dirname(fileURLToPath(import.meta.url))
+const resizeObserverLoopMessage = 'ResizeObserver loop completed with undelivered notifications.'
 
 export default mergeConfig(
   viteConfig,
@@ -18,6 +19,9 @@ export default mergeConfig(
     },
     test: {
       name: 'storybook',
+      onUnhandledError(error) {
+        return !(error instanceof Error && error.message === resizeObserverLoopMessage)
+      },
       browser: {
         enabled: true,
         headless: true,

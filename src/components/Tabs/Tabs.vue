@@ -137,24 +137,24 @@ const activeValue = computed({
 
     &__list {
       display: flex;
-      border-bottom: 1px solid var(--clv-color-border);
+      border-bottom: var(--clv-border-width) solid var(--clv-color-border);
     }
 
     &--vertical &__list {
       flex-direction: column;
-      border-right: 1px solid var(--clv-color-border);
+      border-right: var(--clv-border-width) solid var(--clv-color-border);
       border-bottom: 0;
     }
 
     &__trigger {
-      padding: 0.7rem 1rem;
+      padding: var(--clv-tabs-trigger-padding);
       border: 0;
-      border-bottom: 2px solid transparent;
+      border-bottom: var(--clv-border-width-strong) solid transparent;
       background: transparent;
       color: var(--clv-color-text-muted);
       cursor: pointer;
       font: inherit;
-      font-weight: 750;
+      font-weight: var(--clv-font-weight-strong);
 
       &[data-state='active'] {
         border-color: var(--clv-color-primary);
@@ -171,7 +171,7 @@ const activeValue = computed({
     }
 
     &--vertical &__trigger {
-      border-right: 2px solid transparent;
+      border-right: var(--clv-border-width-strong) solid transparent;
       border-bottom: 0;
     }
 

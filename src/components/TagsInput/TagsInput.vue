@@ -192,7 +192,7 @@ const descriptionId = computed(() =>
       display: inline-flex;
       align-items: center;
       gap: var(--clv-space-1);
-      padding: 0.3rem 0.45rem;
+      padding: var(--clv-tags-input-tag-padding);
       border-radius: var(--clv-radius-sm);
       background: var(--clv-color-surface-raised);
       color: var(--clv-color-text);
@@ -207,7 +207,7 @@ const descriptionId = computed(() =>
     &__input {
       min-width: 7rem;
       flex: 1;
-      padding: 0.35rem;
+      padding: var(--clv-tags-input-clear-padding);
       border: 0;
       outline: 0;
       background: transparent;

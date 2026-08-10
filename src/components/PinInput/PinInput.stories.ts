@@ -32,3 +32,21 @@ export const Default: Story = {
 }
 export const Masked: Story = { args: { mask: true, label: 'Security PIN' } }
 export const Disabled: Story = { args: { disabled: true } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualMasked: Story = {
+  ...Masked,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualDisabled: Story = {
+  ...Disabled,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

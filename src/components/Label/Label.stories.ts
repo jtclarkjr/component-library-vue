@@ -26,3 +26,15 @@ export const Sizes: Story = {
       '<div style="display:grid;gap:1rem"><Label size="sm">Small label</Label><Label>Medium label</Label><Label size="lg">Large label</Label></div>',
   }),
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSizes: Story = {
+  ...Sizes,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

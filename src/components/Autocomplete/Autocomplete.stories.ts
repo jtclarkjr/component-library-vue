@@ -50,3 +50,26 @@ export const Virtualized: Story = {
   },
 }
 export const Invalid: Story = { args: { help: undefined, error: 'Choose a destination.' } }
+
+export const VisualPlaceholder: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.type(
+      within(canvasElement).getByRole('combobox', { name: 'Destination' }),
+      'lon',
+    )
+  },
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

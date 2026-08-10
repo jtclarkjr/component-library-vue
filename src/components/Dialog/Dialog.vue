@@ -88,30 +88,32 @@ const { classes, part, slotContext } = useClvComponent<DialogPartContext>('dialo
 @layer clv.components {
   .clv-dialog__overlay {
     position: fixed;
-    z-index: 1000;
+    z-index: var(--clv-z-modal-overlay);
     inset: 0;
-    background: rgb(2 7 15 / 72%);
-    backdrop-filter: blur(5px);
+    background: var(--clv-color-overlay);
+    backdrop-filter: var(--clv-overlay-backdrop-filter);
 
     &[data-state='open'] {
-      animation: clv-dialog-overlay-in 200ms ease-out both;
+      animation: clv-dialog-overlay-in var(--clv-dialog-overlay-enter-duration)
+        var(--clv-motion-easing) both;
     }
 
     &[data-state='closed'] {
-      animation: clv-dialog-overlay-out 160ms ease-in both;
+      animation: clv-dialog-overlay-out var(--clv-dialog-overlay-exit-duration)
+        var(--clv-dialog-exit-easing) both;
     }
   }
 
   .clv-dialog {
     position: fixed;
-    z-index: 1001;
+    z-index: var(--clv-z-modal-content);
     top: 50%;
     left: 50%;
     width: calc(100% - 2rem);
     max-height: calc(100vh - 2rem);
     overflow: auto;
     padding: var(--clv-space-6);
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-lg);
     background: var(--clv-color-surface);
     box-shadow: var(--clv-shadow-lg);
@@ -122,11 +124,13 @@ const { classes, part, slotContext } = useClvComponent<DialogPartContext>('dialo
     will-change: opacity, transform;
 
     &[data-state='open'] {
-      animation: clv-dialog-content-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: clv-dialog-content-in var(--clv-dialog-content-enter-duration)
+        var(--clv-motion-easing-emphasized) both;
     }
 
     &[data-state='closed'] {
-      animation: clv-dialog-content-out 160ms ease-in both;
+      animation: clv-dialog-content-out var(--clv-dialog-content-exit-duration)
+        var(--clv-dialog-exit-easing) both;
     }
 
     &--sm {
@@ -150,8 +154,8 @@ const { classes, part, slotContext } = useClvComponent<DialogPartContext>('dialo
 
     &__title {
       margin: 0;
-      font-size: 1.35rem;
-      font-weight: 800;
+      font-size: var(--clv-dialog-title-font-size);
+      font-weight: var(--clv-font-weight-bold);
     }
 
     &__description {

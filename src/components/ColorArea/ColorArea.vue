@@ -117,7 +117,7 @@ function commit(value: string) {
       width: 100%;
       aspect-ratio: 4 / 3;
       overflow: hidden;
-      border: 1px solid var(--clv-color-border);
+      border: var(--clv-border-width) solid var(--clv-color-border);
       border-radius: var(--clv-radius-lg);
       cursor: crosshair;
       touch-action: none;
@@ -128,10 +128,10 @@ function commit(value: string) {
       width: 1.35rem;
       height: 1.35rem;
       place-items: center;
-      border: 2px solid white;
-      border-radius: 999px;
-      outline: 1px solid rgb(0 0 0 / 65%);
-      box-shadow: 0 1px 4px rgb(0 0 0 / 45%);
+      border: var(--clv-border-width-strong) solid var(--clv-color-control-handle-border);
+      border-radius: var(--clv-radius-pill);
+      outline: var(--clv-border-width) solid var(--clv-color-control-outline);
+      box-shadow: var(--clv-shadow-control);
       transform: translate(-50%, -50%);
     }
 

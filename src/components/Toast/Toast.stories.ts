@@ -98,3 +98,22 @@ export const CloseIconSlot: Story = {
     await waitFor(() => expect(page.queryByText('Deployment complete')).not.toBeInTheDocument())
   },
 }
+
+export const VisualSuccess: Story = {
+  ...Success,
+  tags: ['visual', '!autodocs'],
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'aria-hidden-focus', enabled: false }],
+      },
+    },
+  },
+  play: undefined,
+}
+
+export const VisualDanger: Story = {
+  ...Danger,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

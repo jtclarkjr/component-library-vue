@@ -50,3 +50,25 @@ export const Small: Story = {
 export const Large: Story = {
   args: { size: 'lg' },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open dialog' }))
+  },
+}
+
+export const VisualLargeOpen: Story = {
+  ...Large,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open dialog' }))
+  },
+}

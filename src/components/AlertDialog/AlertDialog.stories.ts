@@ -41,3 +41,25 @@ export const Destructive: Story = {
 }
 
 export const Loading: Story = { args: { loading: true } }
+
+export const VisualDefault: Story = {
+  ...Destructive,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Destructive,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Delete project' }))
+  },
+}
+
+export const VisualLoadingOpen: Story = {
+  ...Loading,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Delete project' }))
+  },
+}

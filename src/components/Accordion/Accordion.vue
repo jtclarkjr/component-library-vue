@@ -109,14 +109,14 @@ function isOpen(value: string) {
 @layer clv.components {
   .clv-accordion {
     width: 100%;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     color: var(--clv-color-text);
     font-family: var(--clv-font-sans);
 
     &__item + &__item {
-      border-top: 1px solid var(--clv-color-border);
+      border-top: var(--clv-border-width) solid var(--clv-color-border);
     }
 
     &__header {
@@ -135,7 +135,7 @@ function isOpen(value: string) {
       color: inherit;
       cursor: pointer;
       font: inherit;
-      font-weight: 750;
+      font-weight: var(--clv-font-weight-strong);
       text-align: left;
 
       &:focus-visible {
@@ -152,7 +152,7 @@ function isOpen(value: string) {
     }
 
     &__chevron {
-      transition: transform var(--clv-motion-fast) ease;
+      transition: transform var(--clv-motion-fast) var(--clv-motion-easing-standard);
     }
 
     &__content {
@@ -160,7 +160,7 @@ function isOpen(value: string) {
       color: var(--clv-color-text-muted);
 
       &[data-state='open'] {
-        animation: clv-accordion-open var(--clv-motion-medium) ease-out;
+        animation: clv-accordion-open var(--clv-motion-medium) var(--clv-motion-easing);
       }
     }
 

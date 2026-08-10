@@ -67,3 +67,15 @@ export const PartResolverState: Story = {
     }
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualDisabled: Story = {
+  ...Disabled,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

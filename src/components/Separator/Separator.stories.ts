@@ -22,3 +22,15 @@ export const Semantic: Story = {
     )
   },
 }
+
+export const VisualDecorative: Story = {
+  ...Decorative,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSemantic: Story = {
+  ...Semantic,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

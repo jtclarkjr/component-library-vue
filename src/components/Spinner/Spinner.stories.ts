@@ -33,3 +33,21 @@ export const ExtraLarge: Story = {
 export const Decorative: Story = {
   args: { decorative: true },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualLarge: Story = {
+  ...Large,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualExtraLarge: Story = {
+  ...ExtraLarge,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

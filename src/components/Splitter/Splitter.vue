@@ -88,7 +88,7 @@ const emit = defineEmits<{
     min-width: 0;
     min-height: 12rem;
     overflow: hidden;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     color: var(--clv-color-text);

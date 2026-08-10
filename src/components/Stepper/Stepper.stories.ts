@@ -38,3 +38,21 @@ export const Default: Story = {
 }
 export const Vertical: Story = { args: { orientation: 'vertical' } }
 export const NonLinear: Story = { args: { linear: false } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualVertical: Story = {
+  ...Vertical,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualNonLinear: Story = {
+  ...NonLinear,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

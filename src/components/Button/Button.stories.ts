@@ -68,3 +68,30 @@ export const DisabledLink: Story = {
     await expect(args.onClick).not.toHaveBeenCalled()
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualLoading: Story = {
+  ...Loading,
+  tags: ['visual', '!autodocs'],
+}
+
+export const VisualHover: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(within(canvasElement).getByRole('button', { name: 'Save changes' }))
+  },
+}
+
+export const VisualFocus: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    within(canvasElement).getByRole('button', { name: 'Save changes' }).focus()
+  },
+}

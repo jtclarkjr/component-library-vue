@@ -74,3 +74,23 @@ export const PartResolverState: Story = {
     await userEvent.keyboard('{Escape}')
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open calendar' }))
+  },
+}
+
+export const VisualLocalized: Story = {
+  ...Localized,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

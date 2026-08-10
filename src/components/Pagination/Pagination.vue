@@ -142,8 +142,8 @@ const { classes, part, slotContext } = useClvComponent<PaginationPartContext>('p
       min-height: 2.25rem;
       align-items: center;
       justify-content: center;
-      padding: 0.4rem;
-      border: 1px solid var(--clv-color-border);
+      padding: var(--clv-pagination-item-padding);
+      border: var(--clv-border-width) solid var(--clv-color-border);
       border-radius: var(--clv-radius-sm);
       background: var(--clv-color-surface);
       color: var(--clv-color-text-muted);
@@ -153,8 +153,8 @@ const { classes, part, slotContext } = useClvComponent<PaginationPartContext>('p
       &[data-selected] {
         border-color: var(--clv-color-primary);
         background: var(--clv-color-primary);
-        color: #06231b;
-        font-weight: 800;
+        color: var(--clv-choice-selected-text);
+        font-weight: var(--clv-font-weight-bold);
       }
 
       &:focus-visible {

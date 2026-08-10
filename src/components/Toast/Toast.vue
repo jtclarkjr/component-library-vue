@@ -126,7 +126,7 @@ function action(item: ToastItem) {
 @layer clv.components {
   .clv-toast-viewport {
     position: fixed;
-    z-index: 1300;
+    z-index: var(--clv-z-toast);
     right: 0;
     bottom: 0;
     display: flex;
@@ -147,11 +147,11 @@ function action(item: ToastItem) {
     align-items: center;
     gap: var(--clv-space-3);
     padding: var(--clv-space-4);
-    border-left: 4px solid var(--clv-color-primary);
+    border-left: var(--clv-toast-accent-border-width) solid var(--clv-color-primary);
     font-family: var(--clv-font-sans);
 
     &[data-state='open'] {
-      animation: clv-toast-in var(--clv-motion-medium) cubic-bezier(0.16, 1, 0.3, 1);
+      animation: clv-toast-in var(--clv-motion-medium) var(--clv-motion-easing-emphasized);
     }
 
     &[data-swipe='move'] {
@@ -172,13 +172,13 @@ function action(item: ToastItem) {
 
     &__title {
       color: var(--clv-color-text);
-      font-weight: 800;
+      font-weight: var(--clv-font-weight-bold);
     }
 
     &__description {
       margin-top: var(--clv-space-1);
       color: var(--clv-color-text-muted);
-      font-size: 0.875rem;
+      font-size: var(--clv-font-size-body-sm);
     }
 
     &__action,
@@ -188,12 +188,12 @@ function action(item: ToastItem) {
       color: var(--clv-color-primary);
       cursor: pointer;
       font: inherit;
-      font-weight: 750;
+      font-weight: var(--clv-font-weight-strong);
     }
 
     &__close {
       color: var(--clv-color-text-muted);
-      font-size: 1.25rem;
+      font-size: var(--clv-font-size-lg);
     }
 
     &__action:focus-visible,

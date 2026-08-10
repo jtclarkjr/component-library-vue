@@ -40,14 +40,14 @@ const { classes, part, slotContext } = useClvComponent<TogglePartContext>('toggl
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid transparent;
+    border: var(--clv-border-width) solid transparent;
     border-radius: var(--clv-radius-sm);
     background: transparent;
     color: var(--clv-color-text-muted);
     cursor: pointer;
     font-family: var(--clv-font-sans);
-    font-weight: 750;
-    transition: all var(--clv-motion-fast) ease;
+    font-weight: var(--clv-font-weight-strong);
+    transition: all var(--clv-motion-fast) var(--clv-motion-easing-standard);
 
     &:focus-visible {
       @include focus-ring;
@@ -59,7 +59,7 @@ const { classes, part, slotContext } = useClvComponent<TogglePartContext>('toggl
 
     &[data-state='on'] {
       background: var(--clv-color-primary);
-      color: #06231b;
+      color: var(--clv-choice-selected-text);
     }
 
     &--outline {
@@ -69,19 +69,19 @@ const { classes, part, slotContext } = useClvComponent<TogglePartContext>('toggl
     &--sm {
       min-width: 2rem;
       min-height: 2rem;
-      padding: 0.35rem 0.55rem;
+      padding: var(--clv-toggle-padding-sm);
     }
 
     &--md {
       min-width: 2.65rem;
       min-height: 2.65rem;
-      padding: 0.55rem 0.75rem;
+      padding: var(--clv-toggle-padding-md);
     }
 
     &--lg {
       min-width: 3.2rem;
       min-height: 3.2rem;
-      padding: 0.7rem 0.95rem;
+      padding: var(--clv-toggle-padding-lg);
     }
   }
 }

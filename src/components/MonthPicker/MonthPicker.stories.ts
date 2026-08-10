@@ -25,3 +25,21 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 export const Multiple: Story = { args: { multiple: true, label: 'Active months' } }
 export const Localized: Story = { args: { locale: 'ja-JP' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualMultiple: Story = {
+  ...Multiple,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualLocalized: Story = {
+  ...Localized,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

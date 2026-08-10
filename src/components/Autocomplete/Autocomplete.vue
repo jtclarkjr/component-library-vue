@@ -327,7 +327,7 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
     &__input {
       width: 100%;
       min-width: 0;
-      padding: 0.65rem 0.8rem;
+      padding: var(--clv-autocomplete-input-padding);
       border: 0;
       outline: 0;
       background: transparent;
@@ -341,13 +341,13 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
       background: transparent;
       color: var(--clv-color-text-muted);
       cursor: pointer;
-      font-size: 1.25rem;
+      font-size: var(--clv-font-size-lg);
     }
   }
 
   .clv-autocomplete-content {
     @include floating-surface;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     width: var(--reka-combobox-trigger-width);
     max-height: min(20rem, var(--reka-combobox-content-available-height));
     overflow: hidden;

@@ -1,6 +1,6 @@
 {
   "name": "@jtclarkjr/component-library-vue",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Accessible Vue 3 components built with Reka UI, SCSS design tokens, and Vite+.",
   "homepage": "https://github.com/jtclarkjr/component-library-vue#readme",
   "bugs": {
@@ -33,9 +33,10 @@
     "dev": "vp pack --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "visual:capture": "vp run build-storybook && bun .storybook/capture-visuals.ts",
     "test": "vp test run",
     "check": "vp check",
-    "pack:local": "vp run build && vp pm pack --out .local-pack/jtclarkjr-component-library-vue.tgz",
+    "pack:local": "vp run build && mkdir -p .local-pack && vp pm pack --out .local-pack/jtclarkjr-component-library-vue.tgz",
     "prepublishOnly": "vp run build",
     "prepare": "vp config"
   },

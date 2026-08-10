@@ -194,7 +194,7 @@ const { classes, part, slotContext } = useClvComponent<EditablePartContext>('edi
       @include field;
       display: grid;
       flex: 1;
-      padding: 0.65rem 0.8rem;
+      padding: var(--clv-editable-preview-padding);
     }
     &__preview,
     &__input {
@@ -216,8 +216,8 @@ const { classes, part, slotContext } = useClvComponent<EditablePartContext>('edi
       gap: var(--clv-space-1);
     }
     &__button {
-      padding: 0.55rem 0.7rem;
-      border: 1px solid var(--clv-color-border);
+      padding: var(--clv-editable-action-padding);
+      border: var(--clv-border-width) solid var(--clv-color-border);
       border-radius: var(--clv-radius-sm);
       background: var(--clv-color-surface);
       color: var(--clv-color-text);

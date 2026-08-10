@@ -823,16 +823,16 @@ function close() {
     &__range {
       display: flex;
       align-items: center;
-      gap: 0.125rem;
+      gap: var(--clv-space-0-5);
     }
 
     &__segments {
-      padding: 0.375rem 0.625rem;
+      padding: var(--clv-space-1-5) var(--clv-space-2-5);
     }
 
     &__segment {
       border-radius: var(--clv-radius-sm);
-      padding: 0.125rem;
+      padding: var(--clv-space-0-5);
       outline: 0;
       font-variant-numeric: tabular-nums;
     }
@@ -852,7 +852,7 @@ function close() {
     &__trigger {
       width: 2.75rem;
       border: 0;
-      border-left: 1px solid var(--clv-color-border);
+      border-left: var(--clv-border-width) solid var(--clv-color-border);
       background: var(--clv-color-surface);
       color: var(--clv-color-text);
       cursor: pointer;
@@ -871,7 +871,7 @@ function close() {
   .clv-date-picker__content {
     @include floating-surface;
     z-index: var(--clv-z-popover);
-    padding: 0.75rem;
+    padding: var(--clv-space-3);
     color: var(--clv-color-text);
     transform-origin: var(--reka-date-picker-content-transform-origin);
     animation: clv-picker-in var(--clv-motion-duration-fast) var(--clv-motion-easing);
@@ -881,13 +881,13 @@ function close() {
     display: grid;
     grid-template-columns: 2rem 1fr 2rem;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    gap: var(--clv-space-2);
+    margin-bottom: var(--clv-space-2);
   }
 
   .clv-date-picker__heading {
     text-align: center;
-    font-weight: 650;
+    font-weight: var(--clv-font-weight-emphasis);
   }
 
   .clv-date-picker__nav,
@@ -901,14 +901,14 @@ function close() {
 
   .clv-date-picker__nav {
     height: 2rem;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     background: var(--clv-color-surface);
   }
 
   .clv-date-picker__months {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--clv-space-4);
   }
 
   .clv-date-picker__grid {
@@ -921,11 +921,11 @@ function close() {
   }
 
   .clv-date-picker__weekday {
-    padding-block: 0.25rem;
+    padding-block: var(--clv-space-1);
     color: var(--clv-color-text-muted);
     text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: var(--clv-font-size-xs);
+    font-weight: var(--clv-font-weight-semibold);
   }
 
   .clv-date-picker__cell {

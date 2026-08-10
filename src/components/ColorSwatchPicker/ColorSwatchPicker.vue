@@ -175,7 +175,7 @@ const { classes, part, slotContext } = useClvComponent<ColorSwatchPickerPartCont
 @layer clv.components {
   .clv-color-swatch-picker {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--clv-space-2);
     width: max-content;
     max-width: 100%;
 
@@ -192,12 +192,12 @@ const { classes, part, slotContext } = useClvComponent<ColorSwatchPickerPartCont
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 0.5rem;
+      gap: var(--clv-space-2);
       min-width: 3rem;
-      border: 1px solid var(--clv-color-border);
+      border: var(--clv-border-width) solid var(--clv-color-border);
       border-radius: var(--clv-radius-md);
       background: var(--clv-color-surface);
-      padding: 0.35rem;
+      padding: var(--clv-color-swatch-picker-item-padding);
       color: var(--clv-color-text);
       cursor: pointer;
     }
@@ -222,7 +222,7 @@ const { classes, part, slotContext } = useClvComponent<ColorSwatchPickerPartCont
 
     &__option[data-selected] {
       border-color: var(--clv-color-primary);
-      box-shadow: inset 0 0 0 1px var(--clv-color-primary);
+      box-shadow: var(--clv-color-swatch-picker-selected-shadow);
     }
 
     &__option[data-disabled],
@@ -247,7 +247,7 @@ const { classes, part, slotContext } = useClvComponent<ColorSwatchPickerPartCont
 
     &__indicator {
       color: var(--clv-color-primary);
-      font-weight: 800;
+      font-weight: var(--clv-font-weight-bold);
     }
   }
 }

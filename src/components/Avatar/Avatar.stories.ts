@@ -19,3 +19,15 @@ export const Fallback: Story = {
 }
 
 export const Rounded: Story = { args: { shape: 'rounded', size: 'lg' } }
+
+export const VisualFallback: Story = {
+  ...Fallback,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualRounded: Story = {
+  ...Rounded,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

@@ -28,3 +28,21 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 export const Readonly: Story = { args: { readonly: true } }
 export const Invalid: Story = { args: { error: 'The end date must follow the start date.' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualReadonly: Story = {
+  ...Readonly,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

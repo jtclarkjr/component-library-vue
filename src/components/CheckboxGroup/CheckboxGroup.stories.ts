@@ -62,3 +62,21 @@ export const IndicatorSlot: Story = {
     await expect(indicator).toHaveAttribute('data-part-name', 'indicator')
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualHorizontal: Story = {
+  ...Horizontal,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

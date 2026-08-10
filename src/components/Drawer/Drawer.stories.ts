@@ -43,3 +43,25 @@ export const FromRight: Story = { args: { direction: 'right' } }
 export const SnapPoints: Story = {
   args: { snapPoints: [0.35, 0.7, 1], snapToSequentialPoints: true },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open settings' }))
+  },
+}
+
+export const VisualFromRightOpen: Story = {
+  ...FromRight,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open settings' }))
+  },
+}

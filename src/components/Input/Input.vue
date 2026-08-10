@@ -202,14 +202,14 @@ const descriptionAttrs = computed(() =>
   .clv-input {
     display: grid;
     width: 100%;
-    gap: var(--clv-input-gap, var(--clv-space-2));
+    gap: var(--clv-input-gap);
     color: var(--clv-color-text-muted);
     font-family: var(--clv-font-sans);
-    font-size: 0.875rem;
+    font-size: var(--clv-font-size-body-sm);
 
     &__label {
       color: var(--clv-color-text);
-      font-weight: var(--clv-input-label-weight, 700);
+      font-weight: var(--clv-input-label-weight);
     }
 
     &__sr-only {
@@ -232,19 +232,19 @@ const descriptionAttrs = computed(() =>
     &__field {
       display: block;
       width: 100%;
-      min-height: var(--clv-input-height, var(--clv-control-height));
-      padding: var(--clv-input-padding, 0.65rem 0.8rem);
-      border: var(--clv-input-border-width, 1px) solid var(--clv-color-border);
-      border-radius: var(--clv-input-radius, var(--clv-radius-sm));
-      background: var(--clv-input-bg, var(--clv-color-bg));
+      min-height: var(--clv-input-height);
+      padding: var(--clv-input-padding);
+      border: var(--clv-input-border-width) solid var(--clv-color-border);
+      border-radius: var(--clv-input-radius);
+      background: var(--clv-input-bg);
       color: var(--clv-color-text);
       font: inherit;
-      font-size: var(--clv-input-font-size, inherit);
-      transition: border-color var(--clv-motion-fast) ease;
+      font-size: var(--clv-input-font-size);
+      transition: border-color var(--clv-motion-fast) var(--clv-motion-easing-standard);
 
       &:focus-visible {
         border-color: var(--clv-color-primary);
-        outline: var(--clv-input-focus-width, 2px) solid var(--clv-color-focus);
+        outline: var(--clv-input-focus-width) solid var(--clv-color-focus);
       }
 
       &::placeholder {
@@ -262,11 +262,11 @@ const descriptionAttrs = computed(() =>
       }
 
       &--leading {
-        padding-left: var(--clv-input-leading-padding, 2.75rem);
+        padding-left: var(--clv-input-leading-padding);
       }
 
       &--trailing {
-        padding-right: var(--clv-input-trailing-padding, 3rem);
+        padding-right: var(--clv-input-trailing-padding);
       }
     }
 
@@ -274,18 +274,18 @@ const descriptionAttrs = computed(() =>
     &__trailing {
       position: absolute;
       top: 50%;
-      z-index: 1;
+      z-index: var(--clv-z-local);
       display: inline-flex;
       align-items: center;
       transform: translateY(-50%);
     }
 
     &__leading {
-      left: 0.75rem;
+      left: var(--clv-input-affix-offset);
     }
 
     &__trailing {
-      right: 0.75rem;
+      right: var(--clv-input-affix-offset);
     }
 
     &__clear {
@@ -301,8 +301,8 @@ const descriptionAttrs = computed(() =>
       cursor: pointer;
 
       &:focus-visible {
-        border-radius: 50%;
-        outline: 2px solid var(--clv-color-focus);
+        border-radius: var(--clv-radius-round);
+        outline: var(--clv-focus-ring-width) solid var(--clv-color-focus);
       }
 
       svg {
@@ -313,7 +313,7 @@ const descriptionAttrs = computed(() =>
 
     &__description {
       color: var(--clv-color-text-muted);
-      font-size: 0.8rem;
+      font-size: var(--clv-font-size-sm);
     }
 
     &__error {

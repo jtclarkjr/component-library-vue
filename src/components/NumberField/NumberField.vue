@@ -170,7 +170,7 @@ const descriptionId = computed(() =>
       background: var(--clv-color-surface);
       color: var(--clv-color-text);
       cursor: pointer;
-      font-size: 1.15rem;
+      font-size: var(--clv-number-field-control-font-size);
     }
     &__button:hover:not(:disabled) {
       background: var(--clv-color-surface-raised);

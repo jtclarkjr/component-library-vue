@@ -49,3 +49,21 @@ export const VerticalAlpha: Story = {
 }
 export const Inverted: Story = { args: { inverted: true } }
 export const Disabled: Story = { args: { disabled: true } }
+
+export const VisualDefault: Story = {
+  ...Horizontal,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualVerticalAlpha: Story = {
+  ...VerticalAlpha,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualDisabled: Story = {
+  ...Disabled,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

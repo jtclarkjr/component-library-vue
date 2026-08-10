@@ -24,3 +24,21 @@ export const Sizes: Story = {
     </div>`,
   }),
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualTransparent: Story = {
+  ...Transparent,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSizes: Story = {
+  ...Sizes,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

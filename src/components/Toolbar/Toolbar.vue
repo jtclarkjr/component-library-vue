@@ -111,7 +111,7 @@ const emit = defineEmits<{
     align-items: center;
     gap: var(--clv-space-1);
     padding: var(--clv-space-1);
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     font-family: var(--clv-font-sans);
@@ -120,7 +120,7 @@ const emit = defineEmits<{
       align-items: stretch;
     }
     &__item {
-      padding: 0.5rem 0.65rem;
+      padding: var(--clv-toolbar-item-padding);
       border: 0;
       border-radius: var(--clv-radius-sm);
       background: transparent;
@@ -130,7 +130,7 @@ const emit = defineEmits<{
       text-decoration: none;
     }
     &__item:hover {
-      background: rgb(255 255 255 / 7%);
+      background: var(--clv-toolbar-active-bg);
     }
     &__item:focus-visible {
       @include focus-ring;

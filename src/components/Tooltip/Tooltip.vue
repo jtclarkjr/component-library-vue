@@ -50,20 +50,20 @@ const { classes, part, slotContext } = useClvComponent<TooltipPartContext>('tool
 <style lang="scss">
 @layer clv.components {
   .clv-tooltip {
-    z-index: 1200;
+    z-index: var(--clv-z-tooltip);
     max-width: 18rem;
-    padding: 0.4rem 0.65rem;
+    padding: var(--clv-tooltip-padding);
     border-radius: var(--clv-radius-sm);
     background: var(--clv-color-text);
     box-shadow: var(--clv-shadow-sm);
     color: var(--clv-color-bg);
     font-family: var(--clv-font-sans);
-    font-size: 0.8rem;
-    line-height: 1.35;
+    font-size: var(--clv-font-size-sm);
+    line-height: var(--clv-line-height-tooltip);
 
     &[data-state='delayed-open'],
     &[data-state='instant-open'] {
-      animation: clv-tooltip-in var(--clv-motion-fast) ease-out;
+      animation: clv-tooltip-in var(--clv-motion-fast) var(--clv-motion-easing);
     }
 
     &__arrow {

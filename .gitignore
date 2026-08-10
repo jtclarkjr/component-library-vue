@@ -1,8 +1,10 @@
 node_modules
 dist
 storybook-static
+.visual-reference
 coverage
 .local-pack
+figma/
 *.log
 *.tsbuildinfo
 .DS_Store

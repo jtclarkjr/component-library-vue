@@ -255,11 +255,11 @@ function displayValue(value: ClvValue | undefined) {
     gap: var(--clv-space-2);
     color: var(--clv-color-text-muted);
     font-family: var(--clv-font-sans);
-    font-size: 0.875rem;
+    font-size: var(--clv-font-size-body-sm);
 
     &__label {
       color: var(--clv-color-text);
-      font-weight: 750;
+      font-weight: var(--clv-font-weight-strong);
     }
 
     &__error {
@@ -275,14 +275,14 @@ function displayValue(value: ClvValue | undefined) {
 
     &:focus-within {
       border-color: var(--clv-color-primary);
-      box-shadow: 0 0 0 2px var(--clv-color-focus);
+      box-shadow: var(--clv-combobox-focus-shadow);
     }
 
     &__input {
       min-width: 0;
       min-height: 2.55rem;
       flex: 1;
-      padding: 0.65rem 0.8rem;
+      padding: var(--clv-combobox-input-padding);
       border: 0;
       outline: 0;
       background: transparent;
@@ -306,7 +306,7 @@ function displayValue(value: ClvValue | undefined) {
 
   .clv-combobox-content {
     @include floating-surface;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     min-width: var(--reka-combobox-trigger-width);
     max-height: min(20rem, var(--reka-combobox-content-available-height));
     overflow: hidden;
@@ -333,14 +333,14 @@ function displayValue(value: ClvValue | undefined) {
       align-items: center;
       justify-content: space-between;
       gap: var(--clv-space-4);
-      padding: 0.5rem 0.7rem;
+      padding: var(--clv-menu-item-padding);
       border-radius: var(--clv-radius-sm);
       color: var(--clv-color-text);
       cursor: pointer;
       outline: none;
 
       &[data-highlighted] {
-        background: rgb(255 255 255 / 8%);
+        background: var(--clv-combobox-active-bg);
       }
 
       &[data-disabled] {

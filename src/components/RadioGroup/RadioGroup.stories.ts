@@ -37,3 +37,20 @@ export const Default: Story = {
 }
 
 export const Horizontal: Story = { args: { orientation: 'horizontal' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSelected: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+}
+
+export const VisualHorizontal: Story = {
+  ...Horizontal,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

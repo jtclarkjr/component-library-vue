@@ -22,3 +22,21 @@ export const Determinate: Story = {
 
 export const Indeterminate: Story = { args: { value: null, showValue: false } }
 export const Success: Story = { args: { value: 100, variant: 'success' } }
+
+export const VisualDefault: Story = {
+  ...Determinate,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualIndeterminate: Story = {
+  ...Indeterminate,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSuccess: Story = {
+  ...Success,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

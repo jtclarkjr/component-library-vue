@@ -369,28 +369,28 @@ const { classes, part, slotContext } = useClvComponent<
 @layer clv.components {
   .clv-calendar {
     width: max-content;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-lg);
     background: var(--clv-color-surface-raised);
-    padding: 0.75rem;
+    padding: var(--clv-space-3);
     color: var(--clv-color-text);
 
     &__header {
       display: grid;
       grid-template-columns: 2rem 1fr 2rem;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
+      gap: var(--clv-space-2);
+      margin-bottom: var(--clv-space-2);
     }
 
     &__heading {
       text-align: center;
-      font-weight: 650;
+      font-weight: var(--clv-font-weight-emphasis);
     }
 
     &__nav {
       height: 2rem;
-      border: 1px solid var(--clv-color-border);
+      border: var(--clv-border-width) solid var(--clv-color-border);
       border-radius: var(--clv-radius-md);
       background: var(--clv-color-surface);
       color: inherit;
@@ -410,7 +410,7 @@ const { classes, part, slotContext } = useClvComponent<
     &__months {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: var(--clv-space-4);
     }
 
     &__grid {
@@ -423,11 +423,11 @@ const { classes, part, slotContext } = useClvComponent<
     }
 
     &__weekday {
-      padding-block: 0.25rem;
+      padding-block: var(--clv-space-1);
       color: var(--clv-color-text-muted);
       text-align: center;
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: var(--clv-font-size-xs);
+      font-weight: var(--clv-font-weight-semibold);
     }
 
     &__cell {

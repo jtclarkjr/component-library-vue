@@ -137,7 +137,7 @@ function selected(value: ClvValue) {
       flex-direction: column;
     }
     &__item {
-      border: 1px solid transparent;
+      border: var(--clv-border-width) solid transparent;
       border-radius: var(--clv-radius-sm);
       background: var(--clv-color-surface);
       color: var(--clv-color-text-muted);
@@ -145,16 +145,16 @@ function selected(value: ClvValue) {
       font: inherit;
     }
     &--sm &__item {
-      padding: 0.35rem 0.55rem;
-      font-size: 0.75rem;
+      padding: var(--clv-toggle-padding-sm);
+      font-size: var(--clv-font-size-xs);
     }
     &--md &__item {
-      padding: 0.55rem 0.75rem;
-      font-size: 0.875rem;
+      padding: var(--clv-toggle-padding-md);
+      font-size: var(--clv-font-size-body-sm);
     }
     &--lg &__item {
-      padding: 0.7rem 0.95rem;
-      font-size: 1rem;
+      padding: var(--clv-toggle-padding-lg);
+      font-size: var(--clv-font-size-md);
     }
     &--outline &__item {
       border-color: var(--clv-color-border);

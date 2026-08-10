@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2026-08-10
+
+### Added
+
+- Deterministic `Visual*` Storybook fixtures and a Default/Aqua capture workflow for reconciling
+  component states with design artifacts.
+- Documentation for a local-only deferred Code Connect workflow covering all 62 visual public
+  components, their Storybook references, canonical parts, imports, and exact visible API
+  mappings.
+- Figma design-system handoff guidance for foundations, component anatomy, publication, and future
+  parserless `.figma.ts` activation through `figma.code`.
+- The connected “Component Library Vue — Design System” Drafts file with Default/Aqua variables,
+  shared text/effect styles, 62 public component sets, hidden primitives, and stable manifest IDs.
+- Designer-facing UI-kit catalogue pages with 12 reusable content blocks, 6 responsive
+  compositions, and 4 desktop plus 4 mobile Storybook-reconciled reference screens.
+
+### Changed
+
+- Expanded the public CSS-token surface with explicit Default and Aqua values while preserving the
+  existing Vue component API and rendered presentation.
+
+### Fixed
+
+- Kept Vitest browser error tracking enabled while filtering only Chromium's known undelivered
+  `ResizeObserver` notification from the ScrollArea visual fixture.
+- Completed the Default theme's component-token overrides so a nested Default provider no longer
+  inherits Aqua-only field geometry from an Aqua ancestor.
+
 ## [0.3.1] - 2026-08-06
 
 ### Fixed

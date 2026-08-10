@@ -285,7 +285,7 @@ function selected(value: ClvValue) {
     &__item {
       @include menu-item;
       position: relative;
-      padding-left: 2rem;
+      padding-left: var(--clv-listbox-item-inset-padding-left);
     }
     &__item small {
       display: block;

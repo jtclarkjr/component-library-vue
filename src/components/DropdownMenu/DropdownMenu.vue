@@ -87,13 +87,13 @@ const emit = defineEmits<{
 @layer clv.components {
   .clv-dropdown-menu {
     @include floating-surface;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     min-width: var(--clv-menu-min-width);
     padding: var(--clv-space-1);
     font-family: var(--clv-font-sans);
 
     &[data-state='open'] {
-      animation: clv-dropdown-in var(--clv-motion-fast) ease-out;
+      animation: clv-dropdown-in var(--clv-motion-fast) var(--clv-motion-easing);
     }
   }
 

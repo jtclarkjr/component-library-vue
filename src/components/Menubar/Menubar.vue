@@ -115,13 +115,13 @@ const emit = defineEmits<{
     width: fit-content;
     gap: var(--clv-space-1);
     padding: var(--clv-space-1);
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
     font-family: var(--clv-font-sans);
   }
   .clv-menubar__trigger {
-    padding: 0.5rem 0.7rem;
+    padding: var(--clv-menu-item-padding);
     border: 0;
     border-radius: var(--clv-radius-sm);
     background: transparent;
@@ -141,7 +141,7 @@ const emit = defineEmits<{
   }
   .clv-menubar__content {
     @include floating-surface;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     min-width: var(--clv-menu-min-width);
     padding: var(--clv-space-1);
     font-family: var(--clv-font-sans);

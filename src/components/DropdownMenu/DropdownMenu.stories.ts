@@ -130,3 +130,39 @@ export const RecursiveGlyphSlots: Story = {
     await waitFor(() => expect(canvas.getByRole('button', { name: 'Glyph actions' })).toHaveFocus())
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'aria-hidden-focus', enabled: false }],
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Project actions' }))
+  },
+}
+
+export const VisualAdvancedOpen: Story = {
+  ...Advanced,
+  tags: ['visual', '!autodocs'],
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'aria-hidden-focus', enabled: false }],
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Project actions' }))
+  },
+}

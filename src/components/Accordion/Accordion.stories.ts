@@ -30,3 +30,14 @@ export const Default: Story = {
 }
 
 export const Multiple: Story = { args: { type: 'multiple' } }
+
+export const VisualDefault: Story = {
+  ...Multiple,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+}

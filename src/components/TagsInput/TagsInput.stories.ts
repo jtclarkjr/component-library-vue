@@ -73,3 +73,21 @@ export const GlyphSlots: Story = {
     await expect(clearIcon).toHaveAttribute('data-part-name', 'clear')
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualEmpty: Story = {
+  ...Empty,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

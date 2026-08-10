@@ -59,33 +59,33 @@ const rootAttrs = computed(() =>
   .clv-spinner {
     display: inline-block;
     flex-shrink: 0;
-    border: var(--clv-spinner-border-width, 2px) solid var(--clv-spinner-track-color, currentcolor);
-    border-top-color: var(--clv-spinner-accent-color, transparent);
-    border-radius: 50%;
-    animation: clv-spinner-spin var(--clv-spinner-duration, 650ms) linear infinite;
+    border: var(--clv-spinner-border-width) solid var(--clv-spinner-track-color);
+    border-top-color: var(--clv-spinner-accent-color);
+    border-radius: var(--clv-radius-round);
+    animation: clv-spinner-spin var(--clv-spinner-duration) var(--clv-motion-easing-linear) infinite;
 
     &--sm {
-      width: var(--clv-spinner-size-sm, 0.9rem);
-      height: var(--clv-spinner-size-sm, 0.9rem);
-      border-width: var(--clv-spinner-border-sm, var(--clv-spinner-border-width, 2px));
+      width: var(--clv-spinner-size-sm);
+      height: var(--clv-spinner-size-sm);
+      border-width: var(--clv-spinner-border-sm);
     }
 
     &--md {
-      width: var(--clv-spinner-size-md, 1.25rem);
-      height: var(--clv-spinner-size-md, 1.25rem);
-      border-width: var(--clv-spinner-border-md, var(--clv-spinner-border-width, 2px));
+      width: var(--clv-spinner-size-md);
+      height: var(--clv-spinner-size-md);
+      border-width: var(--clv-spinner-border-md);
     }
 
     &--lg {
-      width: var(--clv-spinner-size-lg, 2rem);
-      height: var(--clv-spinner-size-lg, 2rem);
-      border-width: var(--clv-spinner-border-lg, var(--clv-spinner-border-width, 2px));
+      width: var(--clv-spinner-size-lg);
+      height: var(--clv-spinner-size-lg);
+      border-width: var(--clv-spinner-border-lg);
     }
 
     &--xl {
-      width: var(--clv-spinner-size-xl, 3rem);
-      height: var(--clv-spinner-size-xl, 3rem);
-      border-width: var(--clv-spinner-border-xl, var(--clv-spinner-border-width, 3px));
+      width: var(--clv-spinner-size-xl);
+      height: var(--clv-spinner-size-xl);
+      border-width: var(--clv-spinner-border-xl);
     }
   }
 
@@ -97,7 +97,7 @@ const rootAttrs = computed(() =>
 
   @media (prefers-reduced-motion: reduce) {
     .clv-spinner {
-      animation-duration: var(--clv-spinner-reduced-duration, 1.5s);
+      animation-duration: var(--clv-spinner-reduced-duration);
     }
   }
 }

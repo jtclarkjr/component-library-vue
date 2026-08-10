@@ -40,3 +40,14 @@ export const RichContent: Story = {
       '<HoverCard v-bind="args"><template #trigger><button>Preview member</button></template><template #content><strong>Ada Lovelace</strong><p>Mathematician and computing pioneer.</p></template></HoverCard>',
   }),
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+}

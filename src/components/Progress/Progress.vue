@@ -78,14 +78,14 @@ const percentage = computed(() =>
       display: flex;
       justify-content: space-between;
       color: var(--clv-color-text-muted);
-      font-size: 0.82rem;
+      font-size: var(--clv-progress-label-font-size);
     }
   }
 
   .clv-progress {
     overflow: hidden;
     width: 100%;
-    border-radius: 999px;
+    border-radius: var(--clv-radius-pill);
     background: var(--clv-color-surface-raised);
 
     &--sm {
@@ -104,7 +104,7 @@ const percentage = computed(() =>
       width: 100%;
       height: 100%;
       background: var(--clv-color-primary);
-      transition: transform var(--clv-motion-medium) ease;
+      transition: transform var(--clv-motion-medium) var(--clv-motion-easing-standard);
     }
 
     &--success &__indicator {
@@ -117,7 +117,8 @@ const percentage = computed(() =>
 
     &[data-state='indeterminate'] &__indicator {
       width: 45%;
-      animation: clv-progress-indeterminate 1.2s ease-in-out infinite;
+      animation: clv-progress-indeterminate var(--clv-progress-indeterminate-duration)
+        var(--clv-progress-indeterminate-easing) infinite;
     }
   }
 

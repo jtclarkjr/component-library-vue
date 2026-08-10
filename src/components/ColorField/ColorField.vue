@@ -183,7 +183,7 @@ function commit() {
       height: 100%;
       min-height: var(--clv-control-height);
       place-items: center;
-      border-right: 1px solid var(--clv-color-border);
+      border-right: var(--clv-border-width) solid var(--clv-color-border);
     }
 
     &__preview :deep([role='img']) {
@@ -197,7 +197,7 @@ function commit() {
       border: 0;
       outline: 0;
       background: transparent;
-      padding: 0.625rem 0.75rem;
+      padding: var(--clv-space-2-5) var(--clv-space-3);
       color: var(--clv-color-text);
       font: inherit;
       font-variant-numeric: tabular-nums;

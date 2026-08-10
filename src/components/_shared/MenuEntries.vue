@@ -478,7 +478,7 @@ function onSelect(entry: MenuEntry, event: Event) {
   .clv-menu-entry {
     &__content {
       @include floating-surface;
-      z-index: 1200;
+      z-index: var(--clv-z-menu-nested);
       min-width: var(--clv-menu-min-width);
       padding: var(--clv-space-1);
       font-family: var(--clv-font-sans);
@@ -486,7 +486,7 @@ function onSelect(entry: MenuEntry, event: Event) {
     &__item {
       @include menu-item;
       position: relative;
-      padding-left: 1.9rem;
+      padding-left: var(--clv-menu-item-inset-padding-left);
       &--destructive {
         color: var(--clv-color-danger);
       }
@@ -501,14 +501,14 @@ function onSelect(entry: MenuEntry, event: Event) {
     }
     &__indicator {
       position: absolute;
-      left: 0.65rem;
+      left: var(--clv-menu-indicator-offset);
       color: var(--clv-color-primary);
     }
     &__label {
-      padding: 0.45rem 0.7rem;
+      padding: var(--clv-menu-label-padding);
       color: var(--clv-color-text-muted);
-      font-size: 0.75rem;
-      font-weight: 800;
+      font-size: var(--clv-font-size-xs);
+      font-weight: var(--clv-font-weight-bold);
       text-transform: uppercase;
     }
     &__separator {

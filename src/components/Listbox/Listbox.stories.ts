@@ -84,3 +84,32 @@ export const IndicatorSlots: Story = {
     }
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualSelected: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+}
+
+export const VisualMultiple: Story = {
+  ...Multiple,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualEmpty: Story = {
+  ...Empty,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualVirtualized: Story = {
+  ...Virtualized,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

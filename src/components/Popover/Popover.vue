@@ -51,13 +51,13 @@ function close() {
 @layer clv.components {
   .clv-popover {
     @include floating-surface;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     width: min(22rem, calc(100vw - 2rem));
     padding: var(--clv-space-4);
     font-family: var(--clv-font-sans);
 
     &[data-state='open'] {
-      animation: clv-popover-in var(--clv-motion-fast) ease-out;
+      animation: clv-popover-in var(--clv-motion-fast) var(--clv-motion-easing);
     }
 
     &:focus-visible {

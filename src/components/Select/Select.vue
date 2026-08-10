@@ -247,14 +247,14 @@ const descriptionAttrs = computed(() =>
 @layer clv.components {
   .clv-select-field {
     display: grid;
-    gap: var(--clv-select-gap, var(--clv-space-2));
+    gap: var(--clv-select-gap);
     color: var(--clv-color-text-muted);
     font-family: var(--clv-font-sans);
-    font-size: 0.875rem;
+    font-size: var(--clv-font-size-body-sm);
 
     &__label {
       color: var(--clv-color-text);
-      font-weight: var(--clv-select-label-weight, 750);
+      font-weight: var(--clv-select-label-weight);
     }
 
     &__sr-only {
@@ -270,7 +270,7 @@ const descriptionAttrs = computed(() =>
 
     &__description {
       color: var(--clv-color-text-muted);
-      font-size: 0.8rem;
+      font-size: var(--clv-font-size-sm);
     }
 
     &__error {
@@ -285,18 +285,18 @@ const descriptionAttrs = computed(() =>
     align-items: center;
     justify-content: space-between;
     gap: var(--clv-space-3);
-    padding: var(--clv-select-padding, 0.65rem 0.8rem);
-    border-width: var(--clv-select-border-width, 1px);
-    border-radius: var(--clv-select-radius, var(--clv-radius-sm));
-    background: var(--clv-select-bg, var(--clv-color-bg));
+    padding: var(--clv-select-padding);
+    border-width: var(--clv-select-border-width);
+    border-radius: var(--clv-select-radius);
+    background: var(--clv-select-bg);
     cursor: pointer;
-    font-size: var(--clv-select-font-size, inherit);
+    font-size: var(--clv-select-font-size);
     text-align: left;
-    transition: border-color var(--clv-motion-fast) ease;
+    transition: border-color var(--clv-motion-fast) var(--clv-motion-easing-standard);
 
     &:focus-visible {
       border-color: var(--clv-color-primary);
-      outline: var(--clv-select-focus-width, 2px) solid var(--clv-color-focus);
+      outline: var(--clv-select-focus-width) solid var(--clv-color-focus);
     }
 
     &:disabled {
@@ -313,13 +313,13 @@ const descriptionAttrs = computed(() =>
     }
 
     &__icon--default:not([data-clv-unstyled]) {
-      width: var(--clv-select-icon-size, auto);
-      height: var(--clv-select-icon-size, auto);
-      border-right: var(--clv-select-icon-stroke-width, 0) solid currentcolor;
-      border-bottom: var(--clv-select-icon-stroke-width, 0) solid currentcolor;
-      font-size: var(--clv-select-icon-font-size, inherit);
-      line-height: var(--clv-select-icon-line-height, normal);
-      transform: var(--clv-select-icon-transform, none);
+      width: var(--clv-select-icon-size);
+      height: var(--clv-select-icon-size);
+      border-right: var(--clv-select-icon-stroke-width) solid currentcolor;
+      border-bottom: var(--clv-select-icon-stroke-width) solid currentcolor;
+      font-size: var(--clv-select-icon-font-size);
+      line-height: var(--clv-select-icon-line-height);
+      transform: var(--clv-select-icon-transform);
     }
   }
 }

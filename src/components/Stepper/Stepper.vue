@@ -260,9 +260,9 @@ const activeStep = computed(() => props.steps.find((step) => step.value === mode
     height: 2rem;
     flex: 0 0 auto;
     place-items: center;
-    border: 1px solid var(--clv-color-border);
-    border-radius: 999px;
-    font-weight: 850;
+    border: var(--clv-border-width) solid var(--clv-color-border);
+    border-radius: var(--clv-radius-pill);
+    font-weight: var(--clv-font-weight-heavy);
   }
   [data-state='active'] > .clv-stepper__indicator,
   [data-state='completed'] > .clv-stepper__indicator {
@@ -272,13 +272,13 @@ const activeStep = computed(() => props.steps.find((step) => step.value === mode
   .clv-stepper__title {
     display: block;
     color: inherit;
-    font-weight: 800;
+    font-weight: var(--clv-font-weight-bold);
   }
   .clv-stepper__description {
     display: block;
-    margin-top: 0.15rem;
+    margin-top: var(--clv-stepper-label-offset);
     color: var(--clv-color-text-muted);
-    font-size: 0.75rem;
+    font-size: var(--clv-font-size-xs);
   }
   .clv-stepper__separator {
     height: 1px;
@@ -288,13 +288,13 @@ const activeStep = computed(() => props.steps.find((step) => step.value === mode
   .clv-stepper[data-orientation='vertical'] .clv-stepper__separator {
     width: 1px;
     height: 1.5rem;
-    margin-left: 1rem;
+    margin-left: var(--clv-space-4);
     flex: none;
   }
   .clv-stepper__panel {
     min-height: 5rem;
     padding: var(--clv-space-4);
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
     background: var(--clv-color-surface);
   }
@@ -303,8 +303,8 @@ const activeStep = computed(() => props.steps.find((step) => step.value === mode
     justify-content: flex-end;
     gap: var(--clv-space-2);
     button {
-      padding: 0.55rem 0.75rem;
-      border: 1px solid var(--clv-color-border);
+      padding: var(--clv-stepper-action-padding);
+      border: var(--clv-border-width) solid var(--clv-color-border);
       border-radius: var(--clv-radius-sm);
       background: var(--clv-color-surface);
       color: var(--clv-color-text);

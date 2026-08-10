@@ -39,3 +39,21 @@ export const Currency: Story = {
   },
 }
 export const Invalid: Story = { args: { help: undefined, error: 'Enter a supported value.' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualCurrency: Story = {
+  ...Currency,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualInvalid: Story = {
+  ...Invalid,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

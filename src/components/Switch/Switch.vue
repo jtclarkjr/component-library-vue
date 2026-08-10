@@ -80,7 +80,7 @@ const descriptionId = computed(() =>
     gap: var(--clv-space-2);
     color: var(--clv-color-text-muted);
     font-family: var(--clv-font-sans);
-    font-size: 0.875rem;
+    font-size: var(--clv-font-size-body-sm);
 
     &__control {
       display: flex;
@@ -91,7 +91,7 @@ const descriptionId = computed(() =>
     &__label {
       color: var(--clv-color-text);
       cursor: pointer;
-      font-weight: 700;
+      font-weight: var(--clv-font-weight-label);
     }
 
     &__error {
@@ -104,11 +104,11 @@ const descriptionId = computed(() =>
     display: inline-flex;
     align-items: center;
     flex: none;
-    border: 1px solid var(--clv-color-border);
-    border-radius: 999px;
+    border: var(--clv-border-width) solid var(--clv-color-border);
+    border-radius: var(--clv-radius-pill);
     background: var(--clv-color-surface-raised);
     cursor: pointer;
-    transition: background var(--clv-motion-fast) ease;
+    transition: background var(--clv-motion-fast) var(--clv-motion-easing-standard);
 
     &:focus-visible {
       @include focus-ring;
@@ -126,30 +126,30 @@ const descriptionId = computed(() =>
     &--sm {
       width: 2.15rem;
       height: 1.25rem;
-      padding: 0.12rem;
+      padding: var(--clv-switch-padding-sm);
     }
 
     &--md {
       width: 2.75rem;
       height: 1.55rem;
-      padding: 0.15rem;
+      padding: var(--clv-switch-padding-md);
     }
 
     &--lg {
       width: 3.35rem;
       height: 1.85rem;
-      padding: 0.18rem;
+      padding: var(--clv-switch-padding-lg);
     }
 
     &__thumb {
       display: block;
       aspect-ratio: 1;
       height: 100%;
-      border-radius: 50%;
+      border-radius: var(--clv-radius-round);
       background: var(--clv-color-text);
       box-shadow: var(--clv-shadow-sm);
       transform: translateX(0);
-      transition: transform var(--clv-motion-fast) ease;
+      transition: transform var(--clv-motion-fast) var(--clv-motion-easing-standard);
     }
 
     &--sm[data-state='checked'] &__thumb {

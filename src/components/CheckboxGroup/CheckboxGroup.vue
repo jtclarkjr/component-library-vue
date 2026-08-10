@@ -196,8 +196,8 @@ const { classes, part, slotContext } = useClvComponent<CheckboxGroupPartContext>
       height: 1.25rem;
       flex: 0 0 auto;
       place-items: center;
-      border: 1px solid var(--clv-color-border);
-      border-radius: 0.3rem;
+      border: var(--clv-border-width) solid var(--clv-color-border);
+      border-radius: var(--clv-checkbox-group-radius);
       background: var(--clv-color-bg);
       color: var(--clv-color-bg);
       &:focus-visible {
@@ -212,8 +212,8 @@ const { classes, part, slotContext } = useClvComponent<CheckboxGroupPartContext>
       }
     }
     &__indicator {
-      font-size: 0.8rem;
-      font-weight: 900;
+      font-size: var(--clv-font-size-sm);
+      font-weight: var(--clv-font-weight-black);
     }
   }
 }

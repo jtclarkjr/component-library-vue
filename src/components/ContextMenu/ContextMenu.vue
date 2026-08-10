@@ -80,7 +80,7 @@ const emit = defineEmits<{
 @layer clv.components {
   .clv-context-menu {
     @include floating-surface;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     min-width: var(--clv-menu-min-width);
     padding: var(--clv-space-1);
     font-family: var(--clv-font-sans);

@@ -68,7 +68,7 @@ const { classes, part, slotContext } = useClvComponent<ColorSwatchPartContext>(
     display: inline-grid;
     overflow: hidden;
     place-items: stretch;
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-md);
 
     &--checkerboard {
@@ -91,7 +91,7 @@ const { classes, part, slotContext } = useClvComponent<ColorSwatchPartContext>(
     }
 
     &--rounded {
-      border-radius: 999px;
+      border-radius: var(--clv-radius-pill);
     }
 
     &__color {

@@ -49,3 +49,30 @@ export const Default: Story = {
   },
 }
 export const Vertical: Story = { args: { orientation: 'vertical' } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'aria-hidden-focus', enabled: false }],
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(within(canvasElement).getByRole('button', { name: /Products/ }))
+  },
+}
+
+export const VisualVertical: Story = {
+  ...Vertical,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

@@ -49,23 +49,23 @@ const { classes, part, slotContext } = useClvComponent<CardPartContext>('card', 
     min-height: 15rem;
     flex-direction: column;
     padding: var(--clv-space-6);
-    border: 1px solid var(--clv-color-border);
+    border: var(--clv-border-width) solid var(--clv-color-border);
     border-radius: var(--clv-radius-lg);
     background: var(--clv-color-surface);
     color: var(--clv-color-text);
     font-family: var(--clv-font-sans);
 
     &--accent {
-      border-color: rgb(116 224 193 / 60%);
+      border-color: var(--clv-card-accent-border);
     }
 
     &--subtle {
-      background: rgb(255 255 255 / 3%);
+      background: var(--clv-card-subtle-bg);
     }
 
     &__header h2 {
       margin: 0 0 var(--clv-space-4);
-      font-size: 1.2rem;
+      font-size: var(--clv-card-title-font-size);
     }
 
     &__body {
@@ -76,7 +76,7 @@ const { classes, part, slotContext } = useClvComponent<CardPartContext>('card', 
       margin-top: auto;
       padding-top: var(--clv-space-6);
       color: var(--clv-color-text-muted);
-      font-size: 0.875rem;
+      font-size: var(--clv-font-size-body-sm);
     }
   }
 }

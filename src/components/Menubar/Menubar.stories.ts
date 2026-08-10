@@ -52,3 +52,17 @@ export const Default: Story = {
     await expect(args.onAction).toHaveBeenCalled()
   },
 }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualOpen: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('menuitem', { name: 'File' }))
+  },
+}

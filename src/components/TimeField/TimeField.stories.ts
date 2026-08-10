@@ -34,3 +34,21 @@ export const Default: Story = {
 }
 export const TwelveHour: Story = { args: { hourCycle: 12 } }
 export const Disabled: Story = { args: { disabled: true } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualTwelveHour: Story = {
+  ...TwelveHour,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualDisabled: Story = {
+  ...Disabled,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}

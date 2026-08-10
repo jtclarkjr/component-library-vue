@@ -113,20 +113,20 @@ const emit = defineEmits<{
 @layer clv.components {
   .clv-alert-dialog__overlay {
     position: fixed;
-    z-index: 1000;
+    z-index: var(--clv-z-modal-overlay);
     background: var(--clv-color-overlay);
-    backdrop-filter: blur(5px);
+    backdrop-filter: var(--clv-overlay-backdrop-filter);
     inset: 0;
 
     &[data-state='open'] {
-      animation: clv-alert-overlay-in var(--clv-motion-medium) ease-out;
+      animation: clv-alert-overlay-in var(--clv-motion-medium) var(--clv-motion-easing);
     }
   }
 
   .clv-alert-dialog {
     @include floating-surface;
     position: fixed;
-    z-index: 1001;
+    z-index: var(--clv-z-modal-content);
     top: 50%;
     left: 50%;
     width: calc(100% - 2rem);
@@ -137,7 +137,7 @@ const emit = defineEmits<{
     transform: translate(-50%, -50%);
 
     &[data-state='open'] {
-      animation: clv-alert-content-in var(--clv-motion-medium) cubic-bezier(0.16, 1, 0.3, 1);
+      animation: clv-alert-content-in var(--clv-motion-medium) var(--clv-motion-easing-emphasized);
     }
 
     &--sm {
@@ -155,8 +155,8 @@ const emit = defineEmits<{
     &__title {
       margin: 0;
       color: var(--clv-color-text);
-      font-size: 1.25rem;
-      font-weight: 800;
+      font-size: var(--clv-font-size-lg);
+      font-weight: var(--clv-font-weight-bold);
     }
 
     &__description {

@@ -157,21 +157,21 @@ function close() {
 @layer clv.components {
   .clv-drawer__overlay {
     position: fixed;
-    z-index: 1090;
+    z-index: var(--clv-z-drawer-overlay);
     inset: 0;
     background: var(--clv-color-overlay);
   }
   .clv-drawer {
     @include floating-surface;
     position: fixed;
-    z-index: 1100;
+    z-index: var(--clv-z-popover);
     display: flex;
     max-height: 92vh;
     flex-direction: column;
     border-radius: var(--clv-radius-lg);
     font-family: var(--clv-font-sans);
     &[data-state='open'] {
-      animation: clv-drawer-in var(--clv-motion-medium) ease-out;
+      animation: clv-drawer-in var(--clv-motion-medium) var(--clv-motion-easing);
     }
     @include reduced-motion;
   }
@@ -211,7 +211,7 @@ function close() {
     width: 3rem;
     height: 0.3rem;
     margin: var(--clv-space-2) auto;
-    border-radius: 999px;
+    border-radius: var(--clv-radius-pill);
     background: var(--clv-color-border);
   }
   .clv-drawer__header,
@@ -221,17 +221,17 @@ function close() {
     justify-content: space-between;
     gap: var(--clv-space-4);
     padding: var(--clv-space-4);
-    border-bottom: 1px solid var(--clv-color-border);
+    border-bottom: var(--clv-border-width) solid var(--clv-color-border);
   }
   .clv-drawer__footer {
-    border-top: 1px solid var(--clv-color-border);
+    border-top: var(--clv-border-width) solid var(--clv-color-border);
     border-bottom: 0;
   }
   .clv-drawer__title {
     margin: 0;
     color: var(--clv-color-text);
-    font-size: 1.1rem;
-    font-weight: 850;
+    font-size: var(--clv-drawer-title-font-size);
+    font-weight: var(--clv-font-weight-heavy);
   }
   .clv-drawer__description {
     margin-top: var(--clv-space-1);
@@ -242,7 +242,7 @@ function close() {
     background: transparent;
     color: var(--clv-color-text-muted);
     cursor: pointer;
-    font-size: 1.4rem;
+    font-size: var(--clv-drawer-close-font-size);
     &:focus-visible {
       @include focus-ring;
     }

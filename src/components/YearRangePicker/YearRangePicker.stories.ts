@@ -27,3 +27,15 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const NonLinear: Story = { args: { allowNonContiguousRanges: true } }
+
+export const VisualDefault: Story = {
+  ...Default,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
+
+export const VisualNonLinear: Story = {
+  ...NonLinear,
+  tags: ['visual', '!autodocs'],
+  play: undefined,
+}
