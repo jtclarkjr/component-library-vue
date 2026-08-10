@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
   resolved contexts and emitted `data-clv-theme-mode` values canonical and reactively synchronized.
 - Split the built-in theme tokens into dedicated Default, Aqua, and Neutral partials while
   preserving the generated public stylesheet and complete nested-theme resets.
+- Split the headless implementation into focused attribute-policy, composable, constant, context,
+  helper, and type modules while preserving the existing barrel exports and component behavior.
 
 ## [0.3.2] - 2026-08-10
 
