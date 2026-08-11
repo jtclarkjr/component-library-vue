@@ -44,7 +44,7 @@ const emit = defineEmits<{
       <ContextMenuContent
         :class="classes('clv-context-menu')"
         :collision-padding="8"
-        v-bind="part('content', { open }, {}, { surface: true })"
+        v-bind="part('content', { open }, {}, { surface: true, detached: true })"
       >
         <MenuEntries
           :entries="items"

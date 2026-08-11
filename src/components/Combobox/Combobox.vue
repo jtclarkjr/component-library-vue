@@ -143,7 +143,14 @@ function displayValue(value: ClvValue | undefined) {
           position="popper"
           :side-offset="6"
           :aria-label="label ? `${label} options` : 'Options'"
-          v-bind="part('content', { disabled, value: model, searchTerm }, {}, { surface: true })"
+          v-bind="
+            part(
+              'content',
+              { disabled, value: model, searchTerm },
+              {},
+              { surface: true, detached: true },
+            )
+          "
         >
           <ComboboxViewport
             :class="classes('clv-combobox-content__viewport')"

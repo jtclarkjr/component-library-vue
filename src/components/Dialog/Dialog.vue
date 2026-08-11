@@ -42,11 +42,11 @@ const { classes, part, slotContext } = useClvComponent<DialogPartContext>('dialo
     <DialogPortal>
       <DialogOverlay
         :class="classes('clv-dialog__overlay')"
-        v-bind="part('overlay', { open, size }, {}, { surface: true })"
+        v-bind="part('overlay', { open, size }, {}, { surface: true, detached: true })"
       />
       <DialogContent
         :class="classes(['clv-dialog', `clv-dialog--${size}`])"
-        v-bind="part('content', { open, size }, {}, { surface: true })"
+        v-bind="part('content', { open, size }, {}, { surface: true, detached: true })"
       >
         <header :class="classes('clv-dialog__header')" v-bind="part('header', { open, size })">
           <div>

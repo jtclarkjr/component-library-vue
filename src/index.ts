@@ -34,6 +34,17 @@ export type {
 } from './types'
 
 export * from './parts'
+export type {
+  ClvResolvedThemeStyle,
+  ClvThemeCssValue,
+  ClvThemeDefinition,
+  ClvThemePalette,
+  ClvThemeRegistry,
+  ClvThemeTokenName,
+  ClvThemeTokens,
+  ClvThemeVariant,
+} from './themes'
+export { defineClvThemes } from './themes'
 export { CLV_THEME_KEYS, CLV_THEME_MODES } from './headless'
 
 export { default as Accordion } from './components/Accordion/Accordion.vue'

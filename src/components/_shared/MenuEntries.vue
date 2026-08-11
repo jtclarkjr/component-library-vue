@@ -223,7 +223,12 @@ function onSelect(entry: MenuEntry, event: Event) {
           :class="classes('clv-menu-entry__content')"
           :side-offset="4"
           v-bind="
-            part('submenuContent', { entry, index, depth: depth ?? 0, kind }, {}, { surface: true })
+            part(
+              'submenuContent',
+              { entry, index, depth: depth ?? 0, kind },
+              {},
+              { surface: true, detached: true },
+            )
           "
         >
           <MenuEntries

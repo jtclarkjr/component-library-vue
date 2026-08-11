@@ -114,7 +114,7 @@ function action(item: ToastItem) {
       <ToastViewport
         :class="classes('clv-toast-viewport')"
         :label="viewportLabel"
-        v-bind="part('viewport', {}, {}, { surface: true })"
+        v-bind="part('viewport', {}, {}, { surface: true, detached: true })"
       />
     </ToastPortal>
   </ToastProvider>

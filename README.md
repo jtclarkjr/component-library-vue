@@ -148,7 +148,53 @@ The `mode` prop accepts `dark` or `light` in any letter casing, can be driven by
 computed value, inherits through nested providers, and defaults to `dark` for Neutral. Provider,
 component, part, slot, and teleported-surface output is normalized to canonical lowercase. Neutral's
 direct `data-clv-theme-mode` selector is also case-insensitive. Default and Aqua do not supply
-mode-specific styles; custom themes can opt into the same hook.
+mode-specific styles.
+
+Applications can register named themes directly on `ClvProvider`. A custom theme inherits all
+tokens and component recipes from Default unless `extends` selects Aqua or Neutral, so its palette
+and token maps can stay partial. `palette` covers the shared semantic colors; `tokens` accepts any
+advanced `--clv-*` custom property. Raw tokens override equivalent palette entries.
+
+```ts
+import { defineClvThemes } from '@jtclarkjr/component-library-vue'
+
+export const themes = defineClvThemes({
+  brand: {
+    extends: 'neutral',
+    defaultMode: 'dark',
+    palette: {
+      bg: '#18181b',
+      surface: '#27272a',
+      text: '#fafafa',
+      primary: '#7c3aed',
+      onPrimary: '#ffffff',
+    },
+    tokens: {
+      '--clv-radius-sm': '0.75rem',
+    },
+    modes: {
+      light: {
+        palette: { bg: '#ffffff', surface: '#ffffff', text: '#18181b' },
+      },
+      dim: {
+        palette: { surface: '#202023' },
+        tokens: { '--clv-shadow-md': 'none' },
+      },
+    },
+  },
+})
+```
+
+```vue
+<ClvProvider :themes="themes" theme="brand" mode="dim">
+  <RouterView />
+</ClvProvider>
+```
+
+Custom mode names are matched case-insensitively and emitted in lowercase. Registries inherit
+through nested providers; a local definition replaces a parent definition with the same name.
+Built-in names are reserved. Registered palette and token values follow teleported overlays
+automatically, while an unregistered theme name remains available for CSS-authored themes.
 
 `ClvProvider` also accepts `unstyled`. Individual components can explicitly override inherited
 presentation with `:unstyled="false"`, or opt out locally with `unstyled`. Omitting `style.css`
@@ -175,6 +221,9 @@ are composed in order and event listeners run internal-first; required accessibi
 attributes remain component-owned. Physical and teleported surfaces expose
 `data-clv-component`, `data-part`, resolved theme and mode attributes, and applicable state
 attributes for CSS-only customization.
+
+Registered custom-theme provider roots and detached surfaces additionally expose
+`data-clv-theme-base`, identifying the bundled theme supplying their omitted tokens.
 
 The stylesheet supplies default dark-theme tokens and all component styles. Override the public
 `--clv-*` custom properties in your application to theme the components:

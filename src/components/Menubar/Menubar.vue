@@ -72,7 +72,7 @@ const emit = defineEmits<{
               'content',
               { entry: menu, index, depth: 0, kind: 'menubar' },
               {},
-              { surface: true },
+              { surface: true, detached: true },
             )
           "
         >

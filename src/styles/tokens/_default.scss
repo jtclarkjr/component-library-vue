@@ -1,6 +1,7 @@
 @mixin tokens {
   :where(:root),
-  :where([data-clv-theme='default']) {
+  :where([data-clv-theme='default']),
+  :where([data-clv-theme-base='default']) {
     --clv-color-bg: #09111f;
     --clv-color-surface: #111c2f;
     --clv-color-surface-raised: #17243a;

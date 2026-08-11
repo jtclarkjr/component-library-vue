@@ -61,11 +61,13 @@ const emit = defineEmits<{
     <AlertDialogPortal>
       <AlertDialogOverlay
         :class="classes('clv-alert-dialog__overlay')"
-        v-bind="part('overlay', { open }, {}, { surface: true })"
+        v-bind="part('overlay', { open }, {}, { surface: true, detached: true })"
       />
       <AlertDialogContent
         :class="classes(['clv-alert-dialog', `clv-alert-dialog--${size}`])"
-        v-bind="part('content', { open, size, variant, loading }, {}, { surface: true })"
+        v-bind="
+          part('content', { open, size, variant, loading }, {}, { surface: true, detached: true })
+        "
       >
         <AlertDialogTitle
           :class="classes('clv-alert-dialog__title')"

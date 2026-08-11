@@ -1,5 +1,6 @@
 @mixin tokens {
-  :where([data-clv-theme='neutral']) {
+  :where([data-clv-theme='neutral']),
+  :where([data-clv-theme-base='neutral']) {
     color-scheme: dark;
     --clv-color-bg: oklch(0.145 0 0);
     --clv-color-surface: oklch(0.205 0 0);
@@ -212,7 +213,8 @@
     --clv-toast-accent-border-width: 4px;
   }
 
-  :where([data-clv-theme='neutral'][data-clv-theme-mode='light' i]) {
+  :where([data-clv-theme='neutral'][data-clv-theme-mode='light' i]),
+  :where([data-clv-theme-base='neutral'][data-clv-theme-mode='light' i]) {
     color-scheme: light;
     --clv-color-bg: oklch(1 0 0);
     --clv-color-surface: oklch(1 0 0);

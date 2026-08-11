@@ -187,7 +187,7 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
               'content',
               { open, disabled, readonly, invalid: Boolean(error), value: model },
               {},
-              { surface: true },
+              { surface: true, detached: true },
             )
           "
         >

@@ -1,6 +1,13 @@
 import { mergeProps } from 'vue'
 
-import type { ClvCommonPartState, ClvPartAttrs, ClvPartContext, ClvParts } from '../parts'
+import type {
+  ClvBuiltInThemeKey,
+  ClvCommonPartState,
+  ClvPartAttrs,
+  ClvPartContext,
+  ClvParts,
+} from '../parts'
+import type { ClvResolvedThemeStyle } from '../themes'
 import {
   alwaysProtected,
   ariaRelationships,
@@ -18,6 +25,8 @@ interface CreateBuiltInPartAttrsOptions {
   internalAttrs: ClvPartAttrs
   name: string
   resolveOptions: ClvResolvedPartOptions
+  themeBase: ClvBuiltInThemeKey | undefined
+  themeStyle: ClvResolvedThemeStyle | undefined
 }
 
 interface MergePartAttrsOptions {
@@ -57,11 +66,18 @@ function applySurfaceAttrs(
   attrs: Record<string, unknown>,
   component: string,
   context: FullPartContext,
+  resolveOptions: ClvResolvedPartOptions,
+  themeBase: ClvBuiltInThemeKey | undefined,
+  themeStyle: ClvResolvedThemeStyle | undefined,
 ): void {
   attrs['data-clv-component'] = component
   attrs['data-clv-unstyled'] = context.unstyled ? '' : undefined
   if (context.theme !== undefined) attrs['data-clv-theme'] = context.theme
   if (context.mode !== undefined) attrs['data-clv-theme-mode'] = context.mode
+  if (resolveOptions.detached) {
+    if (themeBase !== undefined) attrs['data-clv-theme-base'] = themeBase
+    if (themeStyle !== undefined) attrs.style = themeStyle
+  }
 }
 
 export function createBuiltInPartAttrs({
@@ -70,6 +86,8 @@ export function createBuiltInPartAttrs({
   internalAttrs,
   name,
   resolveOptions,
+  themeBase,
+  themeStyle,
 }: CreateBuiltInPartAttrsOptions): Record<string, unknown> {
   const attrs: Record<string, unknown> = { ...internalAttrs }
 
@@ -79,7 +97,7 @@ export function createBuiltInPartAttrs({
   attrs['data-part'] = toPartName(name)
 
   if (resolveOptions.surface ?? name === 'root') {
-    applySurfaceAttrs(attrs, component, context)
+    applySurfaceAttrs(attrs, component, context, resolveOptions, themeBase, themeStyle)
   }
 
   return attrs

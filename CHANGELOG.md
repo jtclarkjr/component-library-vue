@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Provider-local custom theme registries with typed semantic palettes, advanced token overrides,
+  bundled-theme inheritance, custom named modes, nested-provider composition, and automatic token
+  propagation to teleported surfaces.
+
 ## [0.4.1] - 2026-08-11
 
 ### Changed

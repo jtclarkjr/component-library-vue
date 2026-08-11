@@ -14,6 +14,8 @@ import DateRangePicker from '../DateRangePicker/DateRangePicker.vue'
 import Input from '../Input/Input.vue'
 import Menubar from '../Menubar/Menubar.vue'
 import NavigationMenu from '../NavigationMenu/NavigationMenu.vue'
+import Select from '../Select/Select.vue'
+import { defineClvThemes } from '../../themes'
 import ClvProvider from './ClvProvider.vue'
 
 const meta = {
@@ -307,6 +309,143 @@ export const ThemeAndPartsContract: Story = {
       'data-slot-unstyled',
       'true',
     )
+  },
+}
+
+export const ConsumerDefinedThemes: Story = {
+  render: () => ({
+    components: { Button, ClvProvider, Select },
+    setup() {
+      const mode = ref<ClvThemeModeInput>('DIM')
+      const invalidMode = ref<ClvThemeModeInput>('system')
+      const office = ref('tokyo')
+      const themes = defineClvThemes({
+        brand: {
+          extends: 'neutral',
+          defaultMode: 'dim',
+          palette: {
+            bg: '#18181b',
+            primary: '#7c3aed',
+            onPrimary: '#ffffff',
+            surface: '#18181b',
+            text: '#fafafa',
+          },
+          tokens: { '--clv-radius-sm': '0.75rem' },
+          modes: {
+            dim: {
+              palette: { surface: '#27272a' },
+              tokens: { '--clv-shadow-md': 'none' },
+            },
+            light: {
+              palette: { bg: '#ffffff', surface: '#ffffff', text: '#18181b' },
+            },
+          },
+        },
+      })
+      const shadowThemes = defineClvThemes({
+        brand: {
+          extends: 'aqua',
+          palette: { surface: '#123456' },
+        },
+      })
+      const toggleMode = () => {
+        mode.value = mode.value === 'DIM' ? 'LIGHT' : 'DIM'
+      }
+      return {
+        invalidMode,
+        mode,
+        office,
+        options: [
+          { label: 'Tokyo', value: 'tokyo' },
+          { label: 'Osaka', value: 'osaka' },
+        ],
+        shadowThemes,
+        themes,
+        toggleMode,
+      }
+    },
+    template: `
+      <ClvProvider
+        data-testid="custom-theme-provider"
+        :themes="themes"
+        theme="brand"
+        :mode="mode"
+        style="--clv-color-primary: #9d174d; padding: 1rem; background: var(--clv-color-bg)"
+      >
+        <button data-testid="custom-mode-toggle" type="button" @click="toggleMode">
+          Toggle custom mode
+        </button>
+        <Button>Brand action</Button>
+        <Select v-model="office" :options="options" label="Brand office" />
+        <ClvProvider data-testid="custom-theme-inherited-provider">
+          <Button>Inherited brand action</Button>
+        </ClvProvider>
+        <ClvProvider data-testid="custom-theme-shadow-provider" :themes="shadowThemes">
+          <Button>Shadowed brand action</Button>
+        </ClvProvider>
+      </ClvProvider>
+      <ClvProvider
+        data-testid="custom-theme-invalid-mode-provider"
+        :themes="themes"
+        theme="brand"
+        :mode="invalidMode"
+      >
+        <Button>Default custom mode action</Button>
+      </ClvProvider>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const page = within(canvasElement.ownerDocument.body)
+    const provider = canvas.getByTestId('custom-theme-provider')
+    const modeToggle = canvas.getByTestId('custom-mode-toggle')
+    const inheritedProvider = canvas.getByTestId('custom-theme-inherited-provider')
+    const shadowProvider = canvas.getByTestId('custom-theme-shadow-provider')
+    const invalidModeProvider = canvas.getByTestId('custom-theme-invalid-mode-provider')
+
+    await expect(provider).toHaveAttribute('data-clv-theme', 'brand')
+    await expect(provider).toHaveAttribute('data-clv-theme-base', 'neutral')
+    await expect(provider).toHaveAttribute('data-clv-theme-mode', 'dim')
+    await expect(inheritedProvider).toHaveAttribute('data-clv-theme', 'brand')
+    await expect(inheritedProvider).toHaveAttribute('data-clv-theme-base', 'neutral')
+    await expect(inheritedProvider).toHaveAttribute('data-clv-theme-mode', 'dim')
+    await expect(shadowProvider).toHaveAttribute('data-clv-theme-base', 'aqua')
+    await expect(shadowProvider).not.toHaveAttribute('data-clv-theme-mode')
+    await expect(invalidModeProvider).toHaveAttribute('data-clv-theme-mode', 'dim')
+
+    const providerStyle = getComputedStyle(provider)
+    await expect(providerStyle.getPropertyValue('--clv-color-primary').trim()).toBe('#9d174d')
+    await expect(providerStyle.getPropertyValue('--clv-color-surface').trim()).toBe('#27272a')
+    await expect(providerStyle.getPropertyValue('--clv-radius-sm').trim()).toBe('0.75rem')
+    await expect(providerStyle.getPropertyValue('--clv-shadow-md').trim()).toBe('none')
+    await expect(
+      getComputedStyle(shadowProvider).getPropertyValue('--clv-color-surface').trim(),
+    ).toBe('#123456')
+
+    await userEvent.click(canvas.getByRole('combobox', { name: 'Brand office' }))
+    const option = await page.findByRole('option', { name: 'Tokyo' })
+    const content = option.closest('[data-clv-component="select"]')
+    if (!content) throw new Error('Expected the teleported Select content')
+    await expect(content).toHaveAttribute('data-clv-theme', 'brand')
+    await expect(content).toHaveAttribute('data-clv-theme-base', 'neutral')
+    await expect(content).toHaveAttribute('data-clv-theme-mode', 'dim')
+    await expect(getComputedStyle(content).getPropertyValue('--clv-color-surface').trim()).toBe(
+      '#27272a',
+    )
+
+    modeToggle.click()
+    await waitFor(async () => {
+      await expect(provider).toHaveAttribute('data-clv-theme-mode', 'light')
+      await expect(inheritedProvider).toHaveAttribute('data-clv-theme-mode', 'light')
+      await expect(content).toHaveAttribute('data-clv-theme-mode', 'light')
+      await expect(getComputedStyle(provider).getPropertyValue('--clv-color-surface').trim()).toBe(
+        '#ffffff',
+      )
+      await expect(getComputedStyle(content).getPropertyValue('--clv-color-surface').trim()).toBe(
+        '#ffffff',
+      )
+    })
+    await userEvent.click(option)
   },
 }
 

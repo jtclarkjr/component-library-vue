@@ -1,5 +1,6 @@
 @mixin tokens {
-  :where([data-clv-theme='aqua']) {
+  :where([data-clv-theme='aqua']),
+  :where([data-clv-theme-base='aqua']) {
     color-scheme: dark;
     --clv-color-bg: #0b1622;
     --clv-color-surface: #151f2e;

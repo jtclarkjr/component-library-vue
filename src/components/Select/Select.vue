@@ -99,7 +99,12 @@ const controlAttrs = computed(() =>
   ),
 )
 const contentAttrs = computed(() =>
-  clv.part('content', context.value, { class: 'clv-select-content' }, { surface: true }),
+  clv.part(
+    'content',
+    context.value,
+    { class: 'clv-select-content' },
+    { surface: true, detached: true },
+  ),
 )
 const descriptionAttrs = computed(() =>
   clv.part(

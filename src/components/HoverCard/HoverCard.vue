@@ -47,7 +47,7 @@ const { classes, part, slotContext } = useClvComponent<HoverCardPartContext>('ho
         :align="align"
         :side-offset="sideOffset"
         :collision-padding="8"
-        v-bind="part('content', { open }, {}, { surface: true })"
+        v-bind="part('content', { open }, {}, { surface: true, detached: true })"
       >
         <slot name="content" :open="open" :context="slotContext('content', { open })">{{
           text

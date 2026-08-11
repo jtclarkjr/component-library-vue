@@ -69,14 +69,26 @@ function close() {
       <DrawerOverlay
         v-if="modal === true"
         :class="classes('clv-drawer__overlay')"
-        v-bind="part('overlay', { open, direction, value: snapPoint }, {}, { surface: true })"
+        v-bind="
+          part(
+            'overlay',
+            { open, direction, value: snapPoint },
+            {},
+            { surface: true, detached: true },
+          )
+        "
       />
       <DrawerContent
         :class="classes(['clv-drawer', `clv-drawer--${direction}`])"
         v-bind="
           mergeProps(
             part('root', { open, direction, value: snapPoint }),
-            part('content', { open, direction, value: snapPoint }, {}, { surface: true }),
+            part(
+              'content',
+              { open, direction, value: snapPoint },
+              {},
+              { surface: true, detached: true },
+            ),
           )
         "
       >

@@ -51,7 +51,7 @@ const emit = defineEmits<{
         :align="align"
         :side-offset="sideOffset"
         :collision-padding="8"
-        v-bind="part('content', { open }, {}, { surface: true })"
+        v-bind="part('content', { open }, {}, { surface: true, detached: true })"
       >
         <MenuEntries
           :entries="items"

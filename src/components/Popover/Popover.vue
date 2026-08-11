@@ -36,7 +36,7 @@ function close() {
         :align="align"
         :side-offset="sideOffset"
         :collision-padding="8"
-        v-bind="part('content', { open }, {}, { surface: true })"
+        v-bind="part('content', { open }, {}, { surface: true, detached: true })"
       >
         <slot :close="close" :context="slotContext('content', { open })" />
         <PopoverArrow :class="classes('clv-popover__arrow')" v-bind="part('arrow', { open })" />

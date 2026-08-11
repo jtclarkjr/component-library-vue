@@ -510,7 +510,7 @@ function close() {
               'content',
               { open, disabled, readonly, invalid: Boolean(error), value: modelValue, range },
               {},
-              { surface: true },
+              { surface: true, detached: true },
             )
           "
         >

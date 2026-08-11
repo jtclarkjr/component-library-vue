@@ -38,7 +38,7 @@ const { classes, part, slotContext } = useClvComponent<TooltipPartContext>('tool
         :align="align"
         :side-offset="sideOffset"
         :collision-padding="8"
-        v-bind="part('content', { open }, {}, { surface: true })"
+        v-bind="part('content', { open }, {}, { surface: true, detached: true })"
       >
         <slot name="content" :context="slotContext('content', { open })">{{ content }}</slot>
         <TooltipArrow :class="classes('clv-tooltip__arrow')" v-bind="part('arrow', { open })" />

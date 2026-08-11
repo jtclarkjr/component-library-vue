@@ -2,11 +2,13 @@ import { computed, getCurrentInstance, toValue } from 'vue'
 
 import type {
   ClvCommonPartState,
+  ClvBuiltInThemeKey,
   ClvPartAttrs,
   ClvPartContext,
   ClvThemeKey,
   ClvThemeMode,
 } from '../parts'
+import type { ClvResolvedThemeStyle } from '../themes'
 import { createBuiltInPartAttrs, mergePartAttrs, resolveConfiguredPartAttrs } from './attrs'
 import { useClvContext } from './context'
 import { getComponentPropNames, resolveUnstyled } from './helpers'
@@ -36,6 +38,8 @@ export function useClvComponent<C extends ClvPartContext & ClvCommonPartState>(
   )
   const theme = computed<ClvThemeKey | undefined>(() => provider?.theme.value)
   const mode = computed<ClvThemeMode | undefined>(() => provider?.mode.value)
+  const themeBase = computed<ClvBuiltInThemeKey | undefined>(() => provider?.themeBase.value)
+  const themeStyle = computed<ClvResolvedThemeStyle | undefined>(() => provider?.themeStyle.value)
 
   function slotContext<K extends C['part']>(
     name: K,
@@ -70,6 +74,8 @@ export function useClvComponent<C extends ClvPartContext & ClvCommonPartState>(
       internalAttrs,
       name,
       resolveOptions,
+      themeBase: themeBase.value,
+      themeStyle: themeStyle.value,
     })
     const fallthroughAttrs =
       name === 'root' && options.attrs !== undefined ? toValue(options.attrs) : undefined
