@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-08-11
+
 ### Changed
 
 - Aligned Neutral's light and dark interface chrome with a shadcn-style OKLCH grayscale palette,
