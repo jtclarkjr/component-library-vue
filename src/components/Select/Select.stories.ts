@@ -15,6 +15,41 @@ const options = [
   { value: 'new-york', label: 'New York' },
 ] satisfies ChoiceOption<Office>[]
 
+const neutralCorePalette = {
+  dark: {
+    '--clv-color-bg': 'oklch(0.145 0 0)',
+    '--clv-color-surface': 'oklch(0.205 0 0)',
+    '--clv-color-surface-raised': 'oklch(0.269 0 0)',
+    '--clv-color-border': 'oklch(1 0 0 / 10%)',
+    '--clv-color-text': 'oklch(0.985 0 0)',
+    '--clv-color-text-muted': 'oklch(0.708 0 0)',
+    '--clv-color-primary': 'oklch(0.922 0 0)',
+    '--clv-color-on-primary': 'oklch(0.205 0 0)',
+    '--clv-color-focus': 'oklch(0.556 0 0)',
+  },
+  light: {
+    '--clv-color-bg': 'oklch(1 0 0)',
+    '--clv-color-surface': 'oklch(1 0 0)',
+    '--clv-color-surface-raised': 'oklch(0.97 0 0)',
+    '--clv-color-border': 'oklch(0.922 0 0)',
+    '--clv-color-text': 'oklch(0.145 0 0)',
+    '--clv-color-text-muted': 'oklch(0.515 0 0)',
+    '--clv-color-primary': 'oklch(0.205 0 0)',
+    '--clv-color-on-primary': 'oklch(0.985 0 0)',
+    '--clv-color-focus': 'oklch(0.708 0 0)',
+  },
+} as const
+
+type NeutralPaletteMode = keyof typeof neutralCorePalette
+
+async function expectNeutralCorePalette(style: CSSStyleDeclaration, mode: NeutralPaletteMode) {
+  await Promise.all(
+    Object.entries(neutralCorePalette[mode]).map(([property, value]) =>
+      expect(style.getPropertyValue(property).trim()).toBe(value),
+    ),
+  )
+}
+
 async function expectAquaSelectGeometry(canvasElement: HTMLElement, trigger: HTMLElement) {
   const triggerIcon = canvasElement.querySelector<HTMLElement>('[data-part="icon"]')
   if (!triggerIcon) throw new Error('Expected the Select trigger icon part')
@@ -139,18 +174,14 @@ export const NeutralLightPortal: Story = {
     await expect(content).toHaveAttribute('data-part', 'content')
     await expect(content).toHaveAttribute('data-clv-theme', 'neutral')
     await expect(content).toHaveAttribute('data-clv-theme-mode', 'light')
-    await expect(getComputedStyle(content!).getPropertyValue('--clv-color-bg').trim()).toBe(
-      '#f5f5f5',
-    )
+    await expectNeutralCorePalette(getComputedStyle(content!), 'light')
 
     modeToggle.click()
     await waitFor(async () => {
       await expect(provider).toHaveAttribute('data-clv-theme-mode', 'dark')
       await expect(root).toHaveAttribute('data-clv-theme-mode', 'dark')
       await expect(content).toHaveAttribute('data-clv-theme-mode', 'dark')
-      await expect(getComputedStyle(content!).getPropertyValue('--clv-color-bg').trim()).toBe(
-        '#151515',
-      )
+      await expectNeutralCorePalette(getComputedStyle(content!), 'dark')
     })
     await expect(
       page.getByRole('option', { name: 'London' }).closest('[data-part="content"]'),
@@ -247,8 +278,7 @@ export const ThemeBoundaries: Story = {
       'data-clv-theme-mode',
       'light',
     )
-    await expect(neutralLightStyle.getPropertyValue('--clv-color-bg').trim()).toBe('#f5f5f5')
-    await expect(neutralLightStyle.getPropertyValue('--clv-color-text').trim()).toBe('#171717')
+    await expectNeutralCorePalette(neutralLightStyle, 'light')
     await expect(neutralLightStyle.getPropertyValue('--clv-select-icon-stroke-width').trim()).toBe(
       '1.5px',
     )
@@ -258,8 +288,7 @@ export const ThemeBoundaries: Story = {
       'data-clv-theme-mode',
       'dark',
     )
-    await expect(neutralDarkStyle.getPropertyValue('--clv-color-bg').trim()).toBe('#151515')
-    await expect(neutralDarkStyle.getPropertyValue('--clv-color-text').trim()).toBe('#ffffff')
+    await expectNeutralCorePalette(neutralDarkStyle, 'dark')
     await expect(neutralDarkStyle.getPropertyValue('--clv-select-icon-stroke-width').trim()).toBe(
       '1.5px',
     )

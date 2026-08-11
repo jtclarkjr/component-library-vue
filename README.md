@@ -130,8 +130,9 @@ through `ClvProvider`:
 </ClvProvider>
 ```
 
-Neutral keeps Aqua's typography, geometry, motion, and component recipes while replacing the
-interface chrome with grayscale colors. It defaults to dark and accepts an optional light mode:
+Neutral keeps Aqua's typography, geometry, motion, and component recipes while using a
+shadcn-aligned OKLCH monochrome palette for interface chrome. It defaults to dark and accepts an
+optional light mode:
 
 ```html
 <html data-clv-theme="neutral" data-clv-theme-mode="light"></html>

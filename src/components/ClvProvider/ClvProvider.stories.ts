@@ -25,6 +25,41 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+const neutralCorePalette = {
+  dark: {
+    '--clv-color-bg': 'oklch(0.145 0 0)',
+    '--clv-color-surface': 'oklch(0.205 0 0)',
+    '--clv-color-surface-raised': 'oklch(0.269 0 0)',
+    '--clv-color-border': 'oklch(1 0 0 / 10%)',
+    '--clv-color-text': 'oklch(0.985 0 0)',
+    '--clv-color-text-muted': 'oklch(0.708 0 0)',
+    '--clv-color-primary': 'oklch(0.922 0 0)',
+    '--clv-color-on-primary': 'oklch(0.205 0 0)',
+    '--clv-color-focus': 'oklch(0.556 0 0)',
+  },
+  light: {
+    '--clv-color-bg': 'oklch(1 0 0)',
+    '--clv-color-surface': 'oklch(1 0 0)',
+    '--clv-color-surface-raised': 'oklch(0.97 0 0)',
+    '--clv-color-border': 'oklch(0.922 0 0)',
+    '--clv-color-text': 'oklch(0.145 0 0)',
+    '--clv-color-text-muted': 'oklch(0.515 0 0)',
+    '--clv-color-primary': 'oklch(0.205 0 0)',
+    '--clv-color-on-primary': 'oklch(0.985 0 0)',
+    '--clv-color-focus': 'oklch(0.708 0 0)',
+  },
+} as const
+
+type NeutralPaletteMode = keyof typeof neutralCorePalette
+
+async function expectNeutralCorePalette(style: CSSStyleDeclaration, mode: NeutralPaletteMode) {
+  await Promise.all(
+    Object.entries(neutralCorePalette[mode]).map(([property, value]) =>
+      expect(style.getPropertyValue(property).trim()).toBe(value),
+    ),
+  )
+}
+
 export const ThemeAndPartsContract: Story = {
   render: () => ({
     components: { Button, ClvProvider, Input },
@@ -204,6 +239,7 @@ export const ThemeAndPartsContract: Story = {
     await expect(neutralDefaultProvider).toHaveAttribute('data-clv-theme-mode', 'dark')
     await expect(neutralDarkButton).toHaveAttribute('data-clv-theme-mode', 'dark')
     await expect(neutralDarkButton).toHaveAttribute('data-resolved-mode', 'dark')
+    await expectNeutralCorePalette(getComputedStyle(neutralDefaultProvider), 'dark')
     await expect(canvas.getByTestId('neutral-dark-slot-context')).toHaveAttribute(
       'data-slot-mode',
       'dark',
@@ -224,8 +260,9 @@ export const ThemeAndPartsContract: Story = {
     await expect(customModeProvider).toHaveAttribute('data-clv-theme', 'brand')
     await expect(customModeProvider).toHaveAttribute('data-clv-theme-mode', 'light')
     await expect(customModeButton).toHaveAttribute('data-clv-theme-mode', 'light')
-    await expect(getComputedStyle(neutralUppercaseRaw).colorScheme).toBe('light')
-    await expect(getComputedStyle(neutralUppercaseRaw).backgroundColor).toBe('rgb(245, 245, 245)')
+    const neutralUppercaseStyle = getComputedStyle(neutralUppercaseRaw)
+    await expect(neutralUppercaseStyle.colorScheme).toBe('light')
+    await expectNeutralCorePalette(neutralUppercaseStyle, 'light')
 
     await userEvent.click(canvas.getByRole('button', { name: 'Toggle neutral mode' }))
     await expect(neutralExplicitProvider).toHaveAttribute('data-clv-theme-mode', 'dark')
