@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Aligned Neutral's light and dark interface chrome with a shadcn-style OKLCH grayscale palette,
+- Aligned Neutral's light and dark interface chrome with a OKLCH grayscale palette,
   including subtler borders and token-derived interactive states, while preserving its colored
   status semantics and existing theme-mode behavior.
 

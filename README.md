@@ -131,7 +131,7 @@ through `ClvProvider`:
 ```
 
 Neutral keeps Aqua's typography, geometry, motion, and component recipes while using a
-shadcn-aligned OKLCH monochrome palette for interface chrome. It defaults to dark and accepts an
+OKLCH monochrome palette for interface chrome. It defaults to dark and accepts an
 optional light mode:
 
 ```html
