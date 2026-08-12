@@ -113,6 +113,8 @@ Data-driven components also export their TypeScript contracts, including `ClvVal
 `SplitterPanelDefinition`, `StepperStep`, `ToolbarEntry`, and `ColorSwatchOption`. Date and time
 controls export native `DateValue` and `TimeValue` models plus `ClvDateRange`, `ClvTimeRange`,
 `DateMatcher`, and `DateStep`; color controls export `ClvColorSpace` and `ClvColorChannel`.
+`ClvInputAttrs` and `ClvButtonAttrs` type the safe attribute objects accepted by nested interactive
+targets.
 
 ### Themes and headless composition
 
@@ -200,25 +202,47 @@ automatically, while an unregistered theme name remains available for CSS-author
 presentation with `:unstyled="false"`, or opt out locally with `unstyled`. Omitting `style.css`
 remains the package-wide headless path.
 
-Every component exposes a readonly part tuple and typed `parts` resolver contract. Ordinary
-attributes still target the same physical root as earlier releases; named parts target internal
-surfaces without changing fallthrough behavior:
+Customize components progressively, using the simplest API that fits:
+
+1. Use props, models, and events for behavior and state.
+2. Use ordinary `class`, `style`, and attributes for the component root.
+3. Use named slots to replace content or icons.
+4. Use `inputAttrs`, `controlAttrs`, or `triggerAttrs` for a singular nested interactive element.
+5. Use public CSS tokens and stable `[data-part]` selectors for visual customization.
+6. Use `parts` and `unstyled` for advanced, state-aware, or headless composition.
+
+For example, the wrapper class and native input attributes remain explicit and readable:
 
 ```vue
 <Input
   v-model="query"
   clearable
-  :parts="{
-    root: { class: 'search-field' },
-    input: ({ invalid }) => ({ autocomplete: 'off', 'data-invalid': invalid }),
-  }"
+  class="search-field"
+  :input-attrs="{ autocomplete: 'off' }"
   @clear="refresh"
 />
 ```
 
-Part resolvers receive component state and are merged after built-in attributes. Classes and styles
-are composed in order and event listeners run internal-first; required accessibility and model
-attributes remain component-owned. Physical and teleported surfaces expose
+Ordinary attributes continue to target the same physical root as earlier releases. Named attribute
+props target common internal controls without changing that fallthrough behavior. When a component
+owns repeated elements or customization depends on runtime state, use the typed `parts` resolver:
+
+```vue
+<Listbox
+  v-model="selection"
+  :options="options"
+  :parts="{
+    item: ({ item, disabled }) => ({
+      class: ['project-option', disabled && 'project-option--disabled'],
+      'data-project-id': item?.value,
+    }),
+  }"
+/>
+```
+
+Named attributes merge before `parts`, so an advanced resolver can intentionally refine the easy
+path. Classes and styles compose in order, event listeners run internal-first, and required
+accessibility and model attributes remain component-owned. Physical and teleported surfaces expose
 `data-clv-component`, `data-part`, resolved theme and mode attributes, and applicable state
 attributes for CSS-only customization.
 

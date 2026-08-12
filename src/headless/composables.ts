@@ -84,6 +84,7 @@ export function useClvComponent<C extends ClvPartContext & ClvCommonPartState>(
       builtInAttrs,
       componentPropNames,
       configuredAttrs,
+      directAttrs: resolveOptions.consumerAttrs,
       fallthroughAttrs,
       protectedNames: resolveOptions.protected,
     })

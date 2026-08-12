@@ -2,7 +2,7 @@
 import { computed, toRef, useAttrs, useId, useSlots } from 'vue'
 
 import { useClvComponent } from '../../headless'
-import type { InputPartContext, InputParts } from '../../parts'
+import type { ClvInputAttrs, InputPartContext, InputParts } from '../../parts'
 import type { InputType } from '../../types'
 
 defineOptions({ inheritAttrs: false })
@@ -21,6 +21,7 @@ const props = withDefaults(
     required?: boolean
     clearable?: boolean
     clearLabel?: string
+    inputAttrs?: ClvInputAttrs
     unstyled?: boolean
     parts?: InputParts
   }>(),
@@ -117,6 +118,7 @@ const inputAttrs = computed(() =>
       onInput: updateModel,
     },
     {
+      consumerAttrs: props.inputAttrs,
       protected: [
         'id',
         'type',

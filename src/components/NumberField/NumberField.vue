@@ -7,7 +7,7 @@ import {
   NumberFieldRoot,
 } from 'reka-ui'
 import { useClvComponent } from '../../headless'
-import type { NumberFieldPartContext, NumberFieldParts } from '../../parts'
+import type { ClvInputAttrs, NumberFieldPartContext, NumberFieldParts } from '../../parts'
 
 const model = defineModel<number | null>()
 const props = withDefaults(
@@ -26,6 +26,7 @@ const props = withDefaults(
     locale?: string
     formatOptions?: Intl.NumberFormatOptions
     disableWheelChange?: boolean
+    inputAttrs?: ClvInputAttrs
     unstyled?: boolean
     parts?: NumberFieldParts
   }>(),
@@ -104,7 +105,14 @@ const descriptionId = computed(() =>
           :class="classes('clv-number-field__input')"
           :aria-invalid="error ? 'true' : undefined"
           :aria-describedby="descriptionId"
-          v-bind="part('input', { disabled, readonly, invalid: Boolean(error) })"
+          v-bind="
+            part(
+              'input',
+              { disabled, readonly, invalid: Boolean(error) },
+              {},
+              { consumerAttrs: inputAttrs },
+            )
+          "
         />
       </slot>
       <NumberFieldIncrement

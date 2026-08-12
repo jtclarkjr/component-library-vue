@@ -9,7 +9,7 @@ import {
   TagsInputRoot,
 } from 'reka-ui'
 import { useClvComponent } from '../../headless'
-import type { TagsInputPartContext, TagsInputParts } from '../../parts'
+import type { ClvInputAttrs, TagsInputPartContext, TagsInputParts } from '../../parts'
 
 const model = defineModel<string[]>({ default: () => [] })
 const props = withDefaults(
@@ -29,6 +29,7 @@ const props = withDefaults(
     duplicate?: boolean
     delimiter?: string
     max?: number
+    inputAttrs?: ClvInputAttrs
     unstyled?: boolean
     parts?: TagsInputParts
   }>(),
@@ -132,7 +133,14 @@ const descriptionId = computed(() =>
           :class="classes('clv-tags-input__input')"
           :placeholder="placeholder"
           :aria-label="label"
-          v-bind="part('input', { disabled, readonly, invalid: Boolean(error) })"
+          v-bind="
+            part(
+              'input',
+              { disabled, readonly, invalid: Boolean(error) },
+              {},
+              { consumerAttrs: inputAttrs },
+            )
+          "
         />
       </slot>
       <TagsInputClear

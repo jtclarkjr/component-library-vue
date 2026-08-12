@@ -15,7 +15,7 @@ import {
 } from 'reka-ui'
 
 import { useClvComponent } from '../../headless'
-import type { ComboboxPartContext, ComboboxParts } from '../../parts'
+import type { ClvButtonAttrs, ClvInputAttrs, ComboboxPartContext, ComboboxParts } from '../../parts'
 import type { ChoiceOption, ClvValue } from '../../types'
 
 const model = defineModel<ClvValue>()
@@ -34,6 +34,8 @@ const props = withDefaults(
     disabled?: boolean
     clearable?: boolean
     filter?: (option: ChoiceOption, query: string) => boolean
+    inputAttrs?: ClvInputAttrs
+    triggerAttrs?: ClvButtonAttrs
     unstyled?: boolean
     parts?: ComboboxParts
   }>(),
@@ -103,7 +105,12 @@ function displayValue(value: ClvValue | undefined) {
           :aria-invalid="error ? 'true' : undefined"
           :aria-describedby="descriptionId"
           v-bind="
-            part('input', { disabled, required, invalid: Boolean(error), value: model, searchTerm })
+            part(
+              'input',
+              { disabled, required, invalid: Boolean(error), value: model, searchTerm },
+              {},
+              { consumerAttrs: inputAttrs },
+            )
           "
         />
         <ComboboxCancel
@@ -124,7 +131,14 @@ function displayValue(value: ClvValue | undefined) {
         <ComboboxTrigger
           :class="classes('clv-combobox__button')"
           aria-label="Show options"
-          v-bind="part('trigger', { disabled, value: model, searchTerm })"
+          v-bind="
+            part(
+              'trigger',
+              { disabled, value: model, searchTerm },
+              {},
+              { consumerAttrs: triggerAttrs },
+            )
+          "
         >
           <slot
             name="trigger-icon"

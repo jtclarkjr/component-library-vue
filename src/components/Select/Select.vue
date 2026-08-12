@@ -14,7 +14,7 @@ import {
 } from 'reka-ui'
 
 import { useClvComponent } from '../../headless'
-import type { SelectPartContext, SelectParts } from '../../parts'
+import type { ClvButtonAttrs, SelectPartContext, SelectParts } from '../../parts'
 import type { ChoiceOption, ClvValue } from '../../types'
 
 defineOptions({ inheritAttrs: false })
@@ -31,6 +31,7 @@ const props = withDefaults(
     name?: string
     required?: boolean
     disabled?: boolean
+    triggerAttrs?: ClvButtonAttrs
     unstyled?: boolean
     parts?: SelectParts<T>
   }>(),
@@ -95,7 +96,10 @@ const controlAttrs = computed(() =>
       'aria-invalid': props.error ? 'true' : undefined,
       'aria-describedby': descriptionId.value,
     },
-    { protected: ['id', 'aria-invalid', 'aria-describedby'] },
+    {
+      consumerAttrs: props.triggerAttrs,
+      protected: ['id', 'aria-invalid', 'aria-describedby'],
+    },
   ),
 )
 const contentAttrs = computed(() =>

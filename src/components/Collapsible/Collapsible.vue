@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CollapsibleContent, CollapsibleRoot, CollapsibleTrigger } from 'reka-ui'
 import { useClvComponent } from '../../headless'
-import type { CollapsiblePartContext, CollapsibleParts } from '../../parts'
+import type { ClvButtonAttrs, CollapsiblePartContext, CollapsibleParts } from '../../parts'
 
 const open = defineModel<boolean>('open', { default: false })
 
@@ -9,6 +9,7 @@ const props = withDefaults(
   defineProps<{
     title?: string
     disabled?: boolean
+    triggerAttrs?: ClvButtonAttrs
     unstyled?: boolean
     parts?: CollapsibleParts
   }>(),
@@ -27,7 +28,7 @@ const { classes, part, slotContext } = useClvComponent<CollapsiblePartContext>('
   >
     <CollapsibleTrigger
       :class="classes('clv-collapsible__trigger')"
-      v-bind="part('trigger', { open, disabled })"
+      v-bind="part('trigger', { open, disabled }, {}, { consumerAttrs: triggerAttrs })"
     >
       <slot name="trigger" :open="open" :context="slotContext('trigger', { open, disabled })">
         <span>{{ title }}</span>

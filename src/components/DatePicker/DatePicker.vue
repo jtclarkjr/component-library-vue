@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useClvComponent } from '../../headless'
-import type { DatePickerPartContext, DatePickerParts } from '../../parts'
+import type { ClvButtonAttrs, DatePickerPartContext, DatePickerParts } from '../../parts'
 import type { DateMatcher, DateStep, DateValue } from '../../types'
 import DatePickerBase from '../_shared/DatePickerBase.vue'
 
@@ -38,6 +38,7 @@ const props = withDefaults(
     side?: 'top' | 'right' | 'bottom' | 'left'
     align?: 'start' | 'center' | 'end'
     sideOffset?: number
+    triggerAttrs?: ClvButtonAttrs
     unstyled?: boolean
     parts?: DatePickerParts
   }>(),

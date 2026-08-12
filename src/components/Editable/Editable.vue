@@ -10,7 +10,7 @@ import {
   EditableSubmitTrigger,
 } from 'reka-ui'
 import { useClvComponent } from '../../headless'
-import type { EditablePartContext, EditableParts } from '../../parts'
+import type { ClvInputAttrs, EditablePartContext, EditableParts } from '../../parts'
 
 const model = defineModel<string | null>({ default: '' })
 const props = withDefaults(
@@ -29,6 +29,7 @@ const props = withDefaults(
     startWithEditMode?: boolean
     selectOnFocus?: boolean
     maxLength?: number
+    inputAttrs?: ClvInputAttrs
     unstyled?: boolean
     parts?: EditableParts
   }>(),
@@ -112,14 +113,19 @@ const { classes, part, slotContext } = useClvComponent<EditablePartContext>('edi
           :class="classes('clv-editable__input')"
           :aria-label="label"
           v-bind="
-            part('input', {
-              ...state,
-              disabled,
-              readonly,
-              required,
-              invalid: Boolean(error),
-              value: model,
-            })
+            part(
+              'input',
+              {
+                ...state,
+                disabled,
+                readonly,
+                required,
+                invalid: Boolean(error),
+                value: model,
+              },
+              {},
+              { consumerAttrs: inputAttrs },
+            )
           "
         >
           <slot

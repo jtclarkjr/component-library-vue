@@ -2,7 +2,7 @@
 import { computed, useId } from 'vue'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { useClvComponent } from '../../headless'
-import type { SwitchPartContext, SwitchParts } from '../../parts'
+import type { ClvButtonAttrs, SwitchPartContext, SwitchParts } from '../../parts'
 
 const model = defineModel<boolean>({ default: false })
 const props = withDefaults(
@@ -15,6 +15,7 @@ const props = withDefaults(
     required?: boolean
     disabled?: boolean
     size?: 'sm' | 'md' | 'lg'
+    controlAttrs?: ClvButtonAttrs
     unstyled?: boolean
     parts?: SwitchParts
   }>(),
@@ -44,7 +45,14 @@ const descriptionId = computed(() =>
         :disabled="disabled"
         :aria-invalid="error ? 'true' : undefined"
         :aria-describedby="descriptionId"
-        v-bind="part('control', { disabled, invalid: Boolean(error), size })"
+        v-bind="
+          part(
+            'control',
+            { disabled, invalid: Boolean(error), size },
+            {},
+            { consumerAttrs: controlAttrs },
+          )
+        "
       >
         <SwitchThumb
           :class="classes('clv-switch__thumb')"

@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from 'vue'
+import type { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes } from 'vue'
 
 export type ClvBuiltInThemeKey = 'default' | 'aqua' | 'neutral'
 export type ClvThemeKey = ClvBuiltInThemeKey | (string & Record<never, never>)
@@ -9,7 +9,7 @@ type CaseInsensitive<S extends string> = S extends `${infer Head}${infer Tail}`
   : S
 export type ClvThemeModeInput = CaseInsensitive<ClvBuiltInThemeMode> | ClvThemeMode
 
-type UnsafePartAttribute =
+type UnsafeElementAttribute =
   | 'innerHTML'
   | 'textContent'
   | 'ref'
@@ -21,15 +21,37 @@ type UnsafePartAttribute =
   | 'onVnodeBeforeUnmount'
   | 'onVnodeUnmounted'
 
-export type ClvPartAttrs = Omit<HTMLAttributes, UnsafePartAttribute> & {
+type ClvUnsafeAttrs = {
   readonly innerHTML?: never
   readonly textContent?: never
   readonly ref?: never
   readonly key?: never
+  readonly onVnodeBeforeMount?: never
+  readonly onVnodeMounted?: never
+  readonly onVnodeBeforeUpdate?: never
+  readonly onVnodeUpdated?: never
+  readonly onVnodeBeforeUnmount?: never
+  readonly onVnodeUnmounted?: never
+}
+
+type ClvCustomAttrs = {
   readonly [name: `aria-${string}`]: string | number | boolean | undefined
   readonly [name: `data-${string}`]: unknown
-  readonly [name: string]: unknown
 }
+
+export type ClvInputAttrs = Omit<InputHTMLAttributes, UnsafeElementAttribute> &
+  ClvUnsafeAttrs &
+  ClvCustomAttrs
+
+export type ClvButtonAttrs = Omit<ButtonHTMLAttributes, UnsafeElementAttribute> &
+  ClvUnsafeAttrs &
+  ClvCustomAttrs
+
+export type ClvPartAttrs = Omit<HTMLAttributes, UnsafeElementAttribute> &
+  ClvUnsafeAttrs &
+  ClvCustomAttrs & {
+    readonly [name: string]: unknown
+  }
 
 export interface ClvPartContext<P extends string = string> {
   part: P

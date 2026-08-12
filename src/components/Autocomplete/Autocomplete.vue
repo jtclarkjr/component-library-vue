@@ -13,7 +13,7 @@ import {
 } from 'reka-ui'
 
 import { useClvComponent } from '../../headless'
-import type { AutocompletePartContext, AutocompleteParts } from '../../parts'
+import type { AutocompletePartContext, AutocompleteParts, ClvInputAttrs } from '../../parts'
 import type { AutocompleteSuggestion } from '../../types'
 
 const model = defineModel<string>({ default: '' })
@@ -38,6 +38,7 @@ const props = withDefaults(
     estimateSize?: number
     overscan?: number
     filter?: (suggestion: AutocompleteSuggestion, term: string) => boolean
+    inputAttrs?: ClvInputAttrs
     unstyled?: boolean
     parts?: AutocompleteParts
   }>(),
@@ -147,14 +148,19 @@ function selectSuggestion(suggestion: AutocompleteSuggestion) {
           :aria-invalid="error ? 'true' : undefined"
           :readonly="readonly"
           v-bind="
-            part('input', {
-              open,
-              disabled,
-              readonly,
-              required,
-              invalid: Boolean(error),
-              value: model,
-            })
+            part(
+              'input',
+              {
+                open,
+                disabled,
+                readonly,
+                required,
+                invalid: Boolean(error),
+                value: model,
+              },
+              {},
+              { consumerAttrs: inputAttrs },
+            )
           "
         />
         <button

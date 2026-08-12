@@ -40,6 +40,7 @@ import {
 
 import { useClvComponent } from '../../headless'
 import type {
+  ClvButtonAttrs,
   DatePickerPartContext,
   DatePickerParts,
   DateRangePickerPartContext,
@@ -89,6 +90,7 @@ const props = withDefaults(
     align?: 'start' | 'center' | 'end'
     sideOffset?: number
     componentName?: 'date-picker' | 'date-range-picker'
+    triggerAttrs?: ClvButtonAttrs
     unstyled?: boolean
     parts?: DatePickerParts | DateRangePickerParts
   }>(),
@@ -475,7 +477,14 @@ function close() {
           :is="suite.Trigger"
           :class="classes('clv-date-picker__trigger')"
           aria-label="Open calendar"
-          v-bind="part('trigger', { open, disabled, readonly, value: modelValue, range })"
+          v-bind="
+            part(
+              'trigger',
+              { open, disabled, readonly, value: modelValue, range },
+              {},
+              { consumerAttrs: triggerAttrs },
+            )
+          "
         >
           <slot
             name="trigger"

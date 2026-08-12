@@ -3,7 +3,7 @@ import { computed, useId } from 'vue'
 import { ColorFieldInput, ColorFieldRoot, ColorSwatch } from 'reka-ui'
 
 import { useClvComponent } from '../../headless'
-import type { ColorFieldPartContext, ColorFieldParts } from '../../parts'
+import type { ClvInputAttrs, ColorFieldPartContext, ColorFieldParts } from '../../parts'
 import type { ClvColorChannel, ClvColorSpace } from '../../types'
 import { normalizeCssColor } from '../_shared/color'
 
@@ -25,6 +25,7 @@ const props = withDefaults(
     step?: number
     disableWheelChange?: boolean
     showPreview?: boolean
+    inputAttrs?: ClvInputAttrs
     unstyled?: boolean
     parts?: ColorFieldParts
   }>(),
@@ -134,7 +135,12 @@ function commit() {
           @change="commit"
           @blur="commit"
           v-bind="
-            part('input', { disabled, readonly, required, invalid: Boolean(error), value: model })
+            part(
+              'input',
+              { disabled, readonly, required, invalid: Boolean(error), value: model },
+              {},
+              { consumerAttrs: inputAttrs },
+            )
           "
           :id="inputId"
           :aria-invalid="error ? 'true' : undefined"

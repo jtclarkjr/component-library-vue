@@ -3,6 +3,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type {
   ClvBuiltInThemeKey,
   ClvCommonPartState,
+  ClvPartAttrs,
   ClvPartContext,
   ClvParts,
   ClvThemeKey,
@@ -29,6 +30,8 @@ export interface UseClvComponentOptions<C extends ClvPartContext & ClvCommonPart
 }
 
 export interface ClvResolvedPartOptions {
+  /** Static attributes supplied by a named component prop such as `inputAttrs`. */
+  consumerAttrs?: ClvPartAttrs
   /** Marks a physical or teleported component surface that must carry provider state. */
   surface?: boolean
   /** Marks a surface detached from its provider's DOM subtree by a portal or teleport. */

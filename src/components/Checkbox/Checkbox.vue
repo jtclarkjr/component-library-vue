@@ -2,7 +2,7 @@
 import { computed, useId } from 'vue'
 import { CheckboxIndicator, CheckboxRoot, type CheckboxCheckedState } from 'reka-ui'
 import { useClvComponent } from '../../headless'
-import type { CheckboxPartContext, CheckboxParts } from '../../parts'
+import type { CheckboxPartContext, CheckboxParts, ClvButtonAttrs } from '../../parts'
 
 const model = defineModel<CheckboxCheckedState>({ default: false })
 const props = withDefaults(
@@ -15,6 +15,7 @@ const props = withDefaults(
     value?: string
     required?: boolean
     disabled?: boolean
+    controlAttrs?: ClvButtonAttrs
     unstyled?: boolean
     parts?: CheckboxParts
   }>(),
@@ -37,7 +38,14 @@ const { classes, part, slotContext } = useClvComponent<CheckboxPartContext>('che
     <div :class="classes('clv-checkbox-field__control')">
       <CheckboxRoot
         :class="classes('clv-checkbox')"
-        v-bind="part('control', { disabled, required, invalid: Boolean(error), checked: model })"
+        v-bind="
+          part(
+            'control',
+            { disabled, required, invalid: Boolean(error), checked: model },
+            {},
+            { consumerAttrs: controlAttrs },
+          )
+        "
         :id="controlId"
         v-model="model"
         :name="name"

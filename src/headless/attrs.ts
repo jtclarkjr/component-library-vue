@@ -33,6 +33,7 @@ interface MergePartAttrsOptions {
   builtInAttrs: Record<string, unknown>
   componentPropNames: ReadonlySet<string>
   configuredAttrs: ClvPartAttrs | undefined
+  directAttrs: ClvPartAttrs | undefined
   fallthroughAttrs: Record<string, unknown> | undefined
   protectedNames: readonly string[] | undefined
 }
@@ -161,14 +162,22 @@ export function mergePartAttrs({
   builtInAttrs,
   componentPropNames,
   configuredAttrs,
+  directAttrs,
   fallthroughAttrs,
   protectedNames,
 }: MergePartAttrsOptions): ClvResolvedAttrs {
-  const consumerAttrs = sanitizeConsumerAttrs(configuredAttrs, builtInAttrs, componentPropNames)
-  const merged = mergeProps(builtInAttrs, fallthroughAttrs ?? {}, consumerAttrs ?? {}) as Record<
-    string,
-    unknown
-  >
+  const directConsumerAttrs = sanitizeConsumerAttrs(directAttrs, builtInAttrs, componentPropNames)
+  const configuredConsumerAttrs = sanitizeConsumerAttrs(
+    configuredAttrs,
+    builtInAttrs,
+    componentPropNames,
+  )
+  const merged = mergeProps(
+    builtInAttrs,
+    fallthroughAttrs ?? {},
+    directConsumerAttrs ?? {},
+    configuredConsumerAttrs ?? {},
+  ) as Record<string, unknown>
 
   protectAttrs(merged, builtInAttrs, [...alwaysProtected, ...(protectedNames ?? [])])
 
