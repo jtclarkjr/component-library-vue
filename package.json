@@ -12,7 +12,8 @@
     "url": "git+https://github.com/jtclarkjr/component-library-vue.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "docs/usage-guide.md"
   ],
   "type": "module",
   "sideEffects": [

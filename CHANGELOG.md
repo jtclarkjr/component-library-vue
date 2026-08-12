@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
   propagation to teleported surfaces.
 - Progressive `inputAttrs`, `controlAttrs`, and `triggerAttrs` hooks for common nested interactive
   targets, backed by public safe native-attribute types while retaining `parts` for advanced use.
+- A published consumer usage guide centered on the progressive customization API, with themes,
+  headless composition, local development, and troubleshooting workflows.
 
 ## [0.4.1] - 2026-08-11
 

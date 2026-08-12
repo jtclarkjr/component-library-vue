@@ -7,7 +7,7 @@ toolchain. The package is published to npm and can also be developed and consume
 
 - Vue 3.5 or newer
 - Bun 1.3.14 for developing this repository
-- The global [`vp`](https://viteplus.dev/guide/) command
+- The global [<code>vp</code>](https://viteplus.dev/guide/) command
 
 ## Install and develop
 
@@ -37,393 +37,116 @@ Install the package:
 vp add @jtclarkjr/component-library-vue
 ```
 
-Then import its components and stylesheet:
+Import only the components you need and load the public stylesheet once:
 
 ```ts
-import {
-  Accordion,
-  AlertDialog,
-  AspectRatio,
-  Autocomplete,
-  Avatar,
-  Button,
-  Calendar,
-  Card,
-  Checkbox,
-  CheckboxGroup,
-  ClvProvider,
-  Collapsible,
-  ColorArea,
-  ColorField,
-  ColorSlider,
-  ColorSwatch,
-  ColorSwatchPicker,
-  Combobox,
-  ContextMenu,
-  DateField,
-  DatePicker,
-  DateRangeField,
-  DateRangePicker,
-  Dialog,
-  Drawer,
-  DropdownMenu,
-  Editable,
-  HoverCard,
-  Input,
-  Label,
-  Listbox,
-  Menubar,
-  MonthPicker,
-  MonthRangePicker,
-  NavigationMenu,
-  NumberField,
-  Pagination,
-  PinInput,
-  Popover,
-  Progress,
-  RadioGroup,
-  RangeCalendar,
-  Rating,
-  ScrollArea,
-  Select,
-  Separator,
-  Slider,
-  Spinner,
-  Splitter,
-  Stepper,
-  Switch,
-  Tabs,
-  TagsInput,
-  TimeField,
-  TimeRangeField,
-  Toast,
-  Toggle,
-  ToggleGroup,
-  Toolbar,
-  Tooltip,
-  Tree,
-  YearPicker,
-  YearRangePicker,
-} from '@jtclarkjr/component-library-vue'
+import { Button, Input, Select } from '@jtclarkjr/component-library-vue'
 import '@jtclarkjr/component-library-vue/style.css'
 ```
 
-Data-driven components also export their TypeScript contracts, including `ClvValue`,
-`ChoiceOption`, `MenuEntry`, `AutocompleteSuggestion`, `NavigationMenuItem`, `TreeNode`,
-`SplitterPanelDefinition`, `StepperStep`, `ToolbarEntry`, and `ColorSwatchOption`. Date and time
-controls export native `DateValue` and `TimeValue` models plus `ClvDateRange`, `ClvTimeRange`,
-`DateMatcher`, and `DateStep`; color controls export `ClvColorSpace` and `ClvColorChannel`.
-`ClvInputAttrs` and `ClvButtonAttrs` type the safe attribute objects accepted by nested interactive
-targets.
+Components use explicit named exports and require no global Vue plugin installation.
 
-### Themes and headless composition
+## Usage guide
 
-The default theme remains active without configuration. Aqua and Neutral are bundled alternatives.
-Apply a theme at the document boundary (recommended when the app uses teleported overlays) or
-through `ClvProvider`:
+**[Read the complete consumer usage guide](https://github.com/jtclarkjr/component-library-vue/blob/main/docs/usage-guide.md).**
 
-```html
-<html data-clv-theme="aqua"></html>
-```
+The guide covers first use, models and events, progressive customization, nested attribute props,
+slots, CSS tokens, advanced <code>parts</code>, themes, headless composition, Storybook discovery,
+local linking, tarballs, and troubleshooting. A version-matched copy is also included in every
+published package at <code>docs/usage-guide.md</code>.
 
-```vue
-<ClvProvider theme="aqua">
-  <RouterView />
-</ClvProvider>
-```
+## Design-system and Figma workflow
 
-Neutral keeps Aqua's typography, geometry, motion, and component recipes while using a
-OKLCH monochrome palette for interface chrome. It defaults to dark and accepts an
-optional light mode:
+The per-theme partials in <code>src/styles/tokens/</code> are the canonical token sources for
+Default, Aqua, and Neutral; <code>src/styles/_tokens.scss</code> assembles them into the public
+token layer. Reusable component colors, typography, spacing, radii, borders, effects, and motion
+are exposed as <code>--clv-*</code> custom properties with explicit values in every base theme;
+Neutral adds a light-mode color and effect override. Preserve those CSS names as Figma variable
+code syntax so design and implementation stay traceable.
 
-```html
-<html data-clv-theme="neutral" data-clv-theme-mode="light"></html>
-```
+Storybook is the visual reconciliation surface. The tagged <code>Visual*</code> stories leave
+meaningful states deterministic, and <code>vp run visual:capture</code> builds the catalogue and
+captures each fixture under Default, Aqua, Neutral Dark, and Neutral Light profiles with reduced
+motion. Output is written to the ignored <code>.visual-reference/</code> directory.
 
-```vue
-<ClvProvider theme="neutral" mode="light">
-  <RouterView />
-</ClvProvider>
-```
-
-The `mode` prop accepts `dark` or `light` in any letter casing, can be driven by a reactive ref or
-computed value, inherits through nested providers, and defaults to `dark` for Neutral. Provider,
-component, part, slot, and teleported-surface output is normalized to canonical lowercase. Neutral's
-direct `data-clv-theme-mode` selector is also case-insensitive. Default and Aqua do not supply
-mode-specific styles.
-
-Applications can register named themes directly on `ClvProvider`. A custom theme inherits all
-tokens and component recipes from Default unless `extends` selects Aqua or Neutral, so its palette
-and token maps can stay partial. `palette` covers the shared semantic colors; `tokens` accepts any
-advanced `--clv-*` custom property. Raw tokens override equivalent palette entries.
-
-```ts
-import { defineClvThemes } from '@jtclarkjr/component-library-vue'
-
-export const themes = defineClvThemes({
-  brand: {
-    extends: 'neutral',
-    defaultMode: 'dark',
-    palette: {
-      bg: '#18181b',
-      surface: '#27272a',
-      text: '#fafafa',
-      primary: '#7c3aed',
-      onPrimary: '#ffffff',
-    },
-    tokens: {
-      '--clv-radius-sm': '0.75rem',
-    },
-    modes: {
-      light: {
-        palette: { bg: '#ffffff', surface: '#ffffff', text: '#18181b' },
-      },
-      dim: {
-        palette: { surface: '#202023' },
-        tokens: { '--clv-shadow-md': 'none' },
-      },
-    },
-  },
-})
-```
-
-```vue
-<ClvProvider :themes="themes" theme="brand" mode="dim">
-  <RouterView />
-</ClvProvider>
-```
-
-Custom mode names are matched case-insensitively and emitted in lowercase. Registries inherit
-through nested providers; a local definition replaces a parent definition with the same name.
-Built-in names are reserved. Registered palette and token values follow teleported overlays
-automatically, while an unregistered theme name remains available for CSS-authored themes.
-
-`ClvProvider` also accepts `unstyled`. Individual components can explicitly override inherited
-presentation with `:unstyled="false"`, or opt out locally with `unstyled`. Omitting `style.css`
-remains the package-wide headless path.
-
-Customize components progressively, using the simplest API that fits:
-
-1. Use props, models, and events for behavior and state.
-2. Use ordinary `class`, `style`, and attributes for the component root.
-3. Use named slots to replace content or icons.
-4. Use `inputAttrs`, `controlAttrs`, or `triggerAttrs` for a singular nested interactive element.
-5. Use public CSS tokens and stable `[data-part]` selectors for visual customization.
-6. Use `parts` and `unstyled` for advanced, state-aware, or headless composition.
-
-For example, the wrapper class and native input attributes remain explicit and readable:
-
-```vue
-<Input
-  v-model="query"
-  clearable
-  class="search-field"
-  :input-attrs="{ autocomplete: 'off' }"
-  @clear="refresh"
-/>
-```
-
-Ordinary attributes continue to target the same physical root as earlier releases. Named attribute
-props target common internal controls without changing that fallthrough behavior. When a component
-owns repeated elements or customization depends on runtime state, use the typed `parts` resolver:
-
-```vue
-<Listbox
-  v-model="selection"
-  :options="options"
-  :parts="{
-    item: ({ item, disabled }) => ({
-      class: ['project-option', disabled && 'project-option--disabled'],
-      'data-project-id': item?.value,
-    }),
-  }"
-/>
-```
-
-Named attributes merge before `parts`, so an advanced resolver can intentionally refine the easy
-path. Classes and styles compose in order, event listeners run internal-first, and required
-accessibility and model attributes remain component-owned. Physical and teleported surfaces expose
-`data-clv-component`, `data-part`, resolved theme and mode attributes, and applicable state
-attributes for CSS-only customization.
-
-Registered custom-theme provider roots and detached surfaces additionally expose
-`data-clv-theme-base`, identifying the bundled theme supplying their omitted tokens.
-
-The stylesheet supplies default dark-theme tokens and all component styles. Override the public
-`--clv-*` custom properties in your application to theme the components:
-
-```css
-:root {
-  --clv-color-primary: #7c3aed;
-  --clv-color-primary-hover: #8b5cf6;
-  --clv-radius-sm: 0.6rem;
-}
-```
-
-### Design-system and Figma workflow
-
-The per-theme partials in `src/styles/tokens/` are the canonical token sources for Default, Aqua,
-and Neutral; `src/styles/_tokens.scss` assembles them into the public token layer. Reusable component
-colors, typography, spacing, radii, borders, effects, and motion are exposed as `--clv-*` custom
-properties with explicit values in every base theme; Neutral adds a light-mode color and effect
-override. Preserve those CSS names as Figma variable code syntax so design and implementation stay
-traceable.
-
-Storybook is the visual reconciliation surface. The tagged `Visual*` stories leave meaningful
-states deterministic, and `vp run visual:capture` builds the catalogue and captures each fixture
-under Default, Aqua, Neutral Dark, and Neutral Light profiles with reduced motion. Output is written
-to the ignored `.visual-reference/` directory.
-
-The design workflow can generate a local-only `figma/` handoff containing deferred Code Connect
-metadata for all 62 visual public components. That directory is intentionally ignored and is not
-part of the repository or npm package; `ClvProvider` remains engineering guidance rather than a
-visual component. The corresponding private design library preserves stable component-set IDs;
-live Code Connect activation still requires an Organization or Enterprise Figma plan and
-published components. Its designer-facing UI-kit pages organize those sets into 12 reusable
-content blocks, 6 responsive compositions, and 4 desktop plus 4 mobile reference screens. Local
-Storybook remains the visual and behavioral source of truth.
-
-## Live local linking
-
-Build and register the package once from this repository:
-
-```sh
-vp run build
-vp link
-```
-
-Keep the compiled package updated while working:
-
-```sh
-vp run dev
-```
-
-In a Vite+/Bun consumer project, link the registered package:
-
-```sh
-vp link @jtclarkjr/component-library-vue
-```
-
-Plain Bun projects can use `bun link @jtclarkjr/component-library-vue`. Other package managers can
-use their native package-link command.
-
-For a linked Vite consumer, deduplicate Vue and keep the library out of dependency optimization:
-
-```ts
-import { defineConfig } from 'vite'
-
-export default defineConfig({
-  resolve: {
-    dedupe: ['vue'],
-  },
-  optimizeDeps: {
-    exclude: ['@jtclarkjr/component-library-vue'],
-  },
-})
-```
-
-Vite+ exposes `vp unlink @jtclarkjr/component-library-vue` for removing the consumer link. Bun
-1.3.14 does not implement named unlinking yet, so projects using this repository's pinned Bun
-version should remove the linked dependency with `vp remove` instead. Then unregister the package
-from this repository:
-
-```sh
-# Run in the consumer project.
-vp remove @jtclarkjr/component-library-vue
-
-# Once the active package manager supports named unlinking, this is equivalent:
-# vp unlink @jtclarkjr/component-library-vue
-
-# Run in the component-library repository.
-vp unlink
-```
-
-## Local tarball installation
-
-For a package-like install without symlink behavior, create a local tarball:
-
-```sh
-vp run pack:local
-```
-
-Install it into any local Vue project:
-
-```sh
-vp add /repo/.local-pack/jtclarkjr-component-library-vue.tgz
-```
-
-The same `.tgz` path works with `bun add`, `npm install`, `pnpm add`, or `yarn add`. Rebuild and
-reinstall the tarball when testing a new library revision; use linking for rapid iteration.
+The design workflow can generate a local-only <code>figma/</code> handoff containing deferred Code
+Connect metadata for all 62 visual public components. That directory is intentionally ignored and
+is not part of the repository or npm package; <code>ClvProvider</code> remains engineering guidance
+rather than a visual component. The corresponding private design library preserves stable
+component-set IDs; live Code Connect activation still requires an Organization or Enterprise
+Figma plan and published components. Its designer-facing UI-kit pages organize those sets into 12
+reusable content blocks, 6 responsive compositions, and 4 desktop plus 4 mobile reference screens.
+Local Storybook remains the visual and behavioral source of truth.
 
 ## Components
 
-- `Accordion` — single or multiple expandable sections from typed items and scoped slots
-- `AlertDialog` — focused confirmation dialog with default and destructive actions
-- `AspectRatio` — responsive media frame with a controlled width-to-height ratio
-- `Autocomplete` — free-form suggestions with filtering, scoped rendering, and virtualization
-- `Avatar` — image avatar with accessible alt text, fallback content, sizes, and shapes
-- `Button` — polymorphic button with surface/icon recipes, disabled state, and loading semantics
-- `Calendar` — single or multiple date selection with bounds, localization, and multi-page views
-- `Card` — composable content container with header and footer slots
-- `Checkbox` — labelled boolean or indeterminate control with help and error messaging
-- `CheckboxGroup` — typed multiple-choice field with shared validation and option slots
-- `Collapsible` — controlled disclosure region with customizable trigger and content
-- `ColorArea` — two-channel pointer and keyboard color surface with change and commit events
-- `ColorField` — hexadecimal or channel-based color input with validation and preview slots
-- `ColorSlider` — horizontal or vertical color-channel slider with inversion and channel steps
-- `ColorSwatch` — accessible CSS-color sample with transparency checkerboard and sizes
-- `ColorSwatchPicker` — single or multiple typed swatch selection with scoped options
-- `Combobox` — searchable single-select field with typed options and custom filtering
-- `ContextMenu` — nested rich menu opened from pointer context or the keyboard
-- `DateField` — localized segmented date or date-time input using native date values
-- `DatePicker` — controlled segmented date field and portal calendar popover
-- `DateRangeField` — localized segmented start and end date input
-- `DateRangePicker` — controlled date-range field and multi-page range calendar popover
-- `Dialog` — accessible Reka UI dialog with controlled open state and composition slots
-- `Drawer` — controlled, swipeable four-direction drawer with snap points and focus modes
-- `DropdownMenu` — nested action, checkbox, radio, group, label, and separator menu entries
-- `Editable` — inline preview and edit field with submit and cancel controls
-- `HoverCard` — delayed rich preview surface for hover and keyboard focus
-- `Input` — labelled text input with clear, leading/trailing, help, error, and model-value support
-- `Label` — accessible form label with required, disabled, and size styling
-- `Listbox` — typed single or multiple selection with orientation and optional virtualization
-- `Menubar` — keyboard-navigable top-level menus using the shared recursive menu schema
-- `MonthPicker` — localized single or multiple month selection
-- `MonthRangePicker` — bounded month-range selection with fixed-edge support
-- `NavigationMenu` — recursive link and menu navigation with rich scoped content
-- `NumberField` — localized stepped numeric field with formatting and increment controls
-- `Pagination` — controlled page navigation with sibling and edge controls
-- `PinInput` — grouped one-time-code input with completion behavior and digit slots
-- `Popover` — positioned, controlled content with a scoped close helper
-- `Progress` — determinate or indeterminate progress with sizes and semantic variants
-- `RadioGroup` — typed single-choice collection with orientation and field messaging
-- `RangeCalendar` — localized bounded date-range selection with multi-page navigation
-- `Rating` — keyboard-accessible rating control with configurable granularity
-- `ScrollArea` — styled vertical, horizontal, or bidirectional custom scrollbars
-- `Select` — typed single-select field with labels, validation, and scoped option rendering
-- `Separator` — decorative or semantic horizontal and vertical dividers
-- `Slider` — accessible single-value or range slider with keyboard support
-- `Spinner` — accessible or decorative loading indicator in sizes from `sm` through `xl`
-- `Splitter` — constrained resizable panels with persistence, collapse, and layout events
-- `Stepper` — linear or non-linear numbered workflow with scoped navigation helpers
-- `Switch` — labelled boolean control with sizes and field messaging
-- `Tabs` — typed tab collections with horizontal or vertical keyboard navigation
-- `TagsInput` — validated free-form tag collection with item, input, and deletion slots
-- `TimeField` — localized segmented time input with granularity and step controls
-- `TimeRangeField` — localized segmented start and end time input
-- `Toast` — controlled notification collection with variants, actions, and swipe dismissal
-- `Toggle` — accessible pressed-state button with sizes and variants
-- `ToggleGroup` — typed single or multiple pressed-state button collection
-- `Toolbar` — keyboard-navigable action, link, toggle, and separator records
-- `Tooltip` — accessible hover/focus description with configurable placement and delay
-- `Tree` — recursive scalar-ID selection and expansion with typeahead and virtualization
-- `YearPicker` — localized single or multiple year selection with paged navigation
-- `YearRangePicker` — bounded year-range selection with fixed-edge support
+- <code>Accordion</code> — single or multiple expandable sections from typed items and scoped slots
+- <code>AlertDialog</code> — focused confirmation dialog with default and destructive actions
+- <code>AspectRatio</code> — responsive media frame with a controlled width-to-height ratio
+- <code>Autocomplete</code> — free-form suggestions with filtering, scoped rendering, and virtualization
+- <code>Avatar</code> — image avatar with accessible alt text, fallback content, sizes, and shapes
+- <code>Button</code> — polymorphic button with surface/icon recipes, disabled state, and loading semantics
+- <code>Calendar</code> — single or multiple date selection with bounds, localization, and multi-page views
+- <code>Card</code> — composable content container with header and footer slots
+- <code>Checkbox</code> — labelled boolean or indeterminate control with help and error messaging
+- <code>CheckboxGroup</code> — typed multiple-choice field with shared validation and option slots
+- <code>Collapsible</code> — controlled disclosure region with customizable trigger and content
+- <code>ColorArea</code> — two-channel pointer and keyboard color surface with change and commit events
+- <code>ColorField</code> — hexadecimal or channel-based color input with validation and preview slots
+- <code>ColorSlider</code> — horizontal or vertical color-channel slider with inversion and channel steps
+- <code>ColorSwatch</code> — accessible CSS-color sample with transparency checkerboard and sizes
+- <code>ColorSwatchPicker</code> — single or multiple typed swatch selection with scoped options
+- <code>Combobox</code> — searchable single-select field with typed options and custom filtering
+- <code>ContextMenu</code> — nested rich menu opened from pointer context or the keyboard
+- <code>DateField</code> — localized segmented date or date-time input using native date values
+- <code>DatePicker</code> — controlled segmented date field and portal calendar popover
+- <code>DateRangeField</code> — localized segmented start and end date input
+- <code>DateRangePicker</code> — controlled date-range field and multi-page range calendar popover
+- <code>Dialog</code> — accessible Reka UI dialog with controlled open state and composition slots
+- <code>Drawer</code> — controlled, swipeable four-direction drawer with snap points and focus modes
+- <code>DropdownMenu</code> — nested action, checkbox, radio, group, label, and separator menu entries
+- <code>Editable</code> — inline preview and edit field with submit and cancel controls
+- <code>HoverCard</code> — delayed rich preview surface for hover and keyboard focus
+- <code>Input</code> — labelled text input with clear, leading/trailing, help, error, and model-value support
+- <code>Label</code> — accessible form label with required, disabled, and size styling
+- <code>Listbox</code> — typed single or multiple selection with orientation and optional virtualization
+- <code>Menubar</code> — keyboard-navigable top-level menus using the shared recursive menu schema
+- <code>MonthPicker</code> — localized single or multiple month selection
+- <code>MonthRangePicker</code> — bounded month-range selection with fixed-edge support
+- <code>NavigationMenu</code> — recursive link and menu navigation with rich scoped content
+- <code>NumberField</code> — localized stepped numeric field with formatting and increment controls
+- <code>Pagination</code> — controlled page navigation with sibling and edge controls
+- <code>PinInput</code> — grouped one-time-code input with completion behavior and digit slots
+- <code>Popover</code> — positioned, controlled content with a scoped close helper
+- <code>Progress</code> — determinate or indeterminate progress with sizes and semantic variants
+- <code>RadioGroup</code> — typed single-choice collection with orientation and field messaging
+- <code>RangeCalendar</code> — localized bounded date-range selection with multi-page navigation
+- <code>Rating</code> — keyboard-accessible rating control with configurable granularity
+- <code>ScrollArea</code> — styled vertical, horizontal, or bidirectional custom scrollbars
+- <code>Select</code> — typed single-select field with labels, validation, and scoped option rendering
+- <code>Separator</code> — decorative or semantic horizontal and vertical dividers
+- <code>Slider</code> — accessible single-value or range slider with keyboard support
+- <code>Spinner</code> — accessible or decorative loading indicator in sizes from <code>sm</code> through <code>xl</code>
+- <code>Splitter</code> — constrained resizable panels with persistence, collapse, and layout events
+- <code>Stepper</code> — linear or non-linear numbered workflow with scoped navigation helpers
+- <code>Switch</code> — labelled boolean control with sizes and field messaging
+- <code>Tabs</code> — typed tab collections with horizontal or vertical keyboard navigation
+- <code>TagsInput</code> — validated free-form tag collection with item, input, and deletion slots
+- <code>TimeField</code> — localized segmented time input with granularity and step controls
+- <code>TimeRangeField</code> — localized segmented start and end time input
+- <code>Toast</code> — controlled notification collection with variants, actions, and swipe dismissal
+- <code>Toggle</code> — accessible pressed-state button with sizes and variants
+- <code>ToggleGroup</code> — typed single or multiple pressed-state button collection
+- <code>Toolbar</code> — keyboard-navigable action, link, toggle, and separator records
+- <code>Tooltip</code> — accessible hover/focus description with configurable placement and delay
+- <code>Tree</code> — recursive scalar-ID selection and expansion with typeahead and virtualization
+- <code>YearPicker</code> — localized single or multiple year selection with paged navigation
+- <code>YearRangePicker</code> — bounded year-range selection with fixed-edge support
 
 ## Design principles
 
 - Vue is a peer dependency, so consumer applications own the Vue runtime.
 - Reka UI supplies accessible composite behavior; this package owns the visual styling.
-- `@internationalized/date` supplies the native, locale-aware date and time value objects.
+- <code>@internationalized/date</code> supplies the native, locale-aware date and time value objects.
 - Components use explicit imports and require no global plugin installation.
 - Storybook is the public catalogue and automated component test surface.
