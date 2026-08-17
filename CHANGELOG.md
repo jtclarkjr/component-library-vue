@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-08-17
+
 ### Added
 
 - Provider-local custom theme registries with typed semantic palettes, advanced token overrides,
